@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f7a4c">
+<title>Biogasanlage Schneider</title>
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17362a;background:#f3f6f4}
+*{box-sizing:border-box}
+body{margin:0}
+.app{max-width:720px;margin:auto;min-height:100vh;background:#f7faf8;padding-bottom:82px}
+.top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #dde7e1;padding:14px 16px}
+.brand{font-weight:800;font-size:20px}
+.sub{font-size:12px;color:#658073}
+.screen{display:none;padding:16px}
+.screen.active{display:block}
+.card{background:#fff;border:1px solid #dce7e1;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #163b2712}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:0;border-radius:14px;padding:14px 16px;font-weight:750;font-size:16px}
+.btn.primary{background:#1e7a4a;color:white}
+.btn.soft{background:#e9f4ed;color:#1e6d45}
+.btn.danger{background:#fff1ef;color:#a4382e}
+.btn.active{outline:3px solid #8cc9a7}
+label{display:block;font-size:13px;color:#5b7267;margin:10px 0 6px}
+input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px;background:white;font-size:17px}
+.big{font-size:32px;font-weight:800}
+.muted{color:#6a8075}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.progress{height:12px;background:#e8efeb;border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:#2b8b58}
+.entry{padding:12px 0;border-bottom:1px solid #edf2ef}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dfe8e3;display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:9}
+.navin{width:min(720px,100%);display:grid;grid-template-columns:repeat(5,1fr)}
+.nav button{border:0;background:#fff;padding:10px 2px;font-size:11px;color:#60766b}
+.nav button b{display:block;font-size:19px;margin-bottom:2px}
+.nav button.active{color:#1f7a4c;font-weight:800}
+.pill{display:inline-block;background:#e8f4ed;border-radius:99px;padding:6px 10px;font-weight:700;font-size:13px}
+.planline{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;align-items:center;margin:8px 0}
+.planline input{padding:10px;font-size:15px}
+.small{font-size:12px}
+.success{background:#e7f5ec;padding:10px 12px;border-radius:12px;margin-top:10px;display:none}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="top">
+  <div class="brand">🌿 Biogasanlage Schneider</div>
+  <div class="sub">Fütterungserfassung</div>
+</header>
+
+<section id="feed" class="screen active">
+
+<div class="card">
+  <div class="row">
+    <div>
+      <div class="muted small">Leistungsplan</div>
+      <div id="planBadge" class="pill">500 kW</div>
+    </div>
+    <select id="kwSelect" style="width:145px"></select>
+  </div>
+
+  <div class="grid2" style="margin-top:12px">
+    <button class="btn soft active" data-fer="1">Fermenter 1</button>
+    <button class="btn soft" data-fer="2">Fermenter 2</button>
+  </div>
+
+  <div class="grid2" style="margin-top:10px">
+    <button class="btn soft active" data-round="Morgen">☀️ Morgen</button>
+    <button class="btn soft" data-round="Abend">🌙 Abend</button>
+  </div>
+</div>
+
+<div class="card">
+  <label>Substrat</label>
+  <select id="substrate"></select>
+
+  <label>Gewicht dieser Schaufel (kg)</label>
+  <input id="weight" type="number" inputmode="decimal" placeholder="z. B. 2140">
+
+  <button id="addBtn" class="btn primary" style="width:100%;margin-top:12px">
+    + Schaufel hinzufügen
+  </button>
+
+  <div id="saved" class="success">Schaufel gespeichert ✓</div>
+</div>
+
+<div class="card">
+  <div class="muted small">Aktueller Stand</div>
+  <div class="row">
+    <div><span id="actual" class="big">0</span> kg</div>
+    <div class="muted">Soll <b id="target">0</b> kg</div>
+  </div>
+
+  <div class="progress">
+    <i id="bar" style="width:0%"></i>
+  </div>
+
+  <div class="row small" style="margin-top:8px">
+    <span id="count">0 Schaufeln</span>
+    <b id="remaining">Rest 0 kg</b>
+  </div>
+</div>
+
+<div class="card">
+  <b>Letzte Schaufeln</b>
+  <div id="recent"></div>
+</div>
+
+</section>
+
+<section id="today" class="screen">
+<div class="card">
+  <h2 style="margin-top:0">Heute</h2>
+  <div id="todaySummary"></div>
+</div>
+</section>
+
+<section id="plans" class="screen">
+<div class="card">
+  <h2 style="margin-top:0">Fütterungspläne</h2>
+
+  <label>Leistungsstufe</label>
+  <select id="planEditKw"></select>
+
+  <label>Fermenter</label>
+  <select id="planEditFer">
+    <option value="1">Fermenter 1</option>
+    <option value="2">Fermenter 2</option>
+  </select>
+
+  <div class="planline muted small">
+    <b>Substrat</b>
+    <b>Morgen kg</b>
+    <b>Abend kg</b>
+  </div>
+
+  <div id="planRows"></div>
+
+  <button id="savePlan" class="btn primary" style="width:100%;margin-top:12px">
+    Plan speichern
+  </button>
+</div>
+</section>
+
+<section id="history" class="screen">
+<div class="card">
+  <h2 style="margin-top:0">Historie</h2>
+  <div id="historyList"></div>
+</div>
+</section>
+
+<section id="settings" class="screen">
+
+<div class="card">
+  <h2 style="margin-top:0">Einstellungen</h2>
+
+  <label>Morgenfütterung ab</label>
+  <input id="morningTime" type="time">
+
+  <label>Abendfütterung ab</label>
+  <input id="eveningTime" type="time">
+
+  <button id="saveSettings" class="btn primary" style="width:100%;margin-top:12px">
+    Zeiten speichern
+  </button>
+</div>
+
+<div class="card">
+  <b>Substrate</b>
+
+  <div id="substrateList" style="margin:10px 0"></div>
+
+  <div class="row">
+    <input id="newSubstrate" placeholder="Neues Substrat">
+    <button id="addSubstrate" class="btn soft">+</button>
+  </div>
+</div>
+
+</section>
+
+</div>
+
+<nav class="nav">
+<div class="navin">
+  <button class="active" data-page="feed"><b>⚖️</b>Füttern</button>
+  <button data-page="today"><b>📊</b>Heute</button>
+  <button data-page="plans"><b>📋</b>Pläne</button>
+  <button data-page="history"><b>🕘</b>Historie</button>
+  <button data-page="settings"><b>⚙️</b>Setup</button>
+</div>
+</nav>
+
+<script>
+(function(){
+
+const KWS=[500,600,700,800,900,1000,1100];
+
+const defaultSubs=[
+  'Maissilage',
+  'Grassilage',
+  'GPS',
+  'Rindergülle'
+];
+
+const store={
+  get:function(k,d){
+    try{
+      var v=localStorage.getItem(k);
+      return v ? JSON.parse(v) : d;
+    }catch(e){
+      return d;
+    }
+  },
+  set:function(k,v){
+    localStorage.setItem(k,JSON.stringify(v));
+  }
+};
+
+var subs=store.get('bs_subs',defaultSubs);
+var logs=store.get('bs_logs',[]);
+var plans=store.get('bs_plans',{});
+var settings=store.get('bs_settings',{
+  morning:'06:00',
+  evening:'17:00'
+});
+
+var fer=1;
+var round='Morgen';
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function ensurePlans(){
+  KWS.forEach(function(k){
+    if(!plans[k]) plans[k]={};
+
+    [1,2].forEach(function(f){
+      if(!plans[k][f]) plans[k][f]={};
+
+      subs.forEach(function(s){
+        if(!plans[k][f][s]){
+          plans[k][f][s]={
+            Morgen:0,
+            Abend:0
+          };
+        }
+      });
+    });
+  });
+
+  store.set('bs_plans',plans);
+}
+
+function fillSelects(){
+
+  ['kwSelect','planEditKw'].forEach(function(id){
+
+    $(id).innerHTML=KWS.map(function(k){
+      return '<option value="'+k+'">'+k+' kW</option>';
+    }).join('');
+
+  });
+
+  $('substrate').innerHTML=subs.map(function(s){
+    return '<option>'+s+'</option>';
+  }).join('');
+
+  $('substrateList').innerHTML=subs.map(function(s){
+    return '<span class="pill" style="margin:3px">'+s+'</span>';
+  }).join('');
+}
+
+function dateKey(){
+  var d=new Date();
+
+  var y=d.getFullYear();
+  var m=String(d.getMonth()+1).padStart(2,'0');
+  var day=String(d.getDate()).padStart(2,'0');
+
+  return y+'-'+m+'-'+day;
+}
+
+function currentTarget(){
+
+  var k=$('kwSelect').value;
+  var s=$('substrate').value;
+
+  if(
+    plans[k] &&
+    plans[k][fer] &&
+    plans[k][fer][s] &&
+    plans[k][fer][s][round]
+  ){
+    return Number(plans[k][fer][s][round]);
+  }
+
+  return 0;
+}
+
+function relevant(){
+
+  var currentKw=$('kwSelect').value;
+  var currentSub=$('substrate').value;
+
+  return logs.filter(function(x){
+
+    return x.date===dateKey() &&
+           String(x.kw)===String(currentKw) &&
+           Number(x.fer)===Number(fer) &&
+           x.round===round &&
+           x.substrate===currentSub;
+
+  });
+}
+
+function renderFeed(){
+
+  $('planBadge').textContent=$('kwSelect').value+' kW';
+
+  var entries=relevant();
+
+  var sum=entries.reduce(function(total,x){
+    return total+Number(x.weight);
+  },0);
+
+  var target=currentTarget();
+
+  $('actual').textContent=Math.round(sum).toLocaleString('de-DE');
+  $('target').textContent=Math.round(target).toLocaleString('de-DE');
+
+  $('count').textContent=
+    entries.length+' Schaufel'+
+    (entries.length===1?'':'n');
+
+  $('remaining').textContent=
+    'Rest '+
+    Math.max(0,target-sum).toLocaleString('de-DE')+
+    ' kg';
+
+  $('bar').style.width=
+    (target ? Math.min(100,(sum/target)*100) : 0)+'%';
+
+  var latest=entries.slice().reverse().slice(0,8);
+
+  if(!latest.length){
+    $('recent').innerHTML=
+      '<div class="muted" style="padding-top:10px">'+
+      'Noch keine Schaufel erfasst.'+
+      '</div>';
+  }else{
+
+    $('recent').innerHTML=latest.map(function(x){
+
+      var time=new Date(x.ts).toLocaleTimeString(
+        'de-DE',
+        {
+          hour:'2-digit',
+          minute:'2-digit'
+        }
+      );
+
+      return ''+
+      '<div class="entry row">'+
+        '<span>'+
+          time+
+          ' · '+
+          Number(x.weight).toLocaleString('de-DE')+
+          ' kg'+
+        '</span>'+
+        '<button class="btn danger small" data-del="'+x.id+'" style="padding:7px 9px">'+
+          'Löschen'+
+        '</button>'+
+      '</div>';
+
+    }).join('');
+  }
+}
+
+function renderToday(){
+
+  var today=logs.filter(function(x){
+    return x.date===dateKey();
+  });
+
+  var groups={};
+
+  today.forEach(function(x){
+
+    var key=
+      'F'+x.fer+
+      ' · '+
+      x.round+
+      ' · '+
+      x.substrate;
+
+    if(!groups[key]) groups[key]=0;
+
+    groups[key]+=Number(x.weight);
+  });
+
+  var keys=Object.keys(groups);
+
+  if(!keys.length){
+    $('todaySummary').innerHTML=
+      '<span class="muted">Heute noch keine Fütterung.</span>';
+    return;
+  }
+
+  $('todaySummary').innerHTML=keys.map(function(k){
+
+    return ''+
+    '<div class="entry row">'+
+      '<span>'+k+'</span>'+
+      '<b>'+groups[k].toLocaleString('de-DE')+' kg</b>'+
+    '</div>';
+
+  }).join('');
+}
+
+function renderHistory(){
+
+  if(!logs.length){
+    $('historyList').innerHTML=
+      '<span class="muted">Noch keine Einträge.</span>';
+    return;
+  }
+
+  $('historyList').innerHTML=
+    logs.slice()
+    .reverse()
+    .slice(0,100)
+    .map(function(x){
+
+      return ''+
+      '<div class="entry">'+
+        '<b>'+
+          x.substrate+
+          ': '+
+          Number(x.weight).toLocaleString('de-DE')+
+          ' kg'+
+        '</b>'+
+        '<div class="muted small">'+
+          new Date(x.ts).toLocaleString('de-DE')+
+          ' · '+
+          x.kw+
+          ' kW · Fermenter '+
+          x.fer+
+          ' · '+
+          x.round+
+        '</div>'+
+      '</div>';
+
+    }).join('');
+}
+
+function renderPlan(){
+
+  var k=$('planEditKw').value;
+  var f=$('planEditFer').value;
+
+  $('planRows').innerHTML=subs.map(function(s,i){
+
+    var p=plans[k][f][s] || {
+      Morgen:0,
+      Abend:0
+    };
+
+    return ''+
+    '<div class="planline">'+
+      '<b>'+s+'</b>'+
+      '<input type="number" data-p="'+i+'" data-r="Morgen" value="'+(p.Morgen||0)+'">'+
+      '<input type="number" data-p="'+i+'" data-r="Abend" value="'+(p.Abend||0)+'">'+
+    '</div>';
+
+  }).join('');
+}
+
+function show(page){
+
+  document.querySelectorAll('.screen').forEach(function(s){
+    s.classList.toggle('active',s.id===page);
+  });
+
+  document.querySelectorAll('.nav button').forEach(function(b){
+    b.classList.toggle('active',b.dataset.page===page);
+  });
+
+  if(page==='today'){
+    renderToday();
+  }
+
+  if(page==='history'){
+    renderHistory();
+  }
+
+  if(page==='plans'){
+    renderPlan();
+  }
+}
+
+ensurePlans();
+fillSelects();
+
+$('morningTime').value=settings.morning;
+$('eveningTime').value=settings.evening;
+
+document.querySelectorAll('.nav button').forEach(function(b){
+
+  b.onclick=function(){
+    show(b.dataset.page);
+  };
+
+});
+
+document.querySelectorAll('[data-fer]').forEach(function(b){
+
+  b.onclick=function(){
+
+    fer=Number(b.dataset.fer);
+
+    document.querySelectorAll('[data-fer]').forEach(function(x){
+      x.classList.toggle('active',x===b);
+    });
+
+    renderFeed();
+  };
+
+});
+
+document.querySelectorAll('[data-round]').forEach(function(b){
+
+  b.onclick=function(){
+
+    round=b.dataset.round;
+
+    document.querySelectorAll('[data-round]').forEach(function(x){
+      x.classList.toggle('active',x===b);
+    });
+
+    renderFeed();
+  };
+
+});
+
+$('addBtn').onclick=function(){
+
+  var w=parseFloat(
+    String($('weight').value).replace(',','.')
+  );
+
+  if(!(w>0)){
+    alert('Bitte ein Schaufelgewicht eingeben.');
+    return;
+  }
+
+  logs.push({
+    id:String(Date.now())+Math.random(),
+    ts:new Date().toISOString(),
+    date:dateKey(),
+    kw:Number($('kwSelect').value),
+    fer:fer,
+    round:round,
+    substrate:$('substrate').value,
+    weight:w
+  });
+
+  store.set('bs_logs',logs);
+
+  $('weight').value='';
+
+  $('saved').style.display='block';
+
+  setTimeout(function(){
+    $('saved').style.display='none';
+  },1000);
+
+  renderFeed();
+};
+
+$('recent').onclick=function(e){
+
+  var id=e.target.getAttribute('data-del');
+
+  if(!id) return;
+
+  if(!confirm('Diese Schaufel wirklich löschen?')){
+    return;
+  }
+
+  logs=logs.filter(function(x){
+    return String(x.id)!==String(id);
+  });
+
+  store.set('bs_logs',logs);
+
+  renderFeed();
+};
+
+$('kwSelect').onchange=renderFeed;
+$('substrate').onchange=renderFeed;
+$('planEditKw').onchange=renderPlan;
+$('planEditFer').onchange=renderPlan;
+
+$('savePlan').onclick=function(){
+
+  var k=$('planEditKw').value;
+  var f=$('planEditFer').value;
+
+  document
+    .querySelectorAll('#planRows input')
+    .forEach(function(inp){
+
+      var s=subs[Number(inp.dataset.p)];
+      var r=inp.dataset.r;
+
+      plans[k][f][s][r]=Number(inp.value)||0;
+
+    });
+
+  store.set('bs_plans',plans);
+
+  alert('Fütterungsplan gespeichert.');
+
+  renderFeed();
+};
+
+$('saveSettings').onclick=function(){
+
+  settings={
+    morning:$('morningTime').value,
+    evening:$('eveningTime').value
+  };
+
+  store.set('bs_settings',settings);
+
+  alert('Fütterungszeiten gespeichert.');
+};
+
+$('addSubstrate').onclick=function(){
+
+  var s=$('newSubstrate').value.trim();
+
+  if(!s){
+    return;
+  }
+
+  if(subs.indexOf(s)!==-1){
+    alert('Dieses Substrat gibt es bereits.');
+    return;
+  }
+
+  subs.push(s);
+
+  store.set('bs_subs',subs);
+
+  $('newSubstrate').value='';
+
+  ensurePlans();
+  fillSelects();
+  renderPlan();
+  renderFeed();
+};
+
+renderFeed();
+
+})();
+</script>
+
+</body>
+</html>
