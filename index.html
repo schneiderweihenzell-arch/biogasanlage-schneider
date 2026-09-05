@@ -9,663 +9,1419 @@
 :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17362a;background:#f3f6f4}
 *{box-sizing:border-box}
 body{margin:0}
-.app{max-width:720px;margin:auto;min-height:100vh;background:#f7faf8;padding-bottom:82px}
+.app{max-width:760px;margin:auto;min-height:100vh;background:#f7faf8;padding-bottom:84px}
 .top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #dde7e1;padding:14px 16px}
 .brand{font-weight:800;font-size:20px}
 .sub{font-size:12px;color:#658073}
-.screen{display:none;padding:16px}
+.screen{display:none;padding:14px}
 .screen.active{display:block}
 .card{background:#fff;border:1px solid #dce7e1;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #163b2712}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .btn{border:0;border-radius:14px;padding:14px 16px;font-weight:750;font-size:16px}
-.btn.primary{background:#1e7a4a;color:white}
+.btn.primary{background:#1e7a4a;color:#fff}
 .btn.soft{background:#e9f4ed;color:#1e6d45}
 .btn.danger{background:#fff1ef;color:#a4382e}
 .btn.active{outline:3px solid #8cc9a7}
 label{display:block;font-size:13px;color:#5b7267;margin:10px 0 6px}
-input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px;background:white;font-size:17px}
-.big{font-size:32px;font-weight:800}
+input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px;background:#fff;font-size:17px}
+.big{font-size:30px;font-weight:800}
+.xl{font-size:38px;font-weight:850}
 .muted{color:#6a8075}
 .row{display:flex;gap:10px;align-items:center;justify-content:space-between}
 .progress{height:12px;background:#e8efeb;border-radius:99px;overflow:hidden}
 .progress i{display:block;height:100%;background:#2b8b58}
 .entry{padding:12px 0;border-bottom:1px solid #edf2ef}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dfe8e3;display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:9}
-.navin{width:min(720px,100%);display:grid;grid-template-columns:repeat(5,1fr)}
-.nav button{border:0;background:#fff;padding:10px 2px;font-size:11px;color:#60766b}
-.nav button b{display:block;font-size:19px;margin-bottom:2px}
+.navin{width:min(760px,100%);display:grid;grid-template-columns:repeat(6,1fr)}
+.nav button{border:0;background:#fff;padding:9px 1px;font-size:10px;color:#60766b}
+.nav button b{display:block;font-size:18px;margin-bottom:2px}
 .nav button.active{color:#1f7a4c;font-weight:800}
 .pill{display:inline-block;background:#e8f4ed;border-radius:99px;padding:6px 10px;font-weight:700;font-size:13px}
-.planline{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;align-items:center;margin:8px 0}
-.planline input{padding:10px;font-size:15px}
 .small{font-size:12px}
 .success{background:#e7f5ec;padding:10px 12px;border-radius:12px;margin-top:10px;display:none}
+.kpi{padding:12px;border:1px solid #e3ece7;border-radius:15px;background:#fbfdfc}
+.kpi .n{font-size:25px;font-weight:850}
+.trend{font-size:42px;font-weight:900;line-height:1}
+.trend.flat{color:#111}
+.trend.up,.trend.down{color:#e38b25}
+.trend.strong{font-size:48px}
+.planRow{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:8px;align-items:center;margin:8px 0}
+.planRow input{padding:9px;font-size:14px}
+.fillitem{border:1px solid #dfe9e3;border-radius:15px;padding:12px;margin:10px 0}
+.fillitem.done{background:#e7f5ec}
+.tag{font-size:11px;font-weight:800;padding:4px 7px;border-radius:99px;background:#eef3f0}
+.sectiontitle{margin:0 0 10px}
+.summaryTabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.summaryTabs button{padding:10px;border:0;border-radius:12px;background:#eef3f0;font-weight:700}
+.summaryTabs button.active{background:#1e7a4a;color:#fff}
+.note{font-size:12px;color:#6a8075;line-height:1.4}
+.hero{background:linear-gradient(135deg,#f3fbf6,#fff)}
 </style>
 </head>
-
 <body>
 <div class="app">
 
 <header class="top">
-  <div class="brand">🌿 Biogasanlage Schneider</div>
-  <div class="sub">Fütterungserfassung</div>
+<div class="brand">🌿 Biogasanlage Schneider</div>
+<div class="sub">Fütterung · Dashboard · Fahrpläne</div>
 </header>
 
-<section id="feed" class="screen active">
+<section id="dashboard" class="screen active">
+<div class="card hero">
+<div class="row">
+<div>
+<div class="muted small">Heute</div>
+<div id="dashDate" class="big"></div>
+</div>
+<span id="dashPlan" class="pill">–</span>
+</div>
+</div>
 
-<div class="card">
-  <div class="row">
-    <div>
-      <div class="muted small">Leistungsplan</div>
-      <div id="planBadge" class="pill">500 kW</div>
-    </div>
-    <select id="kwSelect" style="width:145px"></select>
-  </div>
+<div class="grid2">
+<div class="card kpi">
+<div class="muted small">Gefüttert heute</div>
+<div id="dashToday" class="n">0,0 t</div>
+<div id="dashSchaufeln" class="small muted">0 Schaufeln</div>
+</div>
 
-  <div class="grid2" style="margin-top:12px">
-    <button class="btn soft active" data-fer="1">Fermenter 1</button>
-    <button class="btn soft" data-fer="2">Fermenter 2</button>
-  </div>
-
-  <div class="grid2" style="margin-top:10px">
-    <button class="btn soft active" data-round="Morgen">☀️ Morgen</button>
-    <button class="btn soft" data-round="Abend">🌙 Abend</button>
-  </div>
+<div class="card kpi">
+<div class="muted small">Fütterungsbasierte Gasprognose</div>
+<div id="dashGas" class="n">0 m³/h</div>
+<div class="note">inkl. Eintragsverzug & Umsetzung</div>
+</div>
 </div>
 
 <div class="card">
-  <label>Substrat</label>
-  <select id="substrate"></select>
+<div class="row">
+<div>
+<div class="muted small">Tendenz</div>
+<div id="trendLabel" class="big">gleichbleibend</div>
+</div>
+<div id="trendArrow" class="trend flat">→</div>
+</div>
+<div id="trendText" class="note">Noch nicht genügend Vergleichsdaten.</div>
+</div>
 
-  <label>Gewicht dieser Schaufel (kg)</label>
-  <input id="weight" type="number" inputmode="decimal" placeholder="z. B. 2140">
-
-  <button id="addBtn" class="btn primary" style="width:100%;margin-top:12px">
-    + Schaufel hinzufügen
-  </button>
-
-  <div id="saved" class="success">Schaufel gespeichert ✓</div>
+<div class="grid3">
+<div class="card kpi">
+<div class="muted small">Tag</div>
+<div id="kpiDay" class="n">0,0 t</div>
+</div>
+<div class="card kpi">
+<div class="muted small">Monat</div>
+<div id="kpiMonth" class="n">0,0 t</div>
+</div>
+<div class="card kpi">
+<div class="muted small">Jahr</div>
+<div id="kpiYear" class="n">0,0 t</div>
+</div>
 </div>
 
 <div class="card">
-  <div class="muted small">Aktueller Stand</div>
-  <div class="row">
-    <div><span id="actual" class="big">0</span> kg</div>
-    <div class="muted">Soll <b id="target">0</b> kg</div>
-  </div>
-
-  <div class="progress">
-    <i id="bar" style="width:0%"></i>
-  </div>
-
-  <div class="row small" style="margin-top:8px">
-    <span id="count">0 Schaufeln</span>
-    <b id="remaining">Rest 0 kg</b>
-  </div>
+<div class="row">
+<div>
+<b>Nächste / aktuelle Fütterung</b>
+<div id="dashRound" class="muted"></div>
 </div>
-
-<div class="card">
-  <b>Letzte Schaufeln</b>
-  <div id="recent"></div>
+<button class="btn primary" onclick="show('fill')">Füllen</button>
 </div>
-
+</div>
 </section>
 
-<section id="today" class="screen">
+<section id="fill" class="screen">
 <div class="card">
-  <h2 style="margin-top:0">Heute</h2>
-  <div id="todaySummary"></div>
+<div class="row">
+<div>
+<div class="muted small">Mitarbeiter-Modus</div>
+<h2 class="sectiontitle">Füllen</h2>
+<div id="fillPlanText" class="pill">–</div>
+</div>
+<button id="switchRound" class="btn soft">Runde wechseln</button>
+</div>
+<div class="note" style="margin-top:10px">
+Fahrplan wird automatisch nach Wochentag gewählt.
+</div>
+</div>
+<div id="fillList"></div>
+</section>
+
+<section id="feed" class="screen">
+<div class="card">
+<div class="row">
+<div>
+<div class="muted small">Leistungsplan</div>
+<div id="planBadge" class="pill">500 kW</div>
+</div>
+<select id="kwSelect" style="width:145px"></select>
+</div>
+
+<div class="grid2" style="margin-top:12px">
+<button class="btn soft active" data-fer="1">Fermenter 1</button>
+<button class="btn soft" data-fer="2">Fermenter 2</button>
+</div>
+
+<div class="grid2" style="margin-top:10px">
+<button class="btn soft active" data-round="Morgen">☀️ Morgen</button>
+<button class="btn soft" data-round="Abend">🌙 Abend</button>
+</div>
+</div>
+
+<div class="card">
+<label>Substrat</label>
+<select id="substrate"></select>
+
+<label>Gewicht dieser Schaufel (t)</label>
+<input id="weight" type="number" step="0.1" inputmode="decimal" placeholder="z. B. 2,1">
+
+<button id="addBtn" class="btn primary" style="width:100%;margin-top:12px">
++ Schaufel hinzufügen
+</button>
+
+<div id="saved" class="success">Schaufel gespeichert ✓</div>
+</div>
+
+<div class="card">
+<div class="muted small">Aktueller Stand</div>
+<div class="row">
+<div><span id="actual" class="big">0,0</span> t</div>
+<div class="muted">Soll <b id="target">0,0</b> t</div>
+</div>
+
+<div class="progress">
+<i id="bar" style="width:0%"></i>
+</div>
+
+<div class="row small" style="margin-top:8px">
+<span id="count">0 Schaufeln</span>
+<b id="remaining">Rest 0,0 t</b>
+</div>
+</div>
+
+<div class="card">
+<b>Letzte Schaufeln</b>
+<div id="recent"></div>
+</div>
+</section>t<section id="summary" class="screen">
+<div class="card">
+<h2 class="sectiontitle">Zusammenfassung</h2>
+<div class="summaryTabs">
+<button class="active" data-summary="day">Tag</button>
+<button data-summary="month">Monat</button>
+<button data-summary="year">Jahr</button>
+</div>
+<div id="summaryPeriod" class="muted"></div>
+<div id="summaryTotal" class="xl">0,0 t</div>
+<div class="muted">Gesamtfütterung</div>
+</div>
+
+<div class="grid2">
+<div class="card kpi">
+<div class="muted small">Fermenter 1</div>
+<div id="sumF1" class="n">0,0 t</div>
+</div>
+<div class="card kpi">
+<div class="muted small">Fermenter 2</div>
+<div id="sumF2" class="n">0,0 t</div>
+</div>
+</div>
+
+<div class="card">
+<b>Nach Substrat</b>
+<div id="summarySubs"></div>
+</div>
+
+<div class="card">
+<b>Bericht</b>
+<p class="note">
+Der Tagesbericht enthält Datum, Uhrzeit, Fermenter, Fütterungsrunde,
+Substrat, Einzelmenge und Fahrplan.
+</p>
+<button id="exportDay" class="btn primary" style="width:100%">
+Tagesbericht für Excel herunterladen
+</button>
 </div>
 </section>
 
 <section id="plans" class="screen">
 <div class="card">
-  <h2 style="margin-top:0">Fütterungspläne</h2>
+<h2 class="sectiontitle">Fahrpläne</h2>
 
-  <label>Leistungsstufe</label>
-  <select id="planEditKw"></select>
+<label>Leistungsstufe</label>
+<select id="planKw"></select>
 
-  <label>Fermenter</label>
-  <select id="planEditFer">
-    <option value="1">Fermenter 1</option>
-    <option value="2">Fermenter 2</option>
-  </select>
+<label>Fermenter</label>
+<select id="planFer">
+<option value="1">Fermenter 1</option>
+<option value="2">Fermenter 2</option>
+</select>
 
-  <div class="planline muted small">
-    <b>Substrat</b>
-    <b>Morgen kg</b>
-    <b>Abend kg</b>
-  </div>
+<div class="planRow">
+<b>Substrat</b>
+<b>Morgen t</b>
+<b>Abend t</b>
+</div>
 
-  <div id="planRows"></div>
+<div id="planRows"></div>
 
-  <button id="savePlan" class="btn primary" style="width:100%;margin-top:12px">
-    Plan speichern
-  </button>
+<button id="savePlan" class="btn primary" style="width:100%;margin-top:12px">
+Fahrplan speichern
+</button>
+<div id="planSaved" class="success">Fahrplan gespeichert ✓</div>
+</div>
+
+<div class="card">
+<h3 class="sectiontitle">Wochentage zuordnen</h3>
+<p class="note">
+Hier legst du fest, welcher Leistungsfahrplan an welchem Wochentag
+automatisch verwendet wird.
+</p>
+<div id="weekRows"></div>
+
+<button id="saveWeek" class="btn primary" style="width:100%;margin-top:12px">
+Wochenplan speichern
+</button>
+<div id="weekSaved" class="success">Wochenplan gespeichert ✓</div>
 </div>
 </section>
 
 <section id="history" class="screen">
 <div class="card">
-  <h2 style="margin-top:0">Historie</h2>
-  <div id="historyList"></div>
+<h2 class="sectiontitle">Historie</h2>
+<div id="historyList"></div>
 </div>
 </section>
 
-<section id="settings" class="screen">
-
+<section id="setup" class="screen">
 <div class="card">
-  <h2 style="margin-top:0">Einstellungen</h2>
+<h2 class="sectiontitle">Einstellungen</h2>
 
-  <label>Morgenfütterung ab</label>
-  <input id="morningTime" type="time">
+<label>Fütterungszeit morgens</label>
+<input id="morningTime" type="time">
 
-  <label>Abendfütterung ab</label>
-  <input id="eveningTime" type="time">
+<label>Fütterungszeit abends</label>
+<input id="eveningTime" type="time">
 
-  <button id="saveSettings" class="btn primary" style="width:100%;margin-top:12px">
-    Zeiten speichern
-  </button>
+<button id="saveTimes" class="btn primary" style="width:100%;margin-top:12px">
+Zeiten speichern
+</button>
 </div>
 
 <div class="card">
-  <b>Substrate</b>
+<h3 class="sectiontitle">Gasprognose</h3>
+<p class="note">
+Die Prognose ist ein Orientierungswert und kein Ersatz für den
+Gasdurchflussmesser der Anlage. Jede Fütterung wirkt zeitversetzt.
+Die Standardwerte können an das tatsächliche Verhalten der Anlage
+angepasst werden.
+</p>
 
-  <div id="substrateList" style="margin:10px 0"></div>
+<div id="gasRows"></div>
 
-  <div class="row">
-    <input id="newSubstrate" placeholder="Neues Substrat">
-    <button id="addSubstrate" class="btn soft">+</button>
-  </div>
+<button id="saveGas" class="btn primary" style="width:100%;margin-top:12px">
+Gasparameter speichern
+</button>
+<div id="gasSaved" class="success">Gasparameter gespeichert ✓</div>
 </div>
 
+<div class="card">
+<h3 class="sectiontitle">Substrate</h3>
+
+<div id="substrateList"></div>
+
+<label>Neues Substrat</label>
+<input id="newSubstrate" placeholder="z. B. Zuckerrüben">
+
+<button id="addSubstrate" class="btn soft" style="width:100%;margin-top:10px">
++ Substrat hinzufügen
+</button>
+</div>
 </section>
-
-</div>
 
 <nav class="nav">
 <div class="navin">
-  <button class="active" data-page="feed"><b>⚖️</b>Füttern</button>
-  <button data-page="today"><b>📊</b>Heute</button>
-  <button data-page="plans"><b>📋</b>Pläne</button>
-  <button data-page="history"><b>🕘</b>Historie</button>
-  <button data-page="settings"><b>⚙️</b>Setup</button>
+<button class="active" data-screen="dashboard"><b>⌂</b>Dashboard</button>
+<button data-screen="fill"><b>🚜</b>Füllen</button>
+<button data-screen="feed"><b>＋</b>Füttern</button>
+<button data-screen="summary"><b>Σ</b>Auswertung</button>
+<button data-screen="plans"><b>▦</b>Pläne</button>
+<button data-screen="setup"><b>⚙</b>Setup</button>
 </div>
 </nav>
 
+</div>
+
 <script>
-(function(){
+(()=>{
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
 
 const KWS=[500,600,700,800,900,1000,1100];
+const DAYS=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
 
 const defaultSubs=[
-  'Maissilage',
-  'Grassilage',
-  'GPS',
-  'Rindergülle'
+"Maissilage",
+"Grassilage",
+"GPS",
+"Rindergülle"
 ];
 
-const store={
-  get:function(k,d){
-    try{
-      var v=localStorage.getItem(k);
-      return v ? JSON.parse(v) : d;
-    }catch(e){
-      return d;
-    }
-  },
-  set:function(k,v){
-    localStorage.setItem(k,JSON.stringify(v));
-  }
+const defaultGas={
+"Maissilage":{
+yield:200,
+delay:2,
+peak:10
+},
+"Grassilage":{
+yield:180,
+delay:2.5,
+peak:14
+},
+"GPS":{
+yield:190,
+delay:2.5,
+peak:12
+},
+"Rindergülle":{
+yield:25,
+delay:1,
+peak:5
+}
 };
 
-var subs=store.get('bs_subs',defaultSubs);
-var logs=store.get('bs_logs',[]);
-var plans=store.get('bs_plans',{});
-var settings=store.get('bs_settings',{
-  morning:'06:00',
-  evening:'17:00'
+const load=(key,fallback)=>{
+try{
+const v=localStorage.getItem(key);
+return v ? JSON.parse(v) : fallback;
+}catch(e){
+return fallback;
+}
+};
+
+const save=(key,value)=>{
+localStorage.setItem(key,JSON.stringify(value));
+};
+
+let subs=load("bs_subs",defaultSubs);
+let logs=load("bs_logs",[]);
+let plans=load("bs_plans",{});
+let settings=load("bs_settings",{
+morning:"07:00",
+evening:"17:00"
 });
+let week=load("bs_week",{
+0:700,
+1:900,
+2:900,
+3:900,
+4:900,
+5:900,
+6:800
+});
+let gas=load("bs_gas",defaultGas);
 
-var fer=1;
-var round='Morgen';
+let state={
+kw:Number(week[new Date().getDay()]||900),
+fer:1,
+round:autoRound(),
+summary:"day"
+};
 
-function $(id){
-  return document.getElementById(id);
+function pad(n){
+return String(n).padStart(2,"0");
 }
 
-function ensurePlans(){
-  KWS.forEach(function(k){
-    if(!plans[k]) plans[k]={};
+function localDate(d=new Date()){
+return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
 
-    [1,2].forEach(function(f){
-      if(!plans[k][f]) plans[k][f]={};
+function formatDate(d=new Date()){
+return d.toLocaleDateString("de-DE",{
+weekday:"short",
+day:"2-digit",
+month:"2-digit",
+year:"numeric"
+});
+}
 
-      subs.forEach(function(s){
-        if(!plans[k][f][s]){
-          plans[k][f][s]={
-            Morgen:0,
-            Abend:0
-          };
-        }
-      });
-    });
-  });
+function formatTons(v){
+return `${Number(v||0).toLocaleString("de-DE",{
+minimumFractionDigits:1,
+maximumFractionDigits:1
+})} t`;
+}
 
-  store.set('bs_plans',plans);
+function formatNum(v,digits=0){
+return Number(v||0).toLocaleString("de-DE",{
+minimumFractionDigits:digits,
+maximumFractionDigits:digits
+});
+}
+
+function autoRound(){
+const now=new Date();
+const current=now.getHours()*60+now.getMinutes();
+
+const [mh,mm]=(settings?.morning||"07:00")
+.split(":").map(Number);
+
+const [eh,em]=(settings?.evening||"17:00")
+.split(":").map(Number);
+
+const morning=mh*60+mm;
+const evening=eh*60+em;
+
+return current < ((morning+evening)/2)
+? "Morgen"
+: "Abend";
+}
+
+function show(id){
+$$(".screen").forEach(x=>x.classList.remove("active"));
+$("#"+id).classList.add("active");
+
+$$(".nav button").forEach(x=>{
+x.classList.toggle("active",x.dataset.screen===id);
+});
+
+if(id==="dashboard") renderDashboard();
+if(id==="fill") renderFill();
+if(id==="feed") renderFeed();
+if(id==="summary") renderSummary();
+if(id==="plans") renderPlan();
+if(id==="setup") renderSetup();
+}
+
+window.show=show;
+
+$$(".nav button").forEach(btn=>{
+btn.onclick=()=>show(btn.dataset.screen);
+});
+
+function planKey(kw,fer,round,sub){
+return `${kw}|${fer}|${round}|${sub}`;
+}
+
+function getTarget(kw,fer,round,sub){
+return Number(plans[planKey(kw,fer,round,sub)]||0);
+}
+
+function logTons(log){
+if(log.tons!=null) return Number(log.tons)||0;
+if(log.kg!=null) return (Number(log.kg)||0)/1000;
+return 0;
+}
+
+function sameDay(ts,date=new Date()){
+const d=new Date(ts);
+return d.getFullYear()===date.getFullYear()
+&& d.getMonth()===date.getMonth()
+&& d.getDate()===date.getDate();
+}
+
+function logsForToday(){
+const now=new Date();
+return logs.filter(l=>sameDay(l.ts,now));
+}
+
+function sumLogs(arr){
+return arr.reduce((a,l)=>a+logTons(l),0);
+}
+
+function ensureGas(){
+subs.forEach(s=>{
+if(!gas[s]){
+gas[s]={
+yield:160,
+delay:2,
+peak:10
+};
+}
+});
+save("bs_gas",gas);
 }
 
 function fillSelects(){
+const opts=KWS.map(k=>`<option value="${k}">${k} kW</option>`).join("");
 
-  ['kwSelect','planEditKw'].forEach(function(id){
+$("#kwSelect").innerHTML=opts;
+$("#planKw").innerHTML=opts;
 
-    $(id).innerHTML=KWS.map(function(k){
-      return '<option value="'+k+'">'+k+' kW</option>';
-    }).join('');
+$("#substrate").innerHTML=subs
+.map(s=>`<option>${s}</option>`).join("");
 
-  });
-
-  $('substrate').innerHTML=subs.map(function(s){
-    return '<option>'+s+'</option>';
-  }).join('');
-
-  $('substrateList').innerHTML=subs.map(function(s){
-    return '<span class="pill" style="margin:3px">'+s+'</span>';
-  }).join('');
-}
-
-function dateKey(){
-  var d=new Date();
-
-  var y=d.getFullYear();
-  var m=String(d.getMonth()+1).padStart(2,'0');
-  var day=String(d.getDate()).padStart(2,'0');
-
-  return y+'-'+m+'-'+day;
-}
-
-function currentTarget(){
-
-  var k=$('kwSelect').value;
-  var s=$('substrate').value;
-
-  if(
-    plans[k] &&
-    plans[k][fer] &&
-    plans[k][fer][s] &&
-    plans[k][fer][s][round]
-  ){
-    return Number(plans[k][fer][s][round]);
-  }
-
-  return 0;
-}
-
-function relevant(){
-
-  var currentKw=$('kwSelect').value;
-  var currentSub=$('substrate').value;
-
-  return logs.filter(function(x){
-
-    return x.date===dateKey() &&
-           String(x.kw)===String(currentKw) &&
-           Number(x.fer)===Number(fer) &&
-           x.round===round &&
-           x.substrate===currentSub;
-
-  });
+$("#kwSelect").value=state.kw;
+$("#planKw").value=state.kw;
 }
 
 function renderFeed(){
-
-  $('planBadge').textContent=$('kwSelect').value+' kW';
-
-  var entries=relevant();
-
-  var sum=entries.reduce(function(total,x){
-    return total+Number(x.weight);
-  },0);
-
-  var target=currentTarget();
-
-  $('actual').textContent=Math.round(sum).toLocaleString('de-DE');
-  $('target').textContent=Math.round(target).toLocaleString('de-DE');
-
-  $('count').textContent=
-    entries.length+' Schaufel'+
-    (entries.length===1?'':'n');
-
-  $('remaining').textContent=
-    'Rest '+
-    Math.max(0,target-sum).toLocaleString('de-DE')+
-    ' kg';
-
-  $('bar').style.width=
-    (target ? Math.min(100,(sum/target)*100) : 0)+'%';
-
-  var latest=entries.slice().reverse().slice(0,8);
-
-  if(!latest.length){
-    $('recent').innerHTML=
-      '<div class="muted" style="padding-top:10px">'+
-      'Noch keine Schaufel erfasst.'+
-      '</div>';
-  }else{
-
-    $('recent').innerHTML=latest.map(function(x){
-
-      var time=new Date(x.ts).toLocaleTimeString(
-        'de-DE',
-        {
-          hour:'2-digit',
-          minute:'2-digit'
-        }
-      );
-
-      return ''+
-      '<div class="entry row">'+
-        '<span>'+
-          time+
-          ' · '+
-          Number(x.weight).toLocaleString('de-DE')+
-          ' kg'+
-        '</span>'+
-        '<button class="btn danger small" data-del="'+x.id+'" style="padding:7px 9px">'+
-          'Löschen'+
-        '</button>'+
-      '</div>';
-
-    }).join('');
-  }
-}
-
-function renderToday(){
-
-  var today=logs.filter(function(x){
-    return x.date===dateKey();
-  });
-
-  var groups={};
-
-  today.forEach(function(x){
-
-    var key=
-      'F'+x.fer+
-      ' · '+
-      x.round+
-      ' · '+
-      x.substrate;
-
-    if(!groups[key]) groups[key]=0;
-
-    groups[key]+=Number(x.weight);
-  });
-
-  var keys=Object.keys(groups);
-
-  if(!keys.length){
-    $('todaySummary').innerHTML=
-      '<span class="muted">Heute noch keine Fütterung.</span>';
-    return;
-  }
-
-  $('todaySummary').innerHTML=keys.map(function(k){
-
-    return ''+
-    '<div class="entry row">'+
-      '<span>'+k+'</span>'+
-      '<b>'+groups[k].toLocaleString('de-DE')+' kg</b>'+
-    '</div>';
-
-  }).join('');
-}
-
-function renderHistory(){
-
-  if(!logs.length){
-    $('historyList').innerHTML=
-      '<span class="muted">Noch keine Einträge.</span>';
-    return;
-  }
-
-  $('historyList').innerHTML=
-    logs.slice()
-    .reverse()
-    .slice(0,100)
-    .map(function(x){
-
-      return ''+
-      '<div class="entry">'+
-        '<b>'+
-          x.substrate+
-          ': '+
-          Number(x.weight).toLocaleString('de-DE')+
-          ' kg'+
-        '</b>'+
-        '<div class="muted small">'+
-          new Date(x.ts).toLocaleString('de-DE')+
-          ' · '+
-          x.kw+
-          ' kW · Fermenter '+
-          x.fer+
-          ' · '+
-          x.round+
-        '</div>'+
-      '</div>';
-
-    }).join('');
-}
-
-function renderPlan(){
-
-  var k=$('planEditKw').value;
-  var f=$('planEditFer').value;
-
-  $('planRows').innerHTML=subs.map(function(s,i){
-
-    var p=plans[k][f][s] || {
-      Morgen:0,
-      Abend:0
-    };
-
-    return ''+
-    '<div class="planline">'+
-      '<b>'+s+'</b>'+
-      '<input type="number" data-p="'+i+'" data-r="Morgen" value="'+(p.Morgen||0)+'">'+
-      '<input type="number" data-p="'+i+'" data-r="Abend" value="'+(p.Abend||0)+'">'+
-    '</div>';
-
-  }).join('');
-}
-
-function show(page){
-
-  document.querySelectorAll('.screen').forEach(function(s){
-    s.classList.toggle('active',s.id===page);
-  });
-
-  document.querySelectorAll('.nav button').forEach(function(b){
-    b.classList.toggle('active',b.dataset.page===page);
-  });
-
-  if(page==='today'){
-    renderToday();
-  }
-
-  if(page==='history'){
-    renderHistory();
-  }
-
-  if(page==='plans'){
-    renderPlan();
-  }
-}
-
-ensurePlans();
 fillSelects();
 
-$('morningTime').value=settings.morning;
-$('eveningTime').value=settings.evening;
+$("#kwSelect").value=state.kw;
+$("#planBadge").textContent=`${state.kw} kW`;
 
-document.querySelectorAll('.nav button').forEach(function(b){
-
-  b.onclick=function(){
-    show(b.dataset.page);
-  };
-
+$$("[data-fer]").forEach(b=>{
+b.classList.toggle("active",Number(b.dataset.fer)===state.fer);
 });
 
-document.querySelectorAll('[data-fer]').forEach(function(b){
-
-  b.onclick=function(){
-
-    fer=Number(b.dataset.fer);
-
-    document.querySelectorAll('[data-fer]').forEach(function(x){
-      x.classList.toggle('active',x===b);
-    });
-
-    renderFeed();
-  };
-
+$$("[data-round]").forEach(b=>{
+b.classList.toggle("active",b.dataset.round===state.round);
 });
 
-document.querySelectorAll('[data-round]').forEach(function(b){
+const sub=$("#substrate").value || subs[0];
+const today=localDate();
 
-  b.onclick=function(){
+const matching=logs.filter(l=>
+l.date===today &&
+Number(l.kw)===state.kw &&
+Number(l.fer)===state.fer &&
+l.round===state.round &&
+l.sub===sub
+);
 
-    round=b.dataset.round;
+const actual=sumLogs(matching);
+const target=getTarget(state.kw,state.fer,state.round,sub);
+const remaining=Math.max(0,target-actual);
+const pct=target>0 ? Math.min(100,(actual/target)*100) : 0;
 
-    document.querySelectorAll('[data-round]').forEach(function(x){
-      x.classList.toggle('active',x===b);
-    });
+$("#actual").textContent=formatNum(actual,1);
+$("#target").textContent=formatNum(target,1);
+$("#remaining").textContent=`Rest ${formatTons(remaining)}`;
+$("#count").textContent=`${matching.length} Schaufeln`;
+$("#bar").style.width=`${pct}%`;
 
-    renderFeed();
-  };
+const recent=matching.slice().reverse().slice(0,8);
 
+$("#recent").innerHTML=recent.length
+? recent.map(l=>`
+<div class="entry row">
+<div>
+<b>${formatTons(logTons(l))}</b>
+<div class="small muted">${new Date(l.ts).toLocaleTimeString("de-DE",{
+hour:"2-digit",
+minute:"2-digit"
+})}</div>
+</div>
+<button class="btn danger small" data-del="${l.id}">Löschen</button>
+</div>
+`).join("")
+: `<div class="muted" style="padding-top:10px">Noch keine Schaufel erfasst.</div>`;
+
+$$("[data-del]").forEach(b=>{
+b.onclick=()=>{
+logs=logs.filter(l=>String(l.id)!==String(b.dataset.del));
+save("bs_logs",logs);
+renderFeed();
+renderDashboard();
+};
+});
+}
+
+$$("[data-fer]").forEach(b=>{
+b.onclick=()=>{
+state.fer=Number(b.dataset.fer);
+renderFeed();
+};
 });
 
-$('addBtn').onclick=function(){
+$$("[data-round]").forEach(b=>{
+b.onclick=()=>{
+state.round=b.dataset.round;
+renderFeed();
+};
+});
 
-  var w=parseFloat(
-    String($('weight').value).replace(',','.')
-  );
-
-  if(!(w>0)){
-    alert('Bitte ein Schaufelgewicht eingeben.');
-    return;
-  }
-
-  logs.push({
-    id:String(Date.now())+Math.random(),
-    ts:new Date().toISOString(),
-    date:dateKey(),
-    kw:Number($('kwSelect').value),
-    fer:fer,
-    round:round,
-    substrate:$('substrate').value,
-    weight:w
-  });
-
-  store.set('bs_logs',logs);
-
-  $('weight').value='';
-
-  $('saved').style.display='block';
-
-  setTimeout(function(){
-    $('saved').style.display='none';
-  },1000);
-
-  renderFeed();
+$("#kwSelect").onchange=e=>{
+state.kw=Number(e.target.value);
+renderFeed();
 };
 
-$('recent').onclick=function(e){
+$("#substrate").onchange=renderFeed;
 
-  var id=e.target.getAttribute('data-del');
+$("#addBtn").onclick=()=>{
+const tons=Number(String($("#weight").value).replace(",","."));
 
-  if(!id) return;
+if(!tons || tons<=0){
+alert("Bitte ein gültiges Gewicht in Tonnen eingeben.");
+return;
+}
 
-  if(!confirm('Diese Schaufel wirklich löschen?')){
-    return;
-  }
+logs.push({
+id:Date.now(),
+ts:new Date().toISOString(),
+date:localDate(),
+kw:state.kw,
+fer:state.fer,
+round:state.round,
+sub:$("#substrate").value,
+tons
+});
 
-  logs=logs.filter(function(x){
-    return String(x.id)!==String(id);
-  });
+save("bs_logs",logs);
 
-  store.set('bs_logs',logs);
+$("#weight").value="";
+$("#saved").style.display="block";
 
-  renderFeed();
-};
-
-$('kwSelect').onchange=renderFeed;
-$('substrate').onchange=renderFeed;
-$('planEditKw').onchange=renderPlan;
-$('planEditFer').onchange=renderPlan;
-
-$('savePlan').onclick=function(){
-
-  var k=$('planEditKw').value;
-  var f=$('planEditFer').value;
-
-  document
-    .querySelectorAll('#planRows input')
-    .forEach(function(inp){
-
-      var s=subs[Number(inp.dataset.p)];
-      var r=inp.dataset.r;
-
-      plans[k][f][s][r]=Number(inp.value)||0;
-
-    });
-
-  store.set('bs_plans',plans);
-
-  alert('Fütterungsplan gespeichert.');
-
-  renderFeed();
-};
-
-$('saveSettings').onclick=function(){
-
-  settings={
-    morning:$('morningTime').value,
-    evening:$('eveningTime').value
-  };
-
-  store.set('bs_settings',settings);
-
-  alert('Fütterungszeiten gespeichert.');
-};
-
-$('addSubstrate').onclick=function(){
-
-  var s=$('newSubstrate').value.trim();
-
-  if(!s){
-    return;
-  }
-
-  if(subs.indexOf(s)!==-1){
-    alert('Dieses Substrat gibt es bereits.');
-    return;
-  }
-
-  subs.push(s);
-
-  store.set('bs_subs',subs);
-
-  $('newSubstrate').value='';
-
-  ensurePlans();
-  fillSelects();
-  renderPlan();
-  renderFeed();
-};
+setTimeout(()=>{
+$("#saved").style.display="none";
+},1300);
 
 renderFeed();
+renderDashboard();
+};function feedingShape(ageHours,cfg){
+const delay=Number(cfg.delay)||0;
+const peak=Math.max(1,Number(cfg.peak)||8);
+
+if(ageHours<=delay) return 0;
+
+const t=ageHours-delay;
+const scale=peak/3;
+
+const x=Math.max(0.0001,t/scale);
+
+/*
+Gamma-ähnliche Kurve:
+langsamer Anstieg, Maximum, danach Abklingen.
+Die Fläche wird anschließend zur stündlichen Gasmenge skaliert.
+*/
+return Math.pow(x,2)*Math.exp(-x);
+}
+
+function gasContributionAt(log,atDate){
+const cfg=gas[log.sub] || {yield:160,delay:2,peak:10};
+
+const fedAt=new Date(log.ts);
+const age=(atDate-fedAt)/3600000;
+
+if(age<=0) return 0;
+
+const potential=logTons(log)*(Number(cfg.yield)||0);
+
+if(potential<=0) return 0;
+
+/*
+Numerische Normierung der Freisetzungskurve.
+Damit bleibt die gesamte Gasmenge ungefähr beim hinterlegten m³/t-Wert.
+*/
+let norm=0;
+const maxHours=Math.max(48,(Number(cfg.delay)||0)+(Number(cfg.peak)||10)*8);
+
+for(let h=0;h<maxHours;h+=0.5){
+norm+=feedingShape(h,cfg)*0.5;
+}
+
+if(norm<=0) return 0;
+
+const rate=feedingShape(age,cfg)/norm;
+
+return potential*rate;
+}
+
+function gasRateAt(date){
+const horizonMs=96*3600000;
+const minTime=date.getTime()-horizonMs;
+
+return logs
+.filter(l=>new Date(l.ts).getTime()>=minTime)
+.reduce((sum,l)=>sum+gasContributionAt(l,date),0);
+}
+
+function renderGasTrend(){
+const now=new Date();
+const future=new Date(now.getTime()+3*3600000);
+
+const current=gasRateAt(now);
+const later=gasRateAt(future);
+
+$("#dashGas").textContent=`${formatNum(current,0)} m³/h`;
+
+let pct=0;
+
+if(current>5){
+pct=((later-current)/current)*100;
+}else if(later>5){
+pct=100;
+}
+
+const arrow=$("#trendArrow");
+const label=$("#trendLabel");
+
+arrow.className="trend";
+arrow.textContent="→";
+label.textContent="gleichbleibend";
+
+if(Math.abs(pct)<3){
+arrow.classList.add("flat");
+$("#trendText").textContent=
+`Prognose in 3 Stunden etwa ${formatNum(later,0)} m³/h.`;
+return;
+}
+
+if(pct>0){
+arrow.classList.add("up");
+
+if(pct>=12){
+arrow.textContent="↑";
+arrow.classList.add("strong");
+label.textContent="stark steigend";
+}else{
+arrow.textContent="↗";
+label.textContent="leicht steigend";
+}
+}else{
+arrow.classList.add("down");
+
+if(pct<=-12){
+arrow.textContent="↓";
+arrow.classList.add("strong");
+label.textContent="stark fallend";
+}else{
+arrow.textContent="↘";
+label.textContent="leicht fallend";
+}
+}
+
+$("#trendText").textContent=
+`Erwartete Veränderung in 3 Stunden: ${pct>0?"+":""}${formatNum(pct,1)} % · ca. ${formatNum(later,0)} m³/h.`;
+}
+
+function renderDashboard(){
+const now=new Date();
+const today=logsForToday();
+
+$("#dashDate").textContent=formatDate(now);
+
+const dayKw=Number(week[now.getDay()]||900);
+$("#dashPlan").textContent=`${DAYS[now.getDay()]} · ${dayKw} kW`;
+
+$("#dashToday").textContent=formatTons(sumLogs(today));
+$("#dashSchaufeln").textContent=`${today.length} Schaufeln`;
+
+const monthLogs=logs.filter(l=>{
+const d=new Date(l.ts);
+return d.getFullYear()===now.getFullYear()
+&& d.getMonth()===now.getMonth();
+});
+
+const yearLogs=logs.filter(l=>{
+const d=new Date(l.ts);
+return d.getFullYear()===now.getFullYear();
+});
+
+$("#kpiDay").textContent=formatTons(sumLogs(today));
+$("#kpiMonth").textContent=formatTons(sumLogs(monthLogs));
+$("#kpiYear").textContent=formatTons(sumLogs(yearLogs));
+
+const r=autoRound();
+$("#dashRound").textContent=
+`${r} · ${dayKw} kW · ${settings[r==="Morgen"?"morning":"evening"]}`;
+
+renderGasTrend();
+}
+
+function getFillRows(){
+const kw=Number(week[new Date().getDay()]||900);
+const round=state.round;
+
+const rows=[];
+
+[1,2].forEach(fer=>{
+subs.forEach(sub=>{
+const target=getTarget(kw,fer,round,sub);
+
+if(target>0){
+const actual=sumLogs(
+logs.filter(l=>
+l.date===localDate()
+&& Number(l.kw)===kw
+&& Number(l.fer)===fer
+&& l.round===round
+&& l.sub===sub
+)
+);
+
+rows.push({
+kw,
+fer,
+round,
+sub,
+target,
+actual,
+remaining:Math.max(0,target-actual)
+});
+}
+});
+});
+
+return rows;
+}
+
+function renderFill(){
+state.kw=Number(week[new Date().getDay()]||900);
+
+$("#fillPlanText").textContent=
+`${DAYS[new Date().getDay()]} · ${state.round} · ${state.kw} kW`;
+
+$("#switchRound").textContent=
+state.round==="Morgen" ? "Auf Abend wechseln" : "Auf Morgen wechseln";
+
+const rows=getFillRows();
+
+$("#fillList").innerHTML=rows.length
+? rows.map((r,i)=>`
+<div class="fillitem ${r.remaining<=0.01?"done":""}">
+<div class="row">
+<div>
+<span class="tag">Fermenter ${r.fer}</span>
+<h3 style="margin:7px 0 3px">${r.sub}</h3>
+</div>
+<div style="text-align:right">
+<div class="small muted">Rest</div>
+<div class="big">${formatTons(r.remaining)}</div>
+</div>
+</div>
+
+<div class="row small" style="margin:8px 0">
+<span>Soll <b>${formatTons(r.target)}</b></span>
+<span>Ist <b>${formatTons(r.actual)}</b></span>
+</div>
+
+${r.remaining>0.01 ? `
+<div class="grid2">
+<input
+type="number"
+step="0.1"
+inputmode="decimal"
+placeholder="Schaufel t"
+id="fillWeight${i}"
+>
+<button
+class="btn primary"
+data-fill="${i}"
+>
++ Schaufel
+</button>
+</div>
+` : `
+<div class="success" style="display:block">
+Sollmenge erreicht ✓
+</div>
+`}
+</div>
+`).join("")
+: `<div class="card muted">
+Für diesen Fahrplan sind noch keine Sollmengen hinterlegt.
+</div>`;
+
+$$("[data-fill]").forEach(btn=>{
+btn.onclick=()=>{
+const i=Number(btn.dataset.fill);
+const r=rows[i];
+const inp=$("#fillWeight"+i);
+const tons=Number(String(inp.value).replace(",","."));
+
+if(!tons || tons<=0){
+alert("Bitte Schaufelgewicht in Tonnen eingeben.");
+return;
+}
+
+logs.push({
+id:Date.now(),
+ts:new Date().toISOString(),
+date:localDate(),
+kw:r.kw,
+fer:r.fer,
+round:r.round,
+sub:r.sub,
+tons
+});
+
+save("bs_logs",logs);
+
+renderFill();
+renderDashboard();
+};
+});
+}
+
+$("#switchRound").onclick=()=>{
+state.round=state.round==="Morgen" ? "Abend" : "Morgen";
+renderFill();
+};
+
+function rangeLogs(mode){
+const now=new Date();
+
+if(mode==="day"){
+return logs.filter(l=>sameDay(l.ts,now));
+}
+
+if(mode==="month"){
+return logs.filter(l=>{
+const d=new Date(l.ts);
+return d.getFullYear()===now.getFullYear()
+&& d.getMonth()===now.getMonth();
+});
+}
+
+return logs.filter(l=>{
+const d=new Date(l.ts);
+return d.getFullYear()===now.getFullYear();
+});
+}
+
+function renderSummary(){
+const arr=rangeLogs(state.summary);
+const now=new Date();
+
+$$("[data-summary]").forEach(b=>{
+b.classList.toggle("active",b.dataset.summary===state.summary);
+});
+
+let period="";
+
+if(state.summary==="day"){
+period=now.toLocaleDateString("de-DE",{
+weekday:"long",
+day:"2-digit",
+month:"long",
+year:"numeric"
+});
+}
+
+if(state.summary==="month"){
+period=now.toLocaleDateString("de-DE",{
+month:"long",
+year:"numeric"
+});
+}
+
+if(state.summary==="year"){
+period=String(now.getFullYear());
+}
+
+$("#summaryPeriod").textContent=period;
+$("#summaryTotal").textContent=formatTons(sumLogs(arr));
+
+$("#sumF1").textContent=formatTons(
+sumLogs(arr.filter(l=>Number(l.fer)===1))
+);
+
+$("#sumF2").textContent=formatTons(
+sumLogs(arr.filter(l=>Number(l.fer)===2))
+);
+
+$("#summarySubs").innerHTML=subs.map(sub=>{
+const total=sumLogs(arr.filter(l=>l.sub===sub));
+
+return `
+<div class="entry row">
+<span>${sub}</span>
+<b>${formatTons(total)}</b>
+</div>
+`;
+}).join("");
+}
+
+$$("[data-summary]").forEach(btn=>{
+btn.onclick=()=>{
+state.summary=btn.dataset.summary;
+renderSummary();
+};
+});
+
+function csvEscape(v){
+const s=String(v??"");
+return `"${s.replaceAll('"','""')}"`;
+}
+
+$("#exportDay").onclick=()=>{
+const arr=logs
+.filter(l=>l.date===localDate())
+.sort((a,b)=>new Date(a.ts)-new Date(b.ts));
+
+const rows=[
+[
+"Datum",
+"Uhrzeit",
+"Fermenter",
+"Fütterung",
+"Substrat",
+"Menge t",
+"Fahrplan kW"
+]
+];
+
+arr.forEach(l=>{
+const d=new Date(l.ts);
+
+rows.push([
+l.date,
+d.toLocaleTimeString("de-DE",{
+hour:"2-digit",
+minute:"2-digit"
+}),
+`Fermenter ${l.fer}`,
+l.round,
+l.sub,
+formatNum(logTons(l),1),
+l.kw
+]);
+});
+
+const csv="\uFEFF"+rows
+.map(r=>r.map(csvEscape).join(";"))
+.join("\r\n");
+
+const blob=new Blob([csv],{
+type:"text/csv;charset=utf-8"
+});
+
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+
+a.href=url;
+a.download=`Biogasanlage-Schneider-Tagesbericht-${localDate()}.csv`;
+
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+setTimeout(()=>URL.revokeObjectURL(url),1000);
+};tfunction renderPlan(){
+fillSelects();
+
+$("#planKw").value=state.kw;
+
+const kw=Number($("#planKw").value);
+const fer=Number($("#planFer").value);
+
+$("#planRows").innerHTML=subs.map((sub,i)=>`
+<div class="planRow">
+<b>${sub}</b>
+
+<input
+type="number"
+step="0.1"
+inputmode="decimal"
+data-plan-sub="${i}"
+data-plan-round="Morgen"
+value="${getTarget(kw,fer,"Morgen",sub)}"
+>
+
+<input
+type="number"
+step="0.1"
+inputmode="decimal"
+data-plan-sub="${i}"
+data-plan-round="Abend"
+value="${getTarget(kw,fer,"Abend",sub)}"
+>
+</div>
+`).join("");
+
+$("#weekRows").innerHTML=DAYS.map((day,i)=>`
+<div class="row entry">
+<b>${day}</b>
+
+<select
+data-weekday="${i}"
+style="width:145px"
+>
+${KWS.map(k=>`
+<option
+value="${k}"
+${Number(week[i])===k ? "selected" : ""}
+>
+${k} kW
+</option>
+`).join("")}
+</select>
+</div>
+`).join("");
+}
+
+$("#planKw").onchange=()=>{
+state.kw=Number($("#planKw").value);
+renderPlan();
+};
+
+$("#planFer").onchange=renderPlan;
+
+$("#savePlan").onclick=()=>{
+const kw=Number($("#planKw").value);
+const fer=Number($("#planFer").value);
+
+$$("[data-plan-sub]").forEach(inp=>{
+const sub=subs[Number(inp.dataset.planSub)];
+const round=inp.dataset.planRound;
+
+const value=Number(
+String(inp.value).replace(",",".")
+)||0;
+
+plans[planKey(
+kw,
+fer,
+round,
+sub
+)]=value;
+});
+
+save("bs_plans",plans);
+
+$("#planSaved").style.display="block";
+
+setTimeout(()=>{
+$("#planSaved").style.display="none";
+},1300);
+
+renderDashboard();
+};
+
+$("#saveWeek").onclick=()=>{
+$$("[data-weekday]").forEach(sel=>{
+week[sel.dataset.weekday]=Number(sel.value);
+});
+
+save("bs_week",week);
+
+state.kw=Number(
+week[new Date().getDay()]||900
+);
+
+$("#weekSaved").style.display="block";
+
+setTimeout(()=>{
+$("#weekSaved").style.display="none";
+},1300);
+
+renderDashboard();
+renderFill();
+};
+
+function renderSetup(){
+ensureGas();
+
+$("#morningTime").value=settings.morning||"07:00";
+$("#eveningTime").value=settings.evening||"17:00";
+
+$("#gasRows").innerHTML=`
+<div
+class="planRow"
+style="grid-template-columns:1.3fr .7fr .7fr .7fr"
+>
+<b>Substrat</b>
+<b>m³/t</b>
+<b>Verzug h</b>
+<b>Peak h</b>
+</div>
+
+${subs.map((sub,i)=>{
+const g=gas[sub] || {
+yield:160,
+delay:2,
+peak:10
+};
+
+return `
+<div
+class="planRow"
+style="grid-template-columns:1.3fr .7fr .7fr .7fr"
+>
+<b>${sub}</b>
+
+<input
+type="number"
+step="1"
+data-gas-yield="${i}"
+value="${Number(g.yield)||0}"
+>
+
+<input
+type="number"
+step="0.5"
+data-gas-delay="${i}"
+value="${Number(g.delay)||0}"
+>
+
+<input
+type="number"
+step="0.5"
+data-gas-peak="${i}"
+value="${Number(g.peak)||10}"
+>
+</div>
+`;
+}).join("")}
+`;
+
+$("#substrateList").innerHTML=subs.map(sub=>`
+<div class="entry row">
+<span>${sub}</span>
+<span class="tag">aktiv</span>
+</div>
+`).join("");
+}
+
+$("#saveTimes").onclick=()=>{
+settings.morning=$("#morningTime").value||"07:00";
+settings.evening=$("#eveningTime").value||"17:00";
+
+save("bs_settings",settings);
+
+state.round=autoRound();
+
+alert("Fütterungszeiten gespeichert.");
+
+renderDashboard();
+renderFill();
+};
+
+$("#saveGas").onclick=()=>{
+$$("[data-gas-yield]").forEach(inp=>{
+const i=Number(inp.dataset.gasYield);
+const sub=subs[i];
+
+if(!gas[sub]){
+gas[sub]={
+yield:160,
+delay:2,
+peak:10
+};
+}
+
+gas[sub].yield=
+Number(String(inp.value).replace(",","."))||0;
+});
+
+$$("[data-gas-delay]").forEach(inp=>{
+const i=Number(inp.dataset.gasDelay);
+const sub=subs[i];
+
+if(!gas[sub]){
+gas[sub]={
+yield:160,
+delay:2,
+peak:10
+};
+}
+
+gas[sub].delay=
+Number(String(inp.value).replace(",","."))||0;
+});
+
+$$("[data-gas-peak]").forEach(inp=>{
+const i=Number(inp.dataset.gasPeak);
+const sub=subs[i];
+
+if(!gas[sub]){
+gas[sub]={
+yield:160,
+delay:2,
+peak:10
+};
+}
+
+gas[sub].peak=
+Number(String(inp.value).replace(",","."))||10;
+});
+
+save("bs_gas",gas);
+
+$("#gasSaved").style.display="block";
+
+setTimeout(()=>{
+$("#gasSaved").style.display="none";
+},1300);
+
+renderDashboard();
+};
+
+$("#addSubstrate").onclick=()=>{
+const name=$("#newSubstrate").value.trim();
+
+if(!name){
+return;
+}
+
+if(subs.includes(name)){
+alert("Dieses Substrat ist bereits vorhanden.");
+return;
+}
+
+subs.push(name);
+
+gas[name]={
+yield:160,
+delay:2,
+peak:10
+};
+
+save("bs_subs",subs);
+save("bs_gas",gas);
+
+$("#newSubstrate").value="";
+
+fillSelects();
+renderSetup();
+renderPlan();
+renderFeed();
+};
+
+function renderHistory(){
+const arr=[...logs]
+.sort((a,b)=>new Date(b.ts)-new Date(a.ts))
+.slice(0,100);
+
+$("#historyList").innerHTML=arr.length
+? arr.map(l=>`
+<div class="entry">
+<div class="row">
+<b>${l.sub}</b>
+<b>${formatTons(logTons(l))}</b>
+</div>
+
+<div class="small muted">
+${new Date(l.ts).toLocaleString("de-DE",{
+day:"2-digit",
+month:"2-digit",
+year:"numeric",
+hour:"2-digit",
+minute:"2-digit"
+})}
+· Fermenter ${l.fer}
+· ${l.round}
+· ${l.kw} kW
+</div>
+</div>
+`).join("")
+: `<div class="muted">
+Noch keine Fütterungen vorhanden.
+</div>`;
+}
+
+/* Start der App */
+
+ensureGas();
+fillSelects();
+
+state.kw=Number(
+week[new Date().getDay()]||900
+);
+
+state.round=autoRound();
+
+$("#kwSelect").value=state.kw;
+$("#planKw").value=state.kw;
+
+renderFeed();
+renderDashboard();
+renderFill();
+renderSummary();
+renderPlan();
+renderSetup();
+renderHistory();
 
 })();
 </script>
