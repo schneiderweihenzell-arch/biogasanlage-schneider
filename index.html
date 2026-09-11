@@ -59,6 +59,12 @@ input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px
 .summaryTabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .summaryTabs button{padding:10px;border:0;border-radius:12px;background:#eef3f0;font-weight:700}
 .summaryTabs button.active{background:#1e7a4a;color:#fff}
+.exportDialog{width:min(560px,calc(100% - 24px));border:0;border-radius:18px;padding:0;box-shadow:0 18px 60px #173b2b55}
+.exportDialog::backdrop{background:#10271d99}
+.exportDialog .dialogBody{padding:20px}
+.exportDialog .checkRow{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #e5ece8}
+.exportDialog .checkRow input{width:22px;height:22px;flex:0 0 auto}
+.exportDialog .dialogActions{display:grid;grid-template-columns:1fr 1.5fr;gap:10px;margin-top:18px}
 .note{font-size:12px;color:#6a8075;line-height:1.4}
 .hero{background:linear-gradient(135deg,#f3fbf6,#fff)}
 .chartWrap{height:260px;position:relative;margin-top:12px}
@@ -263,15 +269,36 @@ Fahrplan wird automatisch nach Wochentag gewählt.
 <div class="card">
 <b>Bericht</b>
 <p class="note">
-Der Tagesbericht enthält Datum, Uhrzeit, Fermenter, Fütterungsrunde,
-Substrat, Einzelmenge und Fahrplan.
+Zeitraum und enthaltene Daten können vor dem Download ausgewählt werden.
+Die aktuelle Tages-, Monats- oder Jahresauswertung wird automatisch übernommen.
 </p>
-<button id="exportDay" class="btn primary" style="width:100%">
-Tagesbericht für Excel herunterladen
-</button>
-<button id="exportMonth" class="btn soft" style="width:100%;margin-top:10px">Monatsbericht Einsatzstofftagebuch herunterladen</button>
+<button id="openExport" class="btn primary" style="width:100%">Datenexport auswählen</button>
+<button id="exportDay" hidden></button><button id="exportMonth" hidden></button>
 </div>
 </section>
+
+<dialog id="exportDialog" class="exportDialog">
+<div class="dialogBody">
+<h2 class="sectiontitle">Datenexport</h2>
+<label>Zeitraum</label>
+<select id="exportPeriod">
+<option value="day">Tag</option><option value="month">Monat</option>
+<option value="year">Jahr</option><option value="custom">Freier Zeitraum</option>
+</select>
+<div class="grid2">
+<div><label>Von</label><input id="exportFrom" type="date"></div>
+<div><label>Bis einschließlich</label><input id="exportTo" type="date"></div>
+</div>
+<b>Welche Daten sollen enthalten sein?</b>
+<label class="checkRow"><input id="exEntries" type="checkbox" checked><span><b>Einzelne Fütterungseinträge</b><br><span class="muted small">Uhrzeit, Fermenter, Runde, Substrat und Menge</span></span></label>
+<label class="checkRow"><input id="exTotals" type="checkbox" checked><span><b>Zusammenfassungen</b><br><span class="muted small">Substrat, Fermenter und Fütterungsrunde</span></span></label>
+<label class="checkRow"><input id="exParams" type="checkbox"><span><b>Parameter-Snapshots</b><br><span class="muted small">TS, oTS, Ertrag, Verzögerung, Peak und Wirkungsgrad</span></span></label>
+<label class="checkRow"><input id="exEnergy" type="checkbox" checked><span><b>Gas- und Stromertrag</b><br><span class="muted small">Modellierte Gesamt- und Durchschnittswerte</span></span></label>
+<label class="checkRow"><input id="exHourly" type="checkbox"><span><b>Stündliche Modellwerte</b><br><span class="muted small">Gasprognose m³/h und elektrische Leistung kW</span></span></label>
+<label class="checkRow"><input id="exDiary" type="checkbox"><span><b>Einsatzstofftagebuch</b><br><span class="muted small">Tageszeilen wie im Monatsbericht; auch für freie Zeiträume</span></span></label>
+<div class="dialogActions"><button id="cancelExport" class="btn soft">Abbrechen</button><button id="runExport" class="btn primary">CSV herunterladen</button></div>
+</div>
+</dialog>
 
 <section id="plans" class="screen">
 <div class="card">
@@ -1250,6 +1277,53 @@ rows.push(["Gülle + Mist",formatNum(manure,1)],["Summe Nawaro",formatNum(nawaro
 const csv="\uFEFF"+rows.map(r=>r.map(csvEscape).join(";")).join("\r\n"),blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`Einsatzstofftagebuch-${year}-${pad(month+1)}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 $("#exportMonth").onclick=exportMonthlyReport;
+
+function isoLocal(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function exportBounds(mode){
+const now=new Date();let from,to;
+if(mode==="day"){from=new Date(now.getFullYear(),now.getMonth(),now.getDate());to=new Date(from);}
+else if(mode==="month"){from=new Date(now.getFullYear(),now.getMonth(),1);to=new Date(now.getFullYear(),now.getMonth()+1,0);}
+else if(mode==="year"){from=new Date(now.getFullYear(),0,1);to=new Date(now.getFullYear(),11,31);}
+else return null;
+return {from:isoLocal(from),to:isoLocal(to)};
+}
+function setExportBounds(mode){const b=exportBounds(mode);if(!b)return;$("#exportFrom").value=b.from;$("#exportTo").value=b.to;}
+function downloadCsv(rows,name){const csv="\uFEFF"+rows.map(r=>r.map(csvEscape).join(";")).join("\r\n"),blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function logsBetween(from,to){const end=new Date(to+"T23:59:59.999");const start=new Date(from+"T00:00:00");return logs.filter(l=>{const d=new Date(l.ts);return d>=start&&d<=end;}).sort((a,b)=>new Date(a.ts)-new Date(b.ts));}
+function modeledTotals(arr){return arr.reduce((o,l)=>{const p=snapshotFor(l),g=logTons(l)*(Number(p.yieldValue)||0),e=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);o.gas+=g;o.power+=e;return o;},{gas:0,power:0});}
+function pushTotals(rows,arr,label){
+rows.push([], [label]);
+rows.push(["Gesamtmenge t",formatNum(sumLogs(arr),1)]);
+subs.forEach(s=>rows.push(["Substrat",s,formatNum(sumLogs(arr.filter(l=>l.sub===s)),1),"t"]));
+[1,2].forEach(f=>rows.push(["Fermenter",`Fermenter ${f}`,formatNum(sumLogs(arr.filter(l=>Number(l.fer)===f)),1),"t"]));
+["Morgen","Abend"].forEach(x=>rows.push(["Fütterungsrunde",x,formatNum(sumLogs(arr.filter(l=>l.round===x)),1),"t"]));
+}
+function pushDiary(rows,arr,from,to,withEnergy){
+const start=new Date(from+"T00:00:00"),end=new Date(to+"T00:00:00");
+rows.push([], ["Einsatzstofftagebuch"],["Zeitraum",from,"bis",to],[],["Datum",...subs,"Gesamt t",...(withEnergy?["Gasproduktion m³","Stromertrag kWh"]:[])]);
+const totals=Object.fromEntries(subs.map(s=>[s,0]));let grand=0,totalGas=0,totalPower=0,days=0;
+for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){days++;const key=isoLocal(d),dayLogs=arr.filter(l=>isoLocal(new Date(l.ts))===key),vals=subs.map(s=>{const v=sumLogs(dayLogs.filter(l=>l.sub===s));totals[s]+=v;return formatNum(v,1);}),t=sumLogs(dayLogs),energy=modeledTotals(dayLogs);grand+=t;totalGas+=energy.gas;totalPower+=energy.power;rows.push([key,...vals,formatNum(t,1),...(withEnergy?[formatNum(energy.gas,0),formatNum(energy.power,0)]:[])]);}
+rows.push([], ["Summe",...subs.map(s=>formatNum(totals[s],1)),formatNum(grand,1),...(withEnergy?[formatNum(totalGas,0),formatNum(totalPower,0)]:[])]);
+const manure=subs.filter(s=>gas[s]?.category==="manure").reduce((n,s)=>n+(totals[s]||0),0),nawaro=subs.filter(s=>gas[s]?.category==="nawaro").reduce((n,s)=>n+(totals[s]||0),0),maize=["Maissilage","Getreidekorn","Feuchtmaisschrot"].reduce((n,s)=>n+(totals[s]||0),0),pct=grand?maize/grand*100:0;
+rows.push(["Gülle + Mist",formatNum(manure,1)],["Summe Nawaro",formatNum(nawaro,1)],["Maisdeckel",formatNum(pct,1)+" %",pct>40?"WARNUNG: über 40 %":"max. 40 %"],["Ø t/Tag",formatNum(grand/days,1)]);
+}
+function runSelectedExport(){
+const from=$("#exportFrom").value,to=$("#exportTo").value;if(!from||!to||from>to){alert("Bitte einen gültigen Zeitraum auswählen.");return;}
+const choices=["exEntries","exTotals","exParams","exEnergy","exHourly","exDiary"].some(id=>$("#"+id).checked);if(!choices){alert("Bitte mindestens einen Datenbereich auswählen.");return;}
+const arr=logsBetween(from,to),rows=[["Biogasanlage Schneider – Datenexport"],["Zeitraum",from,"bis",to],["Erstellt",new Date().toLocaleString("de-DE")],["Hinweis","Gas- und Stromwerte sind modelliert, nicht gemessen."]];
+if($("#exEntries").checked||$("#exParams").checked){const params=$("#exParams").checked;rows.push([], [params?"Fütterungseinträge mit Parameter-Snapshots":"Fütterungseinträge"],["Datum","Uhrzeit","Fermenter","Fütterungsrunde","Substrat","Menge t","Fahrplan kW",...(params?["TS %","oTS % der TS","Ertrag m³ Biogas/t FM","Verzug h","Peak h","Energie kWh/m³","Wirkungsgrad %"]:[])]);arr.forEach(l=>{const d=new Date(l.ts),p=snapshotFor(l);rows.push([isoLocal(d),d.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}),`Fermenter ${l.fer}`,l.round,l.sub,formatNum(logTons(l),1),l.kw,...(params?[formatNum(p.ts,1),formatNum(p.ots,1),formatNum(p.yieldValue,1),formatNum(p.delayHours,1),formatNum(p.peakHours,1),formatNum(p.energyKwhPerM3,2),formatNum((Number(p.electricEfficiency)||0)*100,1)]:[])]);});}
+if($("#exTotals").checked)pushTotals(rows,arr,"Zusammenfassung");
+const dayCount=Math.floor((new Date(to+"T00:00:00")-new Date(from+"T00:00:00"))/86400000)+1;
+if($("#exEnergy").checked){const m=modeledTotals(arr),hours=dayCount*24;rows.push([], ["Modellierte Energieauswertung"],["Biogas gesamt m³",formatNum(m.gas,0)],["Biogas durchschnittlich m³/h",formatNum(m.gas/hours,1)],["Stromertrag gesamt kWh",formatNum(m.power,0)],["Elektrische Leistung durchschnittlich kW",formatNum(m.power/hours,1)]);}
+if($("#exHourly").checked){rows.push([], ["Stündliche Modellwerte"],["Zeitpunkt","Gasprognose m³/h","Elektrische Leistung kW","Kennzeichnung"]);const start=new Date(from+"T00:00:00"),end=new Date(to+"T23:00:00");for(let d=new Date(start);d<=end;d=new Date(d.getTime()+3600000))rows.push([`${isoLocal(d)} ${d.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}`,formatNum(gasRateAt(d),1),formatNum(powerAt(d),1),"modelliert – nicht gemessen"]);}
+if($("#exDiary").checked)pushDiary(rows,arr,from,to,$("#exEnergy").checked);
+downloadCsv(rows,`Biogasanlage-Auswertung-${from}-bis-${to}.csv`);$("#exportDialog").close();
+}
+$("#openExport").onclick=()=>{const mode=state.summary;$("#exportPeriod").value=mode;setExportBounds(mode);const dlg=$("#exportDialog");if(dlg.showModal)dlg.showModal();else dlg.setAttribute("open","");};
+$("#exportPeriod").onchange=e=>{if(e.target.value!=="custom")setExportBounds(e.target.value);};
+$("#exportFrom").onchange=$("#exportTo").onchange=()=>{$("#exportPeriod").value="custom";};
+$("#cancelExport").onclick=()=>$("#exportDialog").close();
+$("#runExport").onclick=runSelectedExport;
 
 function renderPlan(){
 fillSelects();
