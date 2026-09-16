@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f7a4c">
 <meta name="description" content="Radlader-Testversion der Fütterungsapp für die Biogasanlage Schneider">
-<meta name="application-version" content="2.0-test">
+<meta name="application-version" content="4.0-test">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>Biogasanlage Schneider</title>
 <style>
 :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17362a;background:#f3f6f4}
 *{box-sizing:border-box}
-body{margin:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+body{margin:0;overflow-x:hidden}
 .app{max-width:760px;margin:auto;min-height:100vh;background:#f7faf8;padding-bottom:84px}
 .top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #dde7e1;padding:14px 16px}
 .brand{font-weight:800;font-size:20px}
@@ -76,7 +77,39 @@ input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px
 .warn{background:#fff7e8;border:1px solid #f1d59d;padding:10px 12px;border-radius:12px}
 .incomplete{background:#fff0f0;border:1px solid #efa6a6;border-radius:12px;padding:8px}
 .planCalc{font-size:13px;text-align:right;font-weight:750}
-@media(max-width:620px){.setupGrid{grid-template-columns:1.3fr 1fr}.setupGrid.header{display:none}.setupGrid b{grid-column:1/-1}.chartWrap{height:220px}}
+.powerKpi{background:linear-gradient(135deg,#eaf7ef,#fff);border-color:#a9d4ba}
+.powerCompare{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.powerCompare>div{background:#fff;border:1px solid #dce7e1;border-radius:12px;padding:9px;text-align:center}
+.powerCompare b{display:block;font-size:20px;margin-top:3px}
+.statusUp{color:#167545}.statusDown{color:#b45a20}.statusFlat{color:#36594a}
+.importStatus{padding:10px 12px;border-radius:12px;margin-top:10px;background:#eef3f0;display:none}
+@media(max-width:620px){
+.app{width:100%;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+.top{padding:10px 12px}.brand{font-size:18px}.screen{padding:10px}
+.card{padding:13px;border-radius:15px;margin-bottom:10px}
+input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px}
+.btn{min-height:48px;padding:12px;font-size:16px;touch-action:manipulation}
+.grid2{gap:8px}.grid3{gap:6px}.grid3 .card{padding:10px 7px}.grid3 .kpi .n{font-size:19px}
+.row{flex-wrap:wrap}.big{font-size:27px}.xl{font-size:32px}.kpi .n{font-size:23px}
+#fill .card:first-child .row{flex-wrap:nowrap}#kwSelect{width:125px!important;flex:0 0 125px}
+#weight{font-size:22px!important;font-weight:750;text-align:center}
+#addBtn{min-height:58px;font-size:18px}
+.chartWrap{height:205px}.note{font-size:13px}.small{font-size:13px}
+.navin{grid-template-columns:repeat(6,1fr)}.nav button{min-width:0;padding:7px 0 6px;font-size:9px}.nav button b{font-size:19px}
+#plans .planRow:first-of-type{display:none}
+#planRows .planRow{grid-template-columns:1fr 1fr!important;background:#f7faf8;border:1px solid #dce7e1;border-radius:13px;padding:10px;margin:10px 0}
+#planRows .planRow>b{grid-column:1/-1;font-size:17px}
+#planRows .planRow input{font-size:16px!important;min-width:0}
+#planRows .planCalc{text-align:left;background:#fff;border-radius:9px;padding:7px;font-size:12px}
+#planRows .planCalc:nth-of-type(1)::before{content:"Tag: ";color:#6a8075}
+#planRows .planCalc:nth-of-type(2)::before{content:"Biogas: ";color:#6a8075}
+#planRows .planCalc:nth-of-type(3)::before{content:"Strom: ";color:#6a8075}
+#setup .card{overflow-x:auto}.setupGrid{min-width:690px}.setupGrid.header{display:grid}
+.exportDialog{max-height:calc(100dvh - 20px);overflow:auto}.exportDialog .dialogBody{padding:15px}.exportDialog .dialogActions{position:sticky;bottom:0;background:#fff;padding-top:8px}
+.powerCompare{grid-template-columns:1fr 1fr}.powerCompare>div:last-child{grid-column:1/-1}
+}
+@media(max-width:380px){.brand{font-size:17px}.screen{padding:7px}.card{padding:11px}.nav button{font-size:8px}.nav button b{font-size:18px}.grid3 .muted{font-size:10px}}
+@media(max-height:500px) and (orientation:landscape){.top{position:static}.nav button{padding:4px 0}.nav button b{display:none}.app{padding-bottom:48px}.chartWrap{height:170px}}
 </style>
 </head>
 <body>
@@ -119,6 +152,17 @@ input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px
 <div id="dashGas" class="n">0 m³/h</div>
 <div class="note">inkl. Eintragsverzug & Umsetzung</div>
 </div>
+</div>
+
+<div class="card powerKpi">
+<b>Modellierte Leistung F1 + F2</b>
+<div class="powerCompare">
+<div><span class="muted small">Tagesplan</span><b id="dashPlanPower">0 kW</b></div>
+<div><span class="muted small">Aktueller Stand</span><b id="dashLivePower">0 kW</b></div>
+<div><span class="muted small">Abweichung</span><b id="dashPowerDiff" class="statusFlat">→ 0 kW</b></div>
+</div>
+<div id="dashEnough" class="note" style="margin-top:9px">Modellierte Fütterungsleistung – nicht gemessen</div>
+<div id="dashWeekPower" class="note" style="margin-top:5px">Wochenplan: 0 kWh · Ø 0 kW</div>
 </div>
 
 <div class="card">
@@ -229,6 +273,16 @@ Fahrplan wird automatisch nach Wochentag gewählt.
 </div>
 </div>
 
+<div class="card powerKpi">
+<b>Leistung nach aktuellem Fütterungsstand</b>
+<div class="powerCompare">
+<div><span class="muted small">Ziel F1 + F2</span><b id="fillPlanPower">0 kW</b></div>
+<div><span class="muted small">Prognose</span><b id="fillLivePower">0 kW</b></div>
+<div><span class="muted small">Differenz</span><b id="fillPowerDiff" class="statusFlat">→ 0 kW</b></div>
+</div>
+<div class="note" style="margin-top:9px">Laufende Runde nach Ist-Mengen, andere Runde nach Fahrplan · modelliert, nicht gemessen</div>
+</div>
+
 <div class="card">
 <b>Letzte Schaufeln</b>
 <div id="recent"></div>
@@ -335,6 +389,7 @@ Hier legst du fest, welcher Leistungsfahrplan an welchem Wochentag
 automatisch verwendet wird.
 </p>
 <div id="weekRows"></div>
+<div class="card kpi" style="margin-top:12px"><b>Wochenplan F1 + F2</b><div id="weekPlanTotals" class="note"></div></div>
 
 <button id="saveWeek" class="btn primary" style="width:100%;margin-top:12px">
 Wochenplan speichern
@@ -366,6 +421,9 @@ Wochenplan speichern
 <label>Automatisches Ende abends (Folgetag)</label>
 <input id="eveningEnd" type="time">
 
+<label>Automatischer Abschluss nach letzter Eingabe (Minuten)</label>
+<input id="autoCompleteMinutes" type="number" min="1" max="240" step="1" inputmode="numeric">
+
 <button id="saveTimes" class="btn primary" style="width:100%;margin-top:12px">
 Zeiten speichern
 </button>
@@ -382,7 +440,7 @@ angepasst werden.
 
 <label>Energiegehalt Biogas (kWh/m³)</label><input id="energyContent" type="number" step="0.1">
 <div id="bhkwRows"></div>
-<div class="kpi"><div class="muted small">Automatischer Durchschnittswirkungsgrad</div><div id="averageEfficiency" class="n">40,0 %</div></div>
+<div class="grid2"><div class="kpi"><div class="muted small">Gewichteter Wirkungsgrad</div><div id="averageEfficiency" class="n">40,0 %</div></div><div class="kpi"><div class="muted small">Aktive BHKW-Leistung</div><div id="activeBhkwPower" class="n">0 kW</div></div></div>
 <p class="warn note"><b>Ertragsbasis:</b> m³ Biogas je Tonne Frischmasse. TS und oTS werden dokumentiert und als Snapshot gespeichert, aber nicht nochmals in diesen Ertrag eingerechnet.</p>
 
 <div id="gasRows"></div>
@@ -405,6 +463,20 @@ Gasparameter speichern
 + Substrat hinzufügen
 </button>
 </div>
+
+<div class="card">
+<h3 class="sectiontitle">Datenübernahme und Sicherung</h3>
+<p class="note">Die Excelvorlage übernimmt Fahrpläne und Einstellungen. Vorhandene Fütterungseinträge bleiben erhalten. Der Import wird vor dem Speichern geprüft und muss bestätigt werden.</p>
+<label>Excel-Importvorlage auswählen</label>
+<input id="excelImport" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+<button id="importExcel" class="btn primary" style="width:100%;margin-top:10px">Excel prüfen und importieren</button>
+<div id="importStatus" class="importStatus"></div>
+<hr style="border:0;border-top:1px solid #e3ece7;margin:16px 0">
+<div class="grid2">
+<button id="backupSettings" class="btn soft">Einstellungen sichern</button>
+<label class="btn soft" style="margin:0;text-align:center;color:#1e6d45">Sicherung einlesen<input id="restoreSettings" type="file" accept=".json,application/json" hidden></label>
+</div>
+</div>
 </section>
 
 <nav class="nav">
@@ -420,13 +492,16 @@ Gasparameter speichern
 
 </div>
 
+<script src="jszip.min.js"></script>
+<script src="default-config.js"></script>
 <script>
 (()=>{
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 
-const KWS=[500,600,700,800,900,1000,1100];
+const KWS=Array.from({length:12},(_,i)=>(i+1)*100);
 const DAYS=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+const BUILT_IN=window.BIOGAS_DEFAULT_CONFIG||{};
 
 const defaultSubs=[
 "Maissilage",
@@ -436,7 +511,8 @@ const defaultSubs=[
 "Getreidekorn",
 "Feuchtmaisschrot",
 "Rindermist",
-"Entmischte Melasse"
+"Entmischte Melasse",
+"Sep. Gärrest"
 ];
 
 const defaultGas={
@@ -464,6 +540,8 @@ peak:5
 "Feuchtmaisschrot":{yield:420,ts:65,ots:97,delay:2,peak:11},
 "Rindermist":{yield:80,ts:25,ots:80,delay:3,peak:18},
 "Entmischte Melasse":{yield:300,ts:55,ots:90,delay:1,peak:8}
+,
+"Sep. Gärrest":{yield:50,ts:25,ots:50,delay:4,peak:18,category:"manure"}
 };
 defaultGas["Maissilage"].ts=33; defaultGas["Maissilage"].ots=96;
 defaultGas["Grassilage"].ts=35; defaultGas["Grassilage"].ots=90;
@@ -482,20 +560,24 @@ const save=(key,value)=>{
 localStorage.setItem(key,JSON.stringify(value));
 };
 
-let subs=[...new Set([...load("bs_subs",defaultSubs),...defaultSubs])];
+let subs=[...new Set([...load("bs_subs",BUILT_IN.subs||defaultSubs),...(BUILT_IN.subs||defaultSubs)])];
 let logs=load("bs_logs",[]);
-let plans=load("bs_plans",{});
-let settings=load("bs_settings",{
+let plans={...(BUILT_IN.plans||{}),...load("bs_plans",{})};
+let savedSettings=load("bs_settings",{});
+let settings={
 morning:"07:00",
 morningEnd:"15:00",
 evening:"17:00",
 eveningEnd:"04:00",
 energyContent:5.5,
-electricEfficiency:0.40
-});
-settings={morning:"07:00",morningEnd:"15:00",evening:"17:00",eveningEnd:"04:00",energyContent:5.5,electricEfficiency:0.40,...settings};
-settings.bhkwEfficiencies=settings.bhkwEfficiencies||[3,4,5,6,7,8,9].map(n=>({number:n,efficiency:(Number(settings.electricEfficiency)||.40)*100}));
-let week=load("bs_week",{
+electricEfficiency:0.40,
+autoCompleteMinutes:30,
+...(BUILT_IN.settings||{}),
+...savedSettings
+};
+const builtBhkw=BUILT_IN.settings?.bhkwEfficiencies||[3,4,5,6,7,8,9].map(n=>({number:n,powerKw:0,efficiency:40,active:true}));
+settings.bhkwEfficiencies=builtBhkw.map(b=>({...b,...((savedSettings.bhkwEfficiencies||[]).find(x=>Number(x.number)===Number(b.number))||{})}));
+let week={...(BUILT_IN.week||{
 0:700,
 1:900,
 2:900,
@@ -503,13 +585,13 @@ let week=load("bs_week",{
 4:900,
 5:900,
 6:800
-});
-let gas=load("bs_gas",defaultGas);
+}),...load("bs_week",{})};
+let gas={...defaultGas,...(BUILT_IN.gas||{}),...load("bs_gas",{})};
 let roundCompletions=load("bs_round_completions",{});
 save("bs_subs",subs);
 
 let state={
-kw:Number(week[new Date().getDay()]||900),
+kw:Number(currentPlanKw()||900),
 fer:1,
 round:autoRound(),
 summary:"day"
@@ -560,11 +642,21 @@ const [eh,em]=(settings?.evening||"17:00")
 
 const morning=mh*60+mm;
 const evening=eh*60+em;
-
-return current < ((morning+evening)/2)
-? "Morgen"
-: "Abend";
+const [xh,xm]=(settings?.eveningEnd||"04:00").split(":").map(Number);
+const eveningEnd=xh*60+xm;
+return current<eveningEnd||current>=evening?"Abend":"Morgen";
 }
+
+function feedingDate(round=state?.round,now=new Date()){
+if(round==="Abend"){
+const current=now.getHours()*60+now.getMinutes();
+const [h,m]=(settings.eveningEnd||"04:00").split(":").map(Number);
+if(current<h*60+m){const d=new Date(now);d.setDate(d.getDate()-1);return localDate(d);}
+}
+return localDate(now);
+}
+function entryDate(log){return log.date||feedingDate(log.round,new Date(log.ts));}
+function currentPlanKw(now=new Date()){const date=feedingDate(autoRound(),now),d=dateAt(date,"12:00");return Number(week[d.getDay()]||900);}
 
 function show(id){
 $$(".screen").forEach(x=>x.classList.remove("active"));
@@ -621,19 +713,26 @@ return arr.reduce((a,l)=>a+logTons(l),0);
 function ensureGas(){
 subs.forEach(s=>{
 if(!gas[s]){
-gas[s]={...(defaultGas[s]||{yield:160,ts:30,ots:85,delay:2,peak:10})};
+gas[s]={...(defaultGas[s]||{yield:0,ts:0,ots:0,delay:0,peak:0,category:"unassigned"})};
 }
-gas[s]={yield:160,ts:30,ots:85,delay:2,peak:10,...gas[s]};
-if(!gas[s].category)gas[s].category=["Rindergülle","Rindermist"].includes(s)?"manure":["Entmischte Melasse"].includes(s)?"unassigned":"nawaro";
+gas[s]={yield:0,ts:0,ots:0,delay:0,peak:0,...gas[s]};
+if(!gas[s].category)gas[s].category=["Rindergülle","Rindermist","Sep. Gärrest"].includes(s)?"manure":["Entmischte Melasse"].includes(s)?"other":"nawaro";
 });
 save("bs_gas",gas);
 }
 
-function averageEfficiency(){const values=settings.bhkwEfficiencies.map(x=>Number(x.efficiency)||0);return values.reduce((a,b)=>a+b,0)/Math.max(1,values.length)/100;}
+function averageEfficiency(){
+const active=(settings.bhkwEfficiencies||[]).filter(x=>x.active!==false&&(Number(x.efficiency)||0)>0);
+if(!active.length)return Number(settings.electricEfficiency)||0;
+const withPower=active.filter(x=>(Number(x.powerKw)||0)>0);
+if(withPower.length){const total=withPower.reduce((s,x)=>s+(Number(x.powerKw)||0),0),weighted=withPower.reduce((s,x)=>s+(Number(x.powerKw)||0)*(Number(x.efficiency)||0),0);return total>0?weighted/total/100:0;}
+return active.reduce((s,x)=>s+(Number(x.efficiency)||0),0)/active.length/100;
+}
+function activeBhkwPower(){return (settings.bhkwEfficiencies||[]).filter(x=>x.active!==false).reduce((s,x)=>s+(Number(x.powerKw)||0),0);}
 
 function parameterSnapshot(sub){
 const g=gas[sub]||{};
-return {ts:Number(g.ts)||0,ots:Number(g.ots)||0,yieldValue:Number(g.yield)||0,yieldBasis:"m3_biogas_per_t_fresh_mass",delayHours:Number(g.delay)||0,peakHours:Number(g.peak)||0,energyKwhPerM3:Number(settings.energyContent)||5.5,bhkwEfficiencies:settings.bhkwEfficiencies.map(x=>({...x})),electricEfficiency:averageEfficiency()};
+return {ts:Number(g.ts)||0,ots:Number(g.ots)||0,yieldValue:Number(g.yield)||0,yieldBasis:g.yieldBasis||"m3_biogas_per_t_fresh_mass",delayHours:Number(g.delay)||0,peakHours:Number(g.peak)||0,energyKwhPerM3:Number(settings.energyContent)||5.5,bhkwEfficiencies:(settings.bhkwEfficiencies||[]).map(x=>({...x})),electricEfficiency:averageEfficiency(),activeBhkwPowerKw:activeBhkwPower()};
 }
 
 function snapshotFor(log){
@@ -641,7 +740,7 @@ return log.parameterSnapshot||parameterSnapshot(log.sub);
 }
 
 function makeLog(data){
-return {id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,ts:new Date().toISOString(),date:localDate(),...data,parameterSnapshot:parameterSnapshot(data.sub),schemaVersion:2};
+return {id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,ts:new Date().toISOString(),date:feedingDate(data.round),...data,parameterSnapshot:parameterSnapshot(data.sub),schemaVersion:3};
 }
 
 function migrateLegacyLogs(){
@@ -666,6 +765,7 @@ $("#planKw").value=state.kw;
 }
 
 function renderFeed(){
+updateAutoCompletions();
 fillSelects();
 
 $("#kwSelect").value=state.kw;
@@ -680,7 +780,7 @@ b.classList.toggle("active",b.dataset.round===state.round);
 });
 
 const sub=$("#substrate").value || subs[0];
-const today=localDate();
+const today=feedingDate(state.round);
 
 const matching=logs.filter(l=>
 l.date===today &&
@@ -700,6 +800,9 @@ $("#target").textContent=formatNum(target,1);
 $("#remaining").textContent=`Rest ${formatTons(remaining)}`;
 $("#count").textContent=`${matching.length} Schaufeln`;
 $("#bar").style.width=`${pct}%`;
+renderPowerComparison("fill",plannedDayMetrics(state.kw),liveDayMetrics(state.kw,today));
+const completion=roundCompletions[`${today}|all|${state.round}`];
+$("#completeRoundFeed").textContent=completion?`Abgeschlossen ${new Date(completionValue(completion)).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})} (${completionMode(completion)==="auto"?"automatisch":"manuell"})`:"Fütterung abgeschlossen";
 
 const recent=matching.slice().reverse().slice(0,8);
 
@@ -722,6 +825,7 @@ $$("[data-del]").forEach(b=>{
 b.onclick=()=>{
 logs=logs.filter(l=>String(l.id)!==String(b.dataset.del));
 save("bs_logs",logs);
+updateAutoCompletions();
 renderFeed();
 renderDashboard();
 };
@@ -768,6 +872,7 @@ tons
 save("bs_logs",logs);
 
 $("#weight").value="";
+updateAutoCompletions();
 $("#saved").style.display="block";
 
 setTimeout(()=>{
@@ -784,14 +889,29 @@ const [h,min]=(time||"00:00").split(":").map(Number);
 return new Date(y,m-1,d+addDay,h,min,0,0);
 }
 
+function completionValue(v){return v&&typeof v==="object"?v.ts:v;}
+function completionMode(v){return v&&typeof v==="object"?v.mode:"manual";}
+function setRoundCompletion(date,round,ts,mode){const value={ts:new Date(ts).toISOString(),mode};[1,2].forEach(fer=>roundCompletions[`${date}|${fer}|${round}`]=value);roundCompletions[`${date}|all|${round}`]=value;}
+function updateAutoCompletions(now=new Date()){
+const minutes=Math.max(1,Number(settings.autoCompleteMinutes)||30),groups={};
+logs.forEach(l=>{if(!l.date||!l.round)return;const key=`${l.date}|${l.round}`,t=new Date(l.ts).getTime();if(Number.isFinite(t))groups[key]=Math.max(groups[key]||0,t);});
+let changed=false;
+Object.entries(groups).forEach(([key,last])=>{const split=key.lastIndexOf("|"),date=key.slice(0,split),round=key.slice(split+1),allKey=`${date}|all|${round}`,existing=roundCompletions[allKey],existingTime=new Date(completionValue(existing)||0).getTime();
+if(existing&&completionMode(existing)==="auto"&&last>=existingTime){[1,2].forEach(f=>delete roundCompletions[`${date}|${f}|${round}`]);delete roundCompletions[allKey];changed=true;}
+if(now.getTime()>=last+minutes*60000&&!roundCompletions[allKey]){setRoundCompletion(date,round,last+minutes*60000,"auto");changed=true;}
+});
+if(changed)save("bs_round_completions",roundCompletions);
+return changed;
+}
+
 function roundWindow(log){
 const morning=log.round==="Morgen";
 const start=dateAt(log.date,morning?settings.morning:settings.evening);
 const endSetting=morning?settings.morningEnd:settings.eveningEnd;
 let end=dateAt(log.date,endSetting);
 if(end<=start) end=dateAt(log.date,endSetting,1);
-const manual=roundCompletions[`${log.date}|${log.fer}|${log.round}`];
-if(manual){const m=new Date(manual); if(m>start && m<end) end=m;}
+const completion=roundCompletions[`${log.date}|${log.fer}|${log.round}`]||roundCompletions[`${log.date}|all|${log.round}`];
+if(completion){const m=new Date(completionValue(completion)); if(m>start && m<end) end=m;}
 return {start,end};
 }
 
@@ -916,27 +1036,45 @@ $("#trendText").textContent=
 `Erwartete Veränderung in 3 Stunden: ${pct>0?"+":""}${formatNum(pct,1)} % · ca. ${formatNum(later,0)} m³/h.`;
 }
 
+function plannedDayMetrics(kw){
+let tons=0,gasTotal=0;
+[1,2].forEach(fer=>["Morgen","Abend"].forEach(round=>subs.forEach(sub=>{const t=getTarget(kw,fer,round,sub);tons+=t;gasTotal+=t*(Number(gas[sub]?.yield)||0);})));const electricity=gasTotal*(Number(settings.energyContent)||5.5)*averageEfficiency();return{tons,gas:gasTotal,electricity,power:electricity/24};
+}
+function liveDayMetrics(kw,date=feedingDate(autoRound())){
+let tons=0,gasTotal=0,electricity=0;
+["Morgen","Abend"].forEach(round=>{const roundLogs=logs.filter(l=>l.date===date&&l.round===round);if(roundLogs.length){roundLogs.forEach(l=>{const t=logTons(l),p=snapshotFor(l),g=t*(Number(p.yieldValue)||0);tons+=t;gasTotal+=g;electricity+=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);});}else{[1,2].forEach(fer=>subs.forEach(sub=>{const t=getTarget(kw,fer,round,sub),g=t*(Number(gas[sub]?.yield)||0);tons+=t;gasTotal+=g;electricity+=g*(Number(settings.energyContent)||5.5)*averageEfficiency();}));}});return{tons,gas:gasTotal,electricity,power:electricity/24};
+}
+function weeklyPlanMetrics(){let electricity=0;for(let i=0;i<7;i++)electricity+=plannedDayMetrics(Number(week[i])||0).electricity;return{electricity,power:electricity/168};}
+function renderPowerComparison(prefix,planned,live){const diff=live.power-planned.power,limit=Math.max(10,planned.power*.02),arrow=diff>limit?"↑":diff<-limit?"↓":"→",cls=diff>limit?"statusUp":diff<-limit?"statusDown":"statusFlat";$("#"+prefix+"PlanPower").textContent=`${formatNum(planned.power,0)} kW`;$("#"+prefix+"LivePower").textContent=`${formatNum(live.power,0)} kW`;const el=$("#"+prefix+"PowerDiff");el.textContent=`${arrow} ${diff>0?"+":""}${formatNum(diff,0)} kW`;el.className=cls;}
+
 function renderDashboard(){
+updateAutoCompletions();
 const now=new Date();
-const today=logsForToday();
+const feedDate=feedingDate(autoRound(),now);
+const today=logs.filter(l=>entryDate(l)===feedDate);
 
 $("#dashDate").textContent=formatDate(now);
 
-const dayKw=Number(week[now.getDay()]||900);
-$("#dashPlan").textContent=`${DAYS[now.getDay()]} · ${dayKw} kW`;
+const dayKw=currentPlanKw(now);
+const planDate=dateAt(feedingDate(autoRound(),now),"12:00");
+$("#dashPlan").textContent=`${DAYS[planDate.getDay()]} · ${dayKw} kW`;
 
 $("#dashToday").textContent=formatTons(sumLogs(today));
 $("#dashSchaufeln").textContent=`${today.length} Schaufeln`;
+const planned=plannedDayMetrics(dayKw),live=liveDayMetrics(dayKw,feedDate),weekly=weeklyPlanMetrics();
+renderPowerComparison("dash",planned,live);
+$("#dashEnough").textContent=`Reicht nach aktuellem Stand für ca. ${formatNum(live.power,0)} kW · modelliert, nicht gemessen`;
+$("#dashWeekPower").textContent=`Wochenplan: ${formatNum(weekly.electricity,0)} kWh · Ø ${formatNum(weekly.power,0)} kW`;
 
 const monthLogs=logs.filter(l=>{
-const d=new Date(l.ts);
-return d.getFullYear()===now.getFullYear()
-&& d.getMonth()===now.getMonth();
+const d=new Date(entryDate(l)+"T12:00:00"),current=new Date(feedDate+"T12:00:00");
+return d.getFullYear()===current.getFullYear()
+&& d.getMonth()===current.getMonth();
 });
 
 const yearLogs=logs.filter(l=>{
-const d=new Date(l.ts);
-return d.getFullYear()===now.getFullYear();
+const d=new Date(entryDate(l)+"T12:00:00"),current=new Date(feedDate+"T12:00:00");
+return d.getFullYear()===current.getFullYear();
 });
 
 $("#kpiDay").textContent=formatTons(sumLogs(today));
@@ -969,7 +1107,7 @@ $$("[data-chart-mode]").forEach(b=>b.onclick=()=>{state.chartMode=b.dataset.char
 window.addEventListener("resize",()=>{if($("#dashboard").classList.contains("active"))renderForecastChart();});
 
 function getFillRows(){
-const kw=Number(week[new Date().getDay()]||900);
+const kw=currentPlanKw();
 const round=state.round;
 
 const rows=[];
@@ -981,7 +1119,7 @@ const target=getTarget(kw,fer,round,sub);
 if(target>0){
 const actual=sumLogs(
 logs.filter(l=>
-l.date===localDate()
+l.date===feedingDate(round)
 && Number(l.kw)===kw
 && Number(l.fer)===fer
 && l.round===round
@@ -1006,7 +1144,7 @@ return rows;
 }
 
 function renderFill(){
-state.kw=Number(week[new Date().getDay()]||900);
+state.kw=currentPlanKw();
 
 $("#fillPlanText").textContent=
 `${DAYS[new Date().getDay()]} · ${state.round} · ${state.kw} kW`;
@@ -1084,6 +1222,7 @@ tons
 
 save("bs_logs",logs);
 
+updateAutoCompletions();
 renderFill();
 renderDashboard();
 };
@@ -1096,38 +1235,39 @@ renderFill();
 };
 
 $("#completeRound").onclick=()=>{
-const key=`${localDate()}|all|${state.round}`;
 const now=new Date().toISOString();
-[1,2].forEach(fer=>roundCompletions[`${localDate()}|${fer}|${state.round}`]=now);
-roundCompletions[key]=now;save("bs_round_completions",roundCompletions);
+const date=feedingDate(state.round);setRoundCompletion(date,state.round,now,"manual");save("bs_round_completions",roundCompletions);
 $("#roundDone").style.display="block";setTimeout(()=>$("#roundDone").style.display="none",1500);renderDashboard();
 };
-$("#completeRoundFeed").onclick=()=>{const now=new Date().toISOString();[1,2].forEach(fer=>roundCompletions[`${localDate()}|${fer}|${state.round}`]=now);save("bs_round_completions",roundCompletions);$("#roundDoneFeed").style.display="block";setTimeout(()=>$("#roundDoneFeed").style.display="none",1500);renderDashboard();};
+$("#completeRoundFeed").onclick=()=>{const now=new Date().toISOString(),date=feedingDate(state.round);setRoundCompletion(date,state.round,now,"manual");save("bs_round_completions",roundCompletions);$("#roundDoneFeed").style.display="block";setTimeout(()=>$("#roundDoneFeed").style.display="none",1500);renderDashboard();};
 
 function rangeLogs(mode){
 const now=new Date();
+const currentDate=feedingDate(autoRound(),now);
+const current=new Date(currentDate+"T12:00:00");
 
 if(mode==="day"){
-return logs.filter(l=>sameDay(l.ts,now));
+return logs.filter(l=>entryDate(l)===currentDate);
 }
 
 if(mode==="month"){
 return logs.filter(l=>{
-const d=new Date(l.ts);
-return d.getFullYear()===now.getFullYear()
-&& d.getMonth()===now.getMonth();
+const d=new Date(entryDate(l)+"T12:00:00");
+return d.getFullYear()===current.getFullYear()
+&& d.getMonth()===current.getMonth();
 });
 }
 
 return logs.filter(l=>{
-const d=new Date(l.ts);
-return d.getFullYear()===now.getFullYear();
+const d=new Date(entryDate(l)+"T12:00:00");
+return d.getFullYear()===current.getFullYear();
 });
 }
 
 function renderSummary(){
 const arr=rangeLogs(state.summary);
 const now=new Date();
+const summaryDate=new Date(feedingDate(autoRound(),now)+"T12:00:00");
 
 $$("[data-summary]").forEach(b=>{
 b.classList.toggle("active",b.dataset.summary===state.summary);
@@ -1136,7 +1276,7 @@ b.classList.toggle("active",b.dataset.summary===state.summary);
 let period="";
 
 if(state.summary==="day"){
-period=now.toLocaleDateString("de-DE",{
+period=summaryDate.toLocaleDateString("de-DE",{
 weekday:"long",
 day:"2-digit",
 month:"long",
@@ -1145,14 +1285,14 @@ year:"numeric"
 }
 
 if(state.summary==="month"){
-period=now.toLocaleDateString("de-DE",{
+period=summaryDate.toLocaleDateString("de-DE",{
 month:"long",
 year:"numeric"
 });
 }
 
 if(state.summary==="year"){
-period=String(now.getFullYear());
+period=String(summaryDate.getFullYear());
 }
 
 $("#summaryPeriod").textContent=period;
@@ -1177,7 +1317,7 @@ return `
 `;
 }).join("");
 $("#summaryRounds").innerHTML=["Morgen","Abend"].map(round=>`<div class="entry row"><span>${round}</span><b>${formatTons(sumLogs(arr.filter(l=>l.round===round)))}</b></div>`).join("");
-const modeledGas=arr.reduce((s,l)=>s+logTons(l)*(Number(snapshotFor(l).yieldValue)||0),0);const hours=state.summary==="day"?24:state.summary==="month"?24*new Date(now.getFullYear(),now.getMonth()+1,0).getDate():24*365;const modeledPower=arr.reduce((s,l)=>{const p=snapshotFor(l);return s+logTons(l)*(Number(p.yieldValue)||0)*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);},0);$("#summaryEnergy").innerHTML=`${formatNum(modeledGas,0)} m³ Biogas gesamt · Ø ${formatNum(modeledGas/hours,1)} m³/h<br>${formatNum(modeledPower,0)} kWh elektrisch · Ø ${formatNum(modeledPower/hours,1)} kW<br><span class="muted">Modellierte Werte – nicht gemessen</span>`;
+const modeledGas=arr.reduce((s,l)=>s+logTons(l)*(Number(snapshotFor(l).yieldValue)||0),0);const yearDays=(new Date(summaryDate.getFullYear()+1,0,1)-new Date(summaryDate.getFullYear(),0,1))/86400000,hours=state.summary==="day"?24:state.summary==="month"?24*new Date(summaryDate.getFullYear(),summaryDate.getMonth()+1,0).getDate():24*yearDays;const modeledPower=arr.reduce((s,l)=>{const p=snapshotFor(l);return s+logTons(l)*(Number(p.yieldValue)||0)*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);},0);$("#summaryEnergy").innerHTML=`${formatNum(modeledGas,0)} m³ Biogas gesamt · Ø ${formatNum(modeledGas/hours,1)} m³/h<br>${formatNum(modeledPower,0)} kWh elektrisch · Ø ${formatNum(modeledPower/hours,1)} kW<br><span class="muted">Modellierte Werte – nicht gemessen</span>`;
 }
 
 $$("[data-summary]").forEach(btn=>{
@@ -1289,7 +1429,7 @@ return {from:isoLocal(from),to:isoLocal(to)};
 }
 function setExportBounds(mode){const b=exportBounds(mode);if(!b)return;$("#exportFrom").value=b.from;$("#exportTo").value=b.to;}
 function downloadCsv(rows,name){const csv="\uFEFF"+rows.map(r=>r.map(csvEscape).join(";")).join("\r\n"),blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function logsBetween(from,to){const end=new Date(to+"T23:59:59.999");const start=new Date(from+"T00:00:00");return logs.filter(l=>{const d=new Date(l.ts);return d>=start&&d<=end;}).sort((a,b)=>new Date(a.ts)-new Date(b.ts));}
+function logsBetween(from,to){return logs.filter(l=>entryDate(l)>=from&&entryDate(l)<=to).sort((a,b)=>new Date(a.ts)-new Date(b.ts));}
 function modeledTotals(arr){return arr.reduce((o,l)=>{const p=snapshotFor(l),g=logTons(l)*(Number(p.yieldValue)||0),e=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);o.gas+=g;o.power+=e;return o;},{gas:0,power:0});}
 function pushTotals(rows,arr,label){
 rows.push([], [label]);
@@ -1302,7 +1442,7 @@ function pushDiary(rows,arr,from,to,withEnergy){
 const start=new Date(from+"T00:00:00"),end=new Date(to+"T00:00:00");
 rows.push([], ["Einsatzstofftagebuch"],["Zeitraum",from,"bis",to],[],["Datum",...subs,"Gesamt t",...(withEnergy?["Gasproduktion m³","Stromertrag kWh"]:[])]);
 const totals=Object.fromEntries(subs.map(s=>[s,0]));let grand=0,totalGas=0,totalPower=0,days=0;
-for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){days++;const key=isoLocal(d),dayLogs=arr.filter(l=>isoLocal(new Date(l.ts))===key),vals=subs.map(s=>{const v=sumLogs(dayLogs.filter(l=>l.sub===s));totals[s]+=v;return formatNum(v,1);}),t=sumLogs(dayLogs),energy=modeledTotals(dayLogs);grand+=t;totalGas+=energy.gas;totalPower+=energy.power;rows.push([key,...vals,formatNum(t,1),...(withEnergy?[formatNum(energy.gas,0),formatNum(energy.power,0)]:[])]);}
+for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){days++;const key=isoLocal(d),dayLogs=arr.filter(l=>entryDate(l)===key),vals=subs.map(s=>{const v=sumLogs(dayLogs.filter(l=>l.sub===s));totals[s]+=v;return formatNum(v,1);}),t=sumLogs(dayLogs),energy=modeledTotals(dayLogs);grand+=t;totalGas+=energy.gas;totalPower+=energy.power;rows.push([key,...vals,formatNum(t,1),...(withEnergy?[formatNum(energy.gas,0),formatNum(energy.power,0)]:[])]);}
 rows.push([], ["Summe",...subs.map(s=>formatNum(totals[s],1)),formatNum(grand,1),...(withEnergy?[formatNum(totalGas,0),formatNum(totalPower,0)]:[])]);
 const manure=subs.filter(s=>gas[s]?.category==="manure").reduce((n,s)=>n+(totals[s]||0),0),nawaro=subs.filter(s=>gas[s]?.category==="nawaro").reduce((n,s)=>n+(totals[s]||0),0),maize=["Maissilage","Getreidekorn","Feuchtmaisschrot"].reduce((n,s)=>n+(totals[s]||0),0),pct=grand?maize/grand*100:0;
 rows.push(["Gülle + Mist",formatNum(manure,1)],["Summe Nawaro",formatNum(nawaro,1)],["Maisdeckel",formatNum(pct,1)+" %",pct>40?"WARNUNG: über 40 %":"max. 40 %"],["Ø t/Tag",formatNum(grand/days,1)]);
@@ -1311,7 +1451,7 @@ function runSelectedExport(){
 const from=$("#exportFrom").value,to=$("#exportTo").value;if(!from||!to||from>to){alert("Bitte einen gültigen Zeitraum auswählen.");return;}
 const choices=["exEntries","exTotals","exParams","exEnergy","exHourly","exDiary"].some(id=>$("#"+id).checked);if(!choices){alert("Bitte mindestens einen Datenbereich auswählen.");return;}
 const arr=logsBetween(from,to),rows=[["Biogasanlage Schneider – Datenexport"],["Zeitraum",from,"bis",to],["Erstellt",new Date().toLocaleString("de-DE")],["Hinweis","Gas- und Stromwerte sind modelliert, nicht gemessen."]];
-if($("#exEntries").checked||$("#exParams").checked){const params=$("#exParams").checked;rows.push([], [params?"Fütterungseinträge mit Parameter-Snapshots":"Fütterungseinträge"],["Datum","Uhrzeit","Fermenter","Fütterungsrunde","Substrat","Menge t","Fahrplan kW",...(params?["TS %","oTS % der TS","Ertrag m³ Biogas/t FM","Verzug h","Peak h","Energie kWh/m³","Wirkungsgrad %"]:[])]);arr.forEach(l=>{const d=new Date(l.ts),p=snapshotFor(l);rows.push([isoLocal(d),d.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}),`Fermenter ${l.fer}`,l.round,l.sub,formatNum(logTons(l),1),l.kw,...(params?[formatNum(p.ts,1),formatNum(p.ots,1),formatNum(p.yieldValue,1),formatNum(p.delayHours,1),formatNum(p.peakHours,1),formatNum(p.energyKwhPerM3,2),formatNum((Number(p.electricEfficiency)||0)*100,1)]:[])]);});}
+if($("#exEntries").checked||$("#exParams").checked){const params=$("#exParams").checked;rows.push([], [params?"Fütterungseinträge mit Parameter-Snapshots":"Fütterungseinträge"],["Fütterungstag","Uhrzeit","Fermenter","Fütterungsrunde","Substrat","Menge t","Fahrplan kW",...(params?["TS %","oTS % der TS","Ertrag m³ Biogas/t FM","Verzug h","Peak h","Energie kWh/m³","Wirkungsgrad %"]:[])]);arr.forEach(l=>{const d=new Date(l.ts),p=snapshotFor(l);rows.push([entryDate(l),d.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}),`Fermenter ${l.fer}`,l.round,l.sub,formatNum(logTons(l),1),l.kw,...(params?[formatNum(p.ts,1),formatNum(p.ots,1),formatNum(p.yieldValue,1),formatNum(p.delayHours,1),formatNum(p.peakHours,1),formatNum(p.energyKwhPerM3,2),formatNum((Number(p.electricEfficiency)||0)*100,1)]:[])]);});}
 if($("#exTotals").checked)pushTotals(rows,arr,"Zusammenfassung");
 const dayCount=Math.floor((new Date(to+"T00:00:00")-new Date(from+"T00:00:00"))/86400000)+1;
 if($("#exEnergy").checked){const m=modeledTotals(arr),hours=dayCount*24;rows.push([], ["Modellierte Energieauswertung"],["Biogas gesamt m³",formatNum(m.gas,0)],["Biogas durchschnittlich m³/h",formatNum(m.gas/hours,1)],["Stromertrag gesamt kWh",formatNum(m.power,0)],["Elektrische Leistung durchschnittlich kW",formatNum(m.power/hours,1)]);}
@@ -1377,6 +1517,8 @@ ${k} kW
 </select>
 </div>
 `).join("");
+const weekly=weeklyPlanMetrics();
+$("#weekPlanTotals").textContent=`${formatNum(weekly.electricity,0)} kWh elektrisch/Woche · Ø ${formatNum(weekly.power,0)} kW`;
 renderPlanCalculations();
 }
 
@@ -1429,7 +1571,7 @@ week[sel.dataset.weekday]=Number(sel.value);
 save("bs_week",week);
 
 state.kw=Number(
-week[new Date().getDay()]||900
+currentPlanKw()
 );
 
 $("#weekSaved").style.display="block";
@@ -1449,10 +1591,13 @@ $("#morningTime").value=settings.morning||"07:00";
 $("#morningEnd").value=settings.morningEnd||"15:00";
 $("#eveningTime").value=settings.evening||"17:00";
 $("#eveningEnd").value=settings.eveningEnd||"04:00";
+$("#autoCompleteMinutes").value=Math.max(1,Number(settings.autoCompleteMinutes)||30);
 $("#energyContent").value=Number(settings.energyContent)||5.5;
-$("#bhkwRows").innerHTML=`<h4>BHKW-Wirkungsgrade</h4>${settings.bhkwEfficiencies.map((x,i)=>`<div class="row entry"><b>BHKW ${x.number}</b><input style="width:140px" type="number" step="0.1" min="0" max="100" data-bhkw="${i}" value="${Number(x.efficiency)||0}"></div>`).join("")}`;
+$("#bhkwRows").innerHTML=`<h4>BHKW-Stammdaten</h4><div class="setupGrid header" style="grid-template-columns:1fr 1fr 1fr .7fr"><b>BHKW</b><b>Leistung kW</b><b>Wirkungsgrad %</b><b>Aktiv</b></div>${settings.bhkwEfficiencies.map((x,i)=>`<div class="setupGrid" style="grid-template-columns:1fr 1fr 1fr .7fr"><b>BHKW ${x.number}</b><input type="number" step="1" min="0" data-bhkw-power="${i}" value="${Number(x.powerKw)||0}"><input type="number" step="0.1" min="0" max="100" data-bhkw="${i}" value="${Number(x.efficiency)||0}"><select data-bhkw-active="${i}"><option value="true" ${x.active!==false?"selected":""}>Ja</option><option value="false" ${x.active===false?"selected":""}>Nein</option></select></div>`).join("")}`;
 $("#averageEfficiency").textContent=`${formatNum(averageEfficiency()*100,1)} %`;
-$$('[data-bhkw]').forEach(inp=>inp.oninput=()=>{settings.bhkwEfficiencies[Number(inp.dataset.bhkw)].efficiency=Number(String(inp.value).replace(",","."))||0;$("#averageEfficiency").textContent=`${formatNum(averageEfficiency()*100,1)} %`;});
+$("#activeBhkwPower").textContent=`${formatNum(activeBhkwPower(),0)} kW`;
+function previewBhkw(){settings.bhkwEfficiencies.forEach((x,i)=>{x.powerKw=Number($(`[data-bhkw-power="${i}"]`)?.value)||0;x.efficiency=Number(String($(`[data-bhkw="${i}"]`)?.value||0).replace(",","."))||0;x.active=$(`[data-bhkw-active="${i}"]`)?.value!=="false";});$("#averageEfficiency").textContent=`${formatNum(averageEfficiency()*100,1)} %`;$("#activeBhkwPower").textContent=`${formatNum(activeBhkwPower(),0)} kW`;}
+$$('[data-bhkw],[data-bhkw-power],[data-bhkw-active]').forEach(inp=>inp.oninput=previewBhkw);
 
 $("#gasRows").innerHTML=`
 <div
@@ -1468,9 +1613,9 @@ class="setupGrid header"
 
 ${subs.map((sub,i)=>{
 const g=gas[sub] || {
-yield:160,ts:30,ots:85,
-delay:2,
-peak:10
+yield:0,ts:0,ots:0,
+delay:0,
+peak:0
 };
 
 return `
@@ -1521,6 +1666,7 @@ settings.morning=$("#morningTime").value||"07:00";
 settings.morningEnd=$("#morningEnd").value||"15:00";
 settings.evening=$("#eveningTime").value||"17:00";
 settings.eveningEnd=$("#eveningEnd").value||"04:00";
+settings.autoCompleteMinutes=Math.min(240,Math.max(1,Number($("#autoCompleteMinutes").value)||30));
 
 save("bs_settings",settings);
 
@@ -1541,9 +1687,9 @@ const sub=subs[i];
 
 if(!gas[sub]){
 gas[sub]={
-yield:160,
-delay:2,
-peak:10
+yield:0,
+delay:0,
+peak:0
 };
 }
 
@@ -1557,9 +1703,9 @@ const sub=subs[i];
 
 if(!gas[sub]){
 gas[sub]={
-yield:160,
-delay:2,
-peak:10
+yield:0,
+delay:0,
+peak:0
 };
 }
 
@@ -1573,9 +1719,9 @@ const sub=subs[i];
 
 if(!gas[sub]){
 gas[sub]={
-yield:160,
-delay:2,
-peak:10
+yield:0,
+delay:0,
+peak:0
 };
 }
 
@@ -1586,7 +1732,7 @@ $$('[data-gas-category]').forEach(sel=>{gas[subs[Number(sel.dataset.gasCategory)
 
 save("bs_gas",gas);
 settings.energyContent=Math.max(0,Number(String($("#energyContent").value).replace(",","."))||5.5);
-settings.bhkwEfficiencies=settings.bhkwEfficiencies.map((x,i)=>({...x,efficiency:Number(String($(`[data-bhkw="${i}"]`).value).replace(",","."))||0}));
+settings.bhkwEfficiencies=settings.bhkwEfficiencies.map((x,i)=>({...x,powerKw:Math.max(0,Number($(`[data-bhkw-power="${i}"]`).value)||0),efficiency:Number(String($(`[data-bhkw="${i}"]`).value).replace(",","."))||0,active:$(`[data-bhkw-active="${i}"]`).value!=="false"}));
 settings.electricEfficiency=averageEfficiency();
 save("bs_settings",settings);
 
@@ -1626,6 +1772,32 @@ renderPlan();
 renderFeed();
 };
 
+function normalizeCategory(v){const s=String(v||"").toLowerCase();return s.includes("gülle")||s.includes("mist")?"manure":s.includes("nawaro")?"nawaro":s.includes("sonst")?"other":"unassigned";}
+function excelTime(v){if(typeof v==="number"&&v>=0&&v<1){const mins=Math.round(v*1440)%1440;return `${pad(Math.floor(mins/60))}:${pad(mins%60)}`;}const m=String(v||"").match(/(\d{1,2}):(\d{2})/);return m?`${pad(Number(m[1]))}:${m[2]}`:"";}
+function columnIndex(ref){const letters=(String(ref).match(/[A-Z]+/i)||[""])[0].toUpperCase();let n=0;for(const c of letters)n=n*26+c.charCodeAt(0)-64;return n-1;}
+async function parseExcelWorkbook(file){
+if(!window.JSZip)throw new Error("Excel-Lesemodul ist nicht verfügbar.");
+const zip=await JSZip.loadAsync(await file.arrayBuffer()),parser=new DOMParser(),read=async path=>{const f=zip.file(path);if(!f)throw new Error(`Dateiinhalt fehlt: ${path}`);return parser.parseFromString(await f.async("text"),"application/xml");};
+const shared=[];if(zip.file("xl/sharedStrings.xml")){const doc=await read("xl/sharedStrings.xml");doc.querySelectorAll("si").forEach(si=>shared.push([...si.querySelectorAll("t")].map(t=>t.textContent||"").join("")));}
+const workbook=await read("xl/workbook.xml"),rels=await read("xl/_rels/workbook.xml.rels"),targets={};rels.querySelectorAll("Relationship").forEach(r=>targets[r.getAttribute("Id")]=r.getAttribute("Target"));
+const result={};for(const s of workbook.querySelectorAll("sheet")){const name=s.getAttribute("name"),rid=s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id"),target=targets[rid];if(!target)continue;const path=target.startsWith("/")?target.slice(1):target.startsWith("xl/")?target:`xl/${target.replace(/^\.\//,"")}`,doc=await read(path),rows=[];doc.querySelectorAll("row").forEach(row=>{const ri=(Number(row.getAttribute("r"))||rows.length+1)-1;rows[ri]=rows[ri]||[];row.querySelectorAll("c").forEach(c=>{const ci=columnIndex(c.getAttribute("r")),type=c.getAttribute("t"),raw=c.querySelector("v")?.textContent??c.querySelector("t")?.textContent??"";let value=raw;if(type==="s")value=shared[Number(raw)]??"";else if(type==="b")value=raw==="1";else if(type!=="str"&&type!=="inlineStr"&&raw!==""&&!Number.isNaN(Number(raw)))value=Number(raw);rows[ri][ci]=value;});});result[name]=rows;}
+return result;
+}
+function configFromExcel(book){
+const sr=book.Substrate||book.Substrateparameter||book.Substrate;const fr=book["Fahrpläne"],br=book.BHKW,ar=book.Anlage;if(!sr||!fr||!br||!ar)throw new Error("Benötigte Blätter fehlen: Fahrpläne, Substrate, BHKW oder Anlage.");
+const subHeader=sr.findIndex(r=>String(r?.[0]||"").trim()==="Substrat"),newSubs=[],newGas={};for(let i=subHeader+1;i<sr.length;i++){const r=sr[i]||[],name=String(r[0]||"").trim();if(!name)continue;newSubs.push(name);newGas[name]={ts:Number(r[1])||0,ots:Number(r[2])||0,yield:Number(r[3])||0,delay:Number(r[4])||0,peak:Number(r[5])||0,category:normalizeCategory(r[6]),yieldBasis:String(r[7]||"m3_biogas_per_t_fresh_mass")};}
+const planHeader=fr.findIndex(r=>String(r?.[0]||"").includes("Leistungsstufe")),newPlans={};let kw=0;for(let i=planHeader+1;i<fr.length;i++){const r=fr[i]||[];if(Number(r[0]))kw=Number(r[0]);const sub=String(r[1]||"").trim();if(!kw||!newSubs.includes(sub))continue;newPlans[planKey(kw,1,"Morgen",sub)]=Number(r[2])||0;newPlans[planKey(kw,1,"Abend",sub)]=Number(r[3])||0;newPlans[planKey(kw,2,"Morgen",sub)]=Number(r[4])||0;newPlans[planKey(kw,2,"Abend",sub)]=Number(r[5])||0;}
+const bhkwHeader=br.findIndex(r=>String(r?.[0]||"").trim()==="BHKW"),bhkw=[];for(let i=bhkwHeader+1;i<br.length;i++){const r=br[i]||[],number=Number(r[0]);if(!number)continue;let eff=Number(r[2])||0;if(eff>0&&eff<=1)eff*=100;bhkw.push({number,powerKw:Number(r[1])||0,efficiency:eff,active:String(r[3]||"Ja").toLowerCase()!=="nein",thermalPowerKw:Number(r[4])||0,note:String(r[5]||"")});if(bhkw.length===7)break;}
+const find=(label,col=0)=>{const row=ar.find(r=>String(r?.[col]||"").trim()===label);return row?.[col+1];},newWeek={};const dayIndex={Sonntag:0,Montag:1,Dienstag:2,Mittwoch:3,Donnerstag:4,Freitag:5,Samstag:6};ar.forEach(r=>{const day=String(r?.[6]||"").trim();if(dayIndex[day]!==undefined)newWeek[dayIndex[day]]=Number(r[7])||0;});
+const config={subs:newSubs,gas:newGas,plans:newPlans,settings:{...settings,morning:excelTime(find("Morgen Beginn"))||"07:00",morningEnd:excelTime(find("Morgen Ende"))||"15:00",evening:excelTime(find("Abend Beginn"))||"15:00",eveningEnd:excelTime(find("Abend Ende Folgetag"))||"04:00",energyContent:Number(find("Energiegehalt Biogas kWh/m³"))||5.5,autoCompleteMinutes:Number(settings.autoCompleteMinutes)||30,bhkwEfficiencies:bhkw},week:newWeek};
+const levels=[...new Set(Object.keys(newPlans).map(k=>Number(k.split("|")[0])))].sort((a,b)=>a-b);if(newSubs.length<1||bhkw.length!==7||levels.length!==12||levels[0]!==100||levels.at(-1)!==1200)throw new Error(`Plausibilitätsprüfung fehlgeschlagen: ${newSubs.length} Substrate, ${bhkw.length} BHKW, ${levels.length} Leistungsstufen.`);return{...config,levels};
+}
+function saveConfiguration(config){subs=[...config.subs];gas={...config.gas};plans={...config.plans};settings={...config.settings};week={...config.week};save("bs_subs",subs);save("bs_gas",gas);save("bs_plans",plans);save("bs_settings",settings);save("bs_week",week);state.kw=currentPlanKw();state.round=autoRound();fillSelects();renderSetup();renderPlan();renderFeed();renderFill();renderDashboard();renderSummary();}
+$("#importExcel").onclick=async()=>{const file=$("#excelImport").files?.[0],status=$("#importStatus");status.style.display="block";if(!file){status.textContent="Bitte zuerst eine Excel-Datei auswählen.";return;}status.textContent="Datei wird geprüft …";try{const config=configFromExcel(await parseExcelWorkbook(file)),planCount=Object.values(config.plans).filter(v=>Number(v)>0).length,msg=`Geprüft: ${config.subs.length} Substrate, ${config.levels.length} Leistungsstufen, 2 Fermenter, ${config.settings.bhkwEfficiencies.length} BHKW und ${planCount} belegte Fahrplanwerte. Fahrpläne und Einstellungen jetzt übernehmen?`;if(!confirm(msg)){status.textContent="Import abgebrochen. Es wurden keine Daten verändert.";return;}saveConfiguration(config);status.textContent="Excel-Daten erfolgreich übernommen. Vorhandene Fütterungseinträge wurden nicht verändert.";}catch(e){status.textContent=`Import nicht durchgeführt: ${e.message}`;}};
+function downloadJson(value,name){const blob=new Blob([JSON.stringify(value,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$("#backupSettings").onclick=()=>downloadJson({schemaVersion:4,createdAt:new Date().toISOString(),subs,gas,plans,settings,week},`Biogasanlage-Einstellungen-${localDate()}.json`);
+$("#restoreSettings").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!Array.isArray(data.subs)||!data.gas||!data.plans||!data.settings||!data.week)throw new Error("Ungültige Sicherungsdatei");if(confirm(`Sicherung vom ${data.createdAt?new Date(data.createdAt).toLocaleString("de-DE"):"unbekannten Zeitpunkt"} einlesen? Fütterungseinträge bleiben erhalten.`)){saveConfiguration(data);alert("Einstellungen und Fahrpläne wurden wiederhergestellt.");}}catch(err){alert(`Sicherung konnte nicht eingelesen werden: ${err.message}`);}finally{e.target.value="";}};
+
 function renderHistory(){
 const arr=[...logs]
 .sort((a,b)=>new Date(b.ts)-new Date(a.ts))
@@ -1656,17 +1828,18 @@ minute:"2-digit"
 : `<div class="muted">
 Noch keine Fütterungen vorhanden.
 </div>`;
-$$("[data-history-del]").forEach(b=>b.onclick=()=>{if(confirm("Diesen Fütterungseintrag löschen?")){logs=logs.filter(l=>String(l.id)!==String(b.dataset.historyDel));save("bs_logs",logs);renderHistory();renderSummary();renderDashboard();}});
+$$("[data-history-del]").forEach(b=>b.onclick=()=>{if(confirm("Diesen Fütterungseintrag löschen?")){logs=logs.filter(l=>String(l.id)!==String(b.dataset.historyDel));save("bs_logs",logs);updateAutoCompletions();renderHistory();renderSummary();renderDashboard();}});
 }
 
 /* Start der App */
 
 ensureGas();
 migrateLegacyLogs();
+updateAutoCompletions();
 fillSelects();
 
 state.kw=Number(
-week[new Date().getDay()]||900
+currentPlanKw()
 );
 
 state.round=autoRound();
@@ -1681,6 +1854,9 @@ renderSummary();
 renderPlan();
 renderSetup();
 renderHistory();
+
+setInterval(()=>{if(updateAutoCompletions()){renderFeed();renderDashboard();}},60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){updateAutoCompletions();renderFeed();renderDashboard();}});
 
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 
