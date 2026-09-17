@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f7a4c">
 <meta name="description" content="Radlader-Testversion der Fütterungsapp für die Biogasanlage Schneider">
-<meta name="application-version" content="4.0-test">
+<meta name="application-version" content="4.1-test">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>Biogasanlage Schneider</title>
@@ -83,6 +83,7 @@ input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px
 .powerCompare b{display:block;font-size:20px;margin-top:3px}
 .statusUp{color:#167545}.statusDown{color:#b45a20}.statusFlat{color:#36594a}
 .importStatus{padding:10px 12px;border-radius:12px;margin-top:10px;background:#eef3f0;display:none}
+.feedPlanRows{margin-top:10px}.feedPlanRow{display:grid;grid-template-columns:minmax(0,1.35fr) repeat(3,minmax(62px,.65fr));gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #e5ece8}.feedPlanRow:last-child{border-bottom:0}.feedPlanRow span:not(:first-child){text-align:right}.feedPlanHead{font-size:12px;color:#60766b;font-weight:700;padding-top:4px;padding-bottom:6px}.feedPlanRow .remainingOk{color:#1e7a4a}.feedPlanRow .remainingOpen{color:#a45f0a}
 @media(max-width:620px){
 .app{width:100%;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
 .top{padding:10px 12px}.brand{font-size:18px}.screen{padding:10px}
@@ -107,6 +108,7 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 #setup .card{overflow-x:auto}.setupGrid{min-width:690px}.setupGrid.header{display:grid}
 .exportDialog{max-height:calc(100dvh - 20px);overflow:auto}.exportDialog .dialogBody{padding:15px}.exportDialog .dialogActions{position:sticky;bottom:0;background:#fff;padding-top:8px}
 .powerCompare{grid-template-columns:1fr 1fr}.powerCompare>div:last-child{grid-column:1/-1}
+.feedPlanRow{grid-template-columns:minmax(88px,1.2fr) repeat(3,minmax(52px,.65fr));gap:5px;font-size:13px}.feedPlanHead{font-size:11px}
 }
 @media(max-width:380px){.brand{font-size:17px}.screen{padding:7px}.card{padding:11px}.nav button{font-size:8px}.nav button b{font-size:18px}.grid3 .muted{font-size:10px}}
 @media(max-height:500px) and (orientation:landscape){.top{position:static}.nav button{padding:4px 0}.nav button b{display:none}.app{padding-bottom:48px}.chartWrap{height:170px}}
@@ -131,13 +133,6 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 </div>
 </div>
 
-<div class="grid2">
-<div class="card kpi">
-<div class="muted small">Gefüttert heute</div>
-<div id="dashToday" class="n">0,0 t</div>
-<div id="dashSchaufeln" class="small muted">0 Schaufeln</div>
-</div>
-
 <div class="card">
 <div class="row"><div><b>72-Stunden-Prognose</b><div class="note">24 h rückblickend · jetzt · 48 h voraus · ausschließlich modellierte Werte</div></div></div>
 <div class="seg" style="margin-top:12px">
@@ -151,7 +146,6 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 <div class="muted small">Fütterungsbasierte Gasprognose</div>
 <div id="dashGas" class="n">0 m³/h</div>
 <div class="note">inkl. Eintragsverzug & Umsetzung</div>
-</div>
 </div>
 
 <div class="card powerKpi">
@@ -281,6 +275,14 @@ Fahrplan wird automatisch nach Wochentag gewählt.
 <div><span class="muted small">Differenz</span><b id="fillPowerDiff" class="statusFlat">→ 0 kW</b></div>
 </div>
 <div class="note" style="margin-top:9px">Laufende Runde nach Ist-Mengen, andere Runde nach Fahrplan · modelliert, nicht gemessen</div>
+</div>
+
+<div class="card">
+<div class="row">
+<div><b>Aktueller Fütterungsplan</b><div id="feedPlanContext" class="muted small">–</div></div>
+<span id="feedPlanTotal" class="pill">0,0 t Soll</span>
+</div>
+<div id="feedPlanOverview" class="feedPlanRows"></div>
 </div>
 
 <div class="card">
@@ -801,6 +803,11 @@ $("#remaining").textContent=`Rest ${formatTons(remaining)}`;
 $("#count").textContent=`${matching.length} Schaufeln`;
 $("#bar").style.width=`${pct}%`;
 renderPowerComparison("fill",plannedDayMetrics(state.kw),liveDayMetrics(state.kw,today));
+const planItems=subs.map(name=>{const target=getTarget(state.kw,state.fer,state.round,name),actual=sumLogs(logs.filter(l=>entryDate(l)===today&&Number(l.kw)===state.kw&&Number(l.fer)===state.fer&&l.round===state.round&&l.sub===name));return{name,target,actual,remaining:Math.max(0,target-actual)};}).filter(x=>x.target>0);
+const planTotal=planItems.reduce((sum,x)=>sum+x.target,0);
+$("#feedPlanContext").textContent=`Fermenter ${state.fer} · ${state.round==="Morgen"?"☀️":"🌙"} ${state.round} · ${state.kw} kW`;
+$("#feedPlanTotal").textContent=`${formatNum(planTotal,1)} t Soll`;
+$("#feedPlanOverview").innerHTML=planItems.length?`<div class="feedPlanRow feedPlanHead"><span>Substrat</span><span>Soll</span><span>Ist</span><span>Rest</span></div>${planItems.map(x=>`<div class="feedPlanRow"><span><b>${x.name}</b></span><span>${formatNum(x.target,1)} t</span><span>${formatNum(x.actual,1)} t</span><span class="${x.remaining<=0.01?"remainingOk":"remainingOpen"}">${formatNum(x.remaining,1)} t</span></div>`).join("")}`:`<div class="muted" style="padding-top:10px">Für Fermenter ${state.fer} · ${state.round} · ${state.kw} kW sind noch keine Sollmengen hinterlegt.</div>`;
 const completion=roundCompletions[`${today}|all|${state.round}`];
 $("#completeRoundFeed").textContent=completion?`Abgeschlossen ${new Date(completionValue(completion)).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})} (${completionMode(completion)==="auto"?"automatisch":"manuell"})`:"Fütterung abgeschlossen";
 
@@ -1059,8 +1066,6 @@ const dayKw=currentPlanKw(now);
 const planDate=dateAt(feedingDate(autoRound(),now),"12:00");
 $("#dashPlan").textContent=`${DAYS[planDate.getDay()]} · ${dayKw} kW`;
 
-$("#dashToday").textContent=formatTons(sumLogs(today));
-$("#dashSchaufeln").textContent=`${today.length} Schaufeln`;
 const planned=plannedDayMetrics(dayKw),live=liveDayMetrics(dayKw,feedDate),weekly=weeklyPlanMetrics();
 renderPowerComparison("dash",planned,live);
 $("#dashEnough").textContent=`Reicht nach aktuellem Stand für ca. ${formatNum(live.power,0)} kW · modelliert, nicht gemessen`;
