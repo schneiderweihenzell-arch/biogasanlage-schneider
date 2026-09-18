@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f7a4c">
 <meta name="description" content="Radlader-Testversion der Fütterungsapp für die Biogasanlage Schneider">
-<meta name="application-version" content="4.1-test">
+<meta name="application-version" content="4.2-test">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>Biogasanlage Schneider</title>
@@ -16,7 +16,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulati
 body{margin:0;overflow-x:hidden}
 .app{max-width:760px;margin:auto;min-height:100vh;background:#f7faf8;padding-bottom:84px}
 .top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #dde7e1;padding:14px 16px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{font-weight:800;font-size:20px}
+.headerTime{text-align:right;font-weight:750;font-size:13px;line-height:1.25;white-space:nowrap}
 .sub{font-size:12px;color:#658073}
 .screen{display:none;padding:14px}
 .screen.active{display:block}
@@ -86,7 +88,7 @@ input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px
 .feedPlanRows{margin-top:10px}.feedPlanRow{display:grid;grid-template-columns:minmax(0,1.35fr) repeat(3,minmax(62px,.65fr));gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #e5ece8}.feedPlanRow:last-child{border-bottom:0}.feedPlanRow span:not(:first-child){text-align:right}.feedPlanHead{font-size:12px;color:#60766b;font-weight:700;padding-top:4px;padding-bottom:6px}.feedPlanRow .remainingOk{color:#1e7a4a}.feedPlanRow .remainingOpen{color:#a45f0a}
 @media(max-width:620px){
 .app{width:100%;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
-.top{padding:10px 12px}.brand{font-size:18px}.screen{padding:10px}
+.top{padding:10px 12px}.brand{font-size:18px}.headerTime{font-size:12px}.screen{padding:10px}
 .card{padding:13px;border-radius:15px;margin-bottom:10px}
 input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px}
 .btn{min-height:48px;padding:12px;font-size:16px;touch-action:manipulation}
@@ -110,7 +112,7 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 .powerCompare{grid-template-columns:1fr 1fr}.powerCompare>div:last-child{grid-column:1/-1}
 .feedPlanRow{grid-template-columns:minmax(88px,1.2fr) repeat(3,minmax(52px,.65fr));gap:5px;font-size:13px}.feedPlanHead{font-size:11px}
 }
-@media(max-width:380px){.brand{font-size:17px}.screen{padding:7px}.card{padding:11px}.nav button{font-size:8px}.nav button b{font-size:18px}.grid3 .muted{font-size:10px}}
+@media(max-width:380px){.brand{font-size:16px}.headerTime{font-size:11px}.screen{padding:7px}.card{padding:11px}.nav button{font-size:8px}.nav button b{font-size:18px}.grid3 .muted{font-size:10px}}
 @media(max-height:500px) and (orientation:landscape){.top{position:static}.nav button{padding:4px 0}.nav button b{display:none}.app{padding-bottom:48px}.chartWrap{height:170px}}
 </style>
 </head>
@@ -118,7 +120,10 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 <div class="app">
 
 <header class="top">
+<div class="topline">
 <div class="brand">🌿 Biogasanlage Schneider</div>
+<div id="headerDateTime" class="headerTime" aria-live="off"></div>
+</div>
 <div class="sub">Fütterung · Dashboard · Fahrpläne</div>
 </header>
 
@@ -251,7 +256,7 @@ Fahrplan wird automatisch nach Wochentag gewählt.
 </div>
 
 <div class="card">
-<div class="muted small">Aktueller Stand</div>
+<div class="muted small">Aktueller Stand – gesamte Fütterung</div>
 <div class="row">
 <div><span id="actual" class="big">0,0</span> t</div>
 <div class="muted">Soll <b id="target">0,0</b> t</div>
@@ -265,6 +270,7 @@ Fahrplan wird automatisch nach Wochentag gewählt.
 <span id="count">0 Schaufeln</span>
 <b id="remaining">Rest 0,0 t</b>
 </div>
+<div id="substrateStatus" class="note" style="margin-top:9px"></div>
 </div>
 
 <div class="card powerKpi">
@@ -618,6 +624,14 @@ year:"numeric"
 });
 }
 
+function updateHeaderClock(now=new Date()){
+const el=$("#headerDateTime");
+if(!el)return;
+const date=now.toLocaleDateString("de-DE",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"});
+const time=now.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+el.innerHTML=`<div>${date}</div><div>${time} Uhr</div>`;
+}
+
 function formatTons(v){
 return `${Number(v||0).toLocaleString("de-DE",{
 minimumFractionDigits:1,
@@ -792,15 +806,17 @@ l.round===state.round &&
 l.sub===sub
 );
 
-const actual=sumLogs(matching);
-const target=getTarget(state.kw,state.fer,state.round,sub);
-const remaining=Math.max(0,target-actual);
-const pct=target>0 ? Math.min(100,(actual/target)*100) : 0;
+const substrateActual=sumLogs(matching);
+const substrateTarget=getTarget(state.kw,state.fer,state.round,sub);
+const substrateRemaining=Math.max(0,substrateTarget-substrateActual);
+const totals=roundTotals(state.kw,state.round,today);
+const pct=totals.target>0 ? Math.min(100,(totals.actual/totals.target)*100) : 0;
 
-$("#actual").textContent=formatNum(actual,1);
-$("#target").textContent=formatNum(target,1);
-$("#remaining").textContent=`Rest ${formatTons(remaining)}`;
-$("#count").textContent=`${matching.length} Schaufeln`;
+$("#actual").textContent=formatNum(totals.actual,1);
+$("#target").textContent=formatNum(totals.target,1);
+$("#remaining").textContent=`Rest ${formatTons(totals.remaining)}`;
+$("#count").textContent=`${totals.count} Schaufeln gesamt`;
+$("#substrateStatus").textContent=`Ausgewählt: ${sub} · Fermenter ${state.fer} · Ist ${formatTons(substrateActual)} / Soll ${formatTons(substrateTarget)} · Rest ${formatTons(substrateRemaining)}`;
 $("#bar").style.width=`${pct}%`;
 renderPowerComparison("fill",plannedDayMetrics(state.kw),liveDayMetrics(state.kw,today));
 const planItems=subs.map(name=>{const target=getTarget(state.kw,state.fer,state.round,name),actual=sumLogs(logs.filter(l=>entryDate(l)===today&&Number(l.kw)===state.kw&&Number(l.fer)===state.fer&&l.round===state.round&&l.sub===name));return{name,target,actual,remaining:Math.max(0,target-actual)};}).filter(x=>x.target>0);
@@ -877,6 +893,8 @@ tons
 }));
 
 save("bs_logs",logs);
+clearRoundCompletion(feedingDate(state.round),state.round);
+save("bs_round_completions",roundCompletions);
 
 $("#weight").value="";
 updateAutoCompletions();
@@ -899,6 +917,22 @@ return new Date(y,m-1,d+addDay,h,min,0,0);
 function completionValue(v){return v&&typeof v==="object"?v.ts:v;}
 function completionMode(v){return v&&typeof v==="object"?v.mode:"manual";}
 function setRoundCompletion(date,round,ts,mode){const value={ts:new Date(ts).toISOString(),mode};[1,2].forEach(fer=>roundCompletions[`${date}|${fer}|${round}`]=value);roundCompletions[`${date}|all|${round}`]=value;}
+function clearRoundCompletion(date,round){[1,2].forEach(fer=>delete roundCompletions[`${date}|${fer}|${round}`]);delete roundCompletions[`${date}|all|${round}`];}
+function roundTotals(kw,round,date=feedingDate(round)){
+let target=0;
+[1,2].forEach(fer=>subs.forEach(sub=>{target+=getTarget(kw,fer,round,sub);}));
+const matching=logs.filter(l=>entryDate(l)===date&&Number(l.kw)===Number(kw)&&l.round===round);
+const actual=sumLogs(matching);
+return{target,actual,remaining:Math.max(0,target-actual),count:matching.length};
+}
+function completeCurrentRound(successSelector){
+const date=feedingDate(state.round),totals=roundTotals(state.kw,state.round,date);
+if(totals.remaining>0.05&&!confirm(`Für die gesamte Fütterung sind noch ${formatTons(totals.remaining)} offen. Trotzdem ${state.round} für beide Fermenter und alle Substrate abschließen?`))return;
+setRoundCompletion(date,state.round,new Date().toISOString(),"manual");
+save("bs_round_completions",roundCompletions);
+const success=$(successSelector);success.style.display="block";setTimeout(()=>success.style.display="none",1500);
+renderFeed();renderFill();renderDashboard();
+}
 function updateAutoCompletions(now=new Date()){
 const minutes=Math.max(1,Number(settings.autoCompleteMinutes)||30),groups={};
 logs.forEach(l=>{if(!l.date||!l.round)return;const key=`${l.date}|${l.round}`,t=new Date(l.ts).getTime();if(Number.isFinite(t))groups[key]=Math.max(groups[key]||0,t);});
@@ -1226,6 +1260,8 @@ tons
 }));
 
 save("bs_logs",logs);
+clearRoundCompletion(feedingDate(r.round),r.round);
+save("bs_round_completions",roundCompletions);
 
 updateAutoCompletions();
 renderFill();
@@ -1239,12 +1275,8 @@ state.round=state.round==="Morgen" ? "Abend" : "Morgen";
 renderFill();
 };
 
-$("#completeRound").onclick=()=>{
-const now=new Date().toISOString();
-const date=feedingDate(state.round);setRoundCompletion(date,state.round,now,"manual");save("bs_round_completions",roundCompletions);
-$("#roundDone").style.display="block";setTimeout(()=>$("#roundDone").style.display="none",1500);renderDashboard();
-};
-$("#completeRoundFeed").onclick=()=>{const now=new Date().toISOString(),date=feedingDate(state.round);setRoundCompletion(date,state.round,now,"manual");save("bs_round_completions",roundCompletions);$("#roundDoneFeed").style.display="block";setTimeout(()=>$("#roundDoneFeed").style.display="none",1500);renderDashboard();};
+$("#completeRound").onclick=()=>completeCurrentRound("#roundDone");
+$("#completeRoundFeed").onclick=()=>completeCurrentRound("#roundDoneFeed");
 
 function rangeLogs(mode){
 const now=new Date();
@@ -1841,6 +1873,7 @@ $$("[data-history-del]").forEach(b=>b.onclick=()=>{if(confirm("Diesen Fütterung
 ensureGas();
 migrateLegacyLogs();
 updateAutoCompletions();
+updateHeaderClock();
 fillSelects();
 
 state.kw=Number(
@@ -1861,6 +1894,7 @@ renderSetup();
 renderHistory();
 
 setInterval(()=>{if(updateAutoCompletions()){renderFeed();renderDashboard();}},60000);
+setInterval(updateHeaderClock,1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){updateAutoCompletions();renderFeed();renderDashboard();}});
 
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
