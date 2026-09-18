@@ -1,0 +1,11 @@
+{
+  "name": "Biogasanlage Schneider – Fütterungsapp",
+  "short_name": "Fütterung",
+  "description": "Radlader-Testversion zur lokalen Erfassung und modellierten Gasprognose",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6f4",
+  "theme_color": "#1f7a4c",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
