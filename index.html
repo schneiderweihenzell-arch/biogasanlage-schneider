@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f7a4c">
 <meta name="description" content="Radlader-Testversion der Fütterungsapp für die Biogasanlage Schneider">
-<meta name="application-version" content="5.0-test">
+<meta name="application-version" content="6.0-test">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>Biogasanlage Schneider</title>
@@ -40,7 +40,7 @@ input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px
 .progress i{display:block;height:100%;background:#2b8b58}
 .entry{padding:12px 0;border-bottom:1px solid #edf2ef}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dfe8e3;display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:9}
-.navin{width:min(760px,100%);display:grid;grid-template-columns:repeat(4,1fr)}
+.navin{width:min(760px,100%);display:grid;grid-template-columns:repeat(5,1fr)}
 .nav button{border:0;background:#fff;padding:9px 1px;font-size:10px;color:#60766b}
 .nav button b{display:block;font-size:18px;margin-bottom:2px}
 .nav button.active{color:#1f7a4c;font-weight:800}
@@ -86,7 +86,7 @@ input,select{width:100%;padding:14px;border:1px solid #cddbd3;border-radius:13px
 .statusUp{color:#167545}.statusDown{color:#b45a20}.statusFlat{color:#36594a}
 .importStatus{padding:10px 12px;border-radius:12px;margin-top:10px;background:#eef3f0;display:none}
 .feedPlanRows{margin-top:10px}.feedPlanRow{display:grid;grid-template-columns:minmax(0,1.35fr) repeat(3,minmax(62px,.65fr));gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #e5ece8}.feedPlanRow:last-child{border-bottom:0}.feedPlanRow span:not(:first-child){text-align:right}.feedPlanHead{font-size:12px;color:#60766b;font-weight:700;padding-top:4px;padding-bottom:6px}.feedPlanRow .remainingOk{color:#1e7a4a}.feedPlanRow .remainingOpen{color:#a45f0a}
-.totalLine{font-weight:850;background:#f0f7f3;border-radius:10px;padding:10px!important;margin-top:5px}.negative{color:#b33a32!important}.modelCard{background:#f6f2ff;border-color:#d7c9f4}.setupMenu{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.setupMenu .btn{font-size:14px}.slurryKpi{background:#eef7fb;border-color:#b9dce8}.warningText{color:#9a4f12;font-weight:750}
+.totalLine{font-weight:850;background:#f0f7f3;border-radius:10px;padding:10px!important;margin-top:5px}.negative{color:#b33a32!important}.modelCard{background:#f6f2ff;border-color:#d7c9f4}.setupMenu{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.setupMenu .btn{font-size:14px}.slurryKpi{background:#eef7fb;border-color:#b9dce8}.warningText{color:#9a4f12;font-weight:750}.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px}.legend span:before{content:"";display:inline-block;width:18px;height:3px;margin:0 6px 3px 0;background:#1e7a4a}.legend .plan:before{background:#c83b3b}.additiveItem{border:1px solid #eadfb5;background:#fffaf0;border-radius:14px;padding:11px;margin-top:9px}.detailsBox{margin-top:12px;border-top:1px solid #e3ece7;padding-top:8px}.detailsBox summary{font-weight:750;color:#1e6d45;cursor:pointer}.extraCard{background:#f3f0ff;border-color:#d8cef3}
 @media(max-width:620px){
 .app{width:100%;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
 .top{padding:10px 12px}.brand{font-size:18px}.headerTime{font-size:12px}.screen{padding:10px}
@@ -99,7 +99,7 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 #weight{font-size:22px!important;font-weight:750;text-align:center}
 #addBtn{min-height:58px;font-size:18px}
 .chartWrap{height:205px}.note{font-size:13px}.small{font-size:13px}
-.navin{grid-template-columns:repeat(4,1fr)}.nav button{min-width:0;padding:7px 0 6px;font-size:10px}.nav button b{font-size:19px}
+.navin{grid-template-columns:repeat(5,1fr)}.nav button{min-width:0;padding:7px 0 6px;font-size:9px}.nav button b{font-size:18px}
 #plans .planRow:first-of-type{display:none}
 #planRows .planRow{grid-template-columns:1fr 1fr!important;background:#f7faf8;border:1px solid #dce7e1;border-radius:13px;padding:10px;margin:10px 0}
 #planRows .planRow>b{grid-column:1/-1;font-size:17px}
@@ -108,7 +108,7 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 #planRows .planCalc:nth-of-type(1)::before{content:"Tag: ";color:#6a8075}
 #planRows .planCalc:nth-of-type(2)::before{content:"Biogas: ";color:#6a8075}
 #planRows .planCalc:nth-of-type(3)::before{content:"Strom: ";color:#6a8075}
-#setup .card{overflow-x:auto}.setupGrid{min-width:690px}.setupGrid.header{display:grid}
+#setup .card{overflow-x:auto}.setupGrid{min-width:980px}.setupGrid.header{display:grid}
 .exportDialog{max-height:calc(100dvh - 20px);overflow:auto}.exportDialog .dialogBody{padding:15px}.exportDialog .dialogActions{position:sticky;bottom:0;background:#fff;padding-top:8px}
 .powerCompare{grid-template-columns:1fr 1fr}.powerCompare>div:last-child{grid-column:1/-1}
 .feedPlanRow{grid-template-columns:minmax(88px,1.2fr) repeat(3,minmax(52px,.65fr));gap:5px;font-size:13px}.feedPlanHead{font-size:11px}
@@ -125,7 +125,7 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 <div class="brand">🌿 Biogasanlage Schneider</div>
 <div id="headerDateTime" class="headerTime" aria-live="off"></div>
 </div>
-<div class="sub">Fütterung · Gülle · Prognose · Testversion 5.0</div>
+<div class="sub">Fütterung · Gülle · Extra · Prognose · Testversion 6.0</div>
 </header>
 
 <section id="dashboard" class="screen active">
@@ -145,13 +145,15 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 <button class="active" data-chart-mode="gas">Biogas m³/h</button>
 <button data-chart-mode="power">Elektrisch kW</button>
 </div>
+<div class="legend"><span>Aktuelle Prognose</span><span class="plan">Reine Plan-Prognose</span></div>
 <div class="chartWrap"><canvas id="forecastChart" aria-label="Modellierte 120-Stunden-Prognose"></canvas></div>
 </div>
 
 <div class="card kpi">
 <div class="muted small">Fütterungsbasierte Gasprognose</div>
 <div id="dashGas" class="n">0 m³/h</div>
-<div class="note">inkl. Eintragsverzug & Umsetzung</div>
+<div class="note">inkl. 15-Minuten-Eintrag und substratspezifischer Umsetzung</div>
+<div id="dashGasSources" class="note"></div>
 </div>
 
 <div class="card powerKpi">
@@ -168,7 +170,7 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 <div class="card">
 <div class="row">
 <div>
-<div class="muted small">Tendenz</div>
+<div class="muted small">12-Stunden-Tendenz aus bereits erfassten Mengen</div>
 <div id="trendLabel" class="big">gleichbleibend</div>
 </div>
 <div id="trendArrow" class="trend flat">→</div>
@@ -257,6 +259,16 @@ Fahrplan wird automatisch nach Wochentag gewählt.
 <div id="saved" class="success">Schaufel gespeichert ✓</div>
 </div>
 
+<div class="card powerKpi">
+<b>Leistung nach aktuellem Fütterungsstand</b>
+<div class="powerCompare">
+<div><span class="muted small">Morgen</span><b id="fillMorningPower">0 kW</b><span id="fillMorningDiff" class="small statusFlat">→ 0 kW</span></div>
+<div><span class="muted small">Abend</span><b id="fillEveningPower">0 kW</b><span id="fillEveningDiff" class="small statusFlat">→ 0 kW</span></div>
+<div><span class="muted small">Tag F1 + F2</span><b id="fillDayPower">0 kW</b><span id="fillDayDiff" class="small statusFlat">→ 0 kW</span></div>
+</div>
+<div class="note" style="margin-top:9px">Rundenwerte nur aus Morgen bzw. Abend; automatische Gülle einmalig im Tageswert · modelliert, nicht gemessen</div>
+</div>
+
 <div class="card">
 <div id="feedTotalTitle" class="muted small">Gesamte Menge Morgen · F1 + F2 gesamt</div>
 <div class="row">
@@ -275,34 +287,25 @@ Fahrplan wird automatisch nach Wochentag gewählt.
 <div id="substrateStatus" class="note" style="margin-top:9px"></div>
 </div>
 
-<div class="card modelCard">
-<b>Beladung und modellierte Dosierung</b>
-<div id="dosingStatus" class="note" style="margin-top:8px">Noch keine abgeschlossene Beladung.</div>
-<div class="grid2"><div><label>Dosierbeginn</label><input id="dosingStart" type="datetime-local"></div><div><label>Dosierende</label><input id="dosingEnd" type="datetime-local"></div></div>
-<div class="note">Beim manuellen Abschluss werden diese Zeiten gespeichert. Feststoffe werden rechnerisch in 15-Minuten-Abschnitten verteilt.</div>
-</div>
-
-<div class="card powerKpi">
-<b>Leistung nach aktuellem Fütterungsstand</b>
-<div class="powerCompare">
-<div><span class="muted small">Ziel F1 + F2</span><b id="fillPlanPower">0 kW</b></div>
-<div><span class="muted small">Prognose</span><b id="fillLivePower">0 kW</b></div>
-<div><span class="muted small">Differenz</span><b id="fillPowerDiff" class="statusFlat">→ 0 kW</b></div>
-</div>
-<div class="note" style="margin-top:9px">Laufende Runde nach Ist-Mengen, andere Runde nach Fahrplan · modelliert, nicht gemessen</div>
-</div>
-
 <div class="card">
 <div class="row">
 <div><b>Aktueller Fütterungsplan</b><div id="feedPlanContext" class="muted small">–</div></div>
 <span id="feedPlanTotal" class="pill">0,0 t Soll</span>
 </div>
 <div id="feedPlanOverview" class="feedPlanRows"></div>
+<div id="feedAdditives"></div>
 </div>
 
 <div class="card">
 <b>Letzte Schaufeln dieser Fütterung</b>
 <div id="recent"></div>
+</div>
+
+<div class="card modelCard">
+<b>Beladung und modellierte Dosierung</b>
+<div id="dosingStatus" class="note" style="margin-top:8px">Noch keine abgeschlossene Beladung.</div>
+<div class="grid2"><div><label>Dosierbeginn</label><input id="dosingStart" type="datetime-local"></div><div><label>Dosierende</label><input id="dosingEnd" type="datetime-local"></div></div>
+<div class="note">Beim manuellen Abschluss werden diese Zeiten gespeichert. Feststoffe werden rechnerisch in 15-Minuten-Abschnitten verteilt.</div>
 </div>
 <button id="completeRoundFeed" class="btn soft" style="width:100%;margin-bottom:14px">Fütterung abgeschlossen</button>
 <div id="roundDoneFeed" class="success">Abschlusszeit gespeichert ✓</div>
@@ -310,8 +313,23 @@ Fahrplan wird automatisch nach Wochentag gewählt.
 
 <section id="slurry" class="screen">
 <div class="card slurryKpi"><h2 class="sectiontitle">Gülle</h2><p class="note">Rechnerische kontinuierliche Zufuhr – keine Pumpensteuerung und keine gemessene Menge.</p><div class="grid2"><div class="kpi"><div class="muted small">Tagesmenge</div><div id="slurryDayKpi" class="n">0,0 m³</div></div><div class="kpi"><div class="muted small">Stundenmenge</div><div id="slurryHourKpi" class="n">0,00 m³/h</div></div></div><div id="slurryTodayStatus" class="note" style="margin-top:10px"></div></div>
-<div class="card"><label>Automatische Mengenberechnung</label><select id="slurryEnabled"><option value="false">Aus</option><option value="true">Ein</option></select><label>Standard-Tagesmenge (m³/Tag)</label><input id="slurryM3Day" type="number" min="0" step="0.1" inputmode="decimal"><label>Verteilung</label><select id="slurryTarget"><option value="equal">50 % F1 / 50 % F2</option></select><label>Wirksam ab</label><input id="slurryEffectiveFrom" type="datetime-local"><label>Gasertrag (m³ Biogas je m³ Gülle)</label><input id="slurryYield" type="number" min="0" step="0.1"><label>Dichte für optionale Massenauswertung (t/m³)</label><input id="slurryDensity" type="number" min="0" step="0.01"><button id="saveSlurry" class="btn primary" style="width:100%;margin-top:12px">Gülleeinstellung ab Wirksamkeitszeit speichern</button><div id="slurrySaved" class="success">Gülleeinstellung gespeichert ✓</div></div>
+<div class="card"><label>Automatische Gülle</label><select id="slurryEnabled"><option value="false">Aus</option><option value="true">Ein</option></select><label>Standard-Tagesmenge (m³/Tag)</label><input id="slurryM3Day" type="number" min="0" step="0.1" inputmode="decimal"><label>Anteil Fermenter 1 (%)</label><input id="slurrySplitF1" type="number" min="0" max="100" step="1"><div id="slurrySplitText" class="note">F1 50 % · F2 50 %</div><label>Gasertrag (m³ Biogas je m³ Gülle)</label><input id="slurryYield" type="number" min="0" step="0.1"><details class="detailsBox"><summary>Erweiterte Einstellungen</summary><label>Wirksam ab</label><input id="slurryEffectiveFrom" type="datetime-local"><label>Dichte für optionale Massenauswertung (t/m³)</label><input id="slurryDensity" type="number" min="0" step="0.01"></details><button id="saveSlurry" class="btn primary" style="width:100%;margin-top:12px">Gülleeinstellung ab Wirksamkeitszeit speichern</button><div id="slurrySaved" class="success">Gülleeinstellung gespeichert ✓</div></div>
 <div class="card"><h3 class="sectiontitle">Tagesabweichung und Pause</h3><label>Tag</label><input id="slurryOverrideDate" type="date"><label>Abweichende Tagesmenge (m³; leer = Standard)</label><input id="slurryOverrideM3" type="number" min="0" step="0.1"><button id="saveSlurryOverride" class="btn soft" style="width:100%;margin-top:10px">Tagesabweichung speichern</button><div class="grid2"><div><label>Pause von</label><input id="slurryPauseFrom" type="datetime-local"></div><div><label>Pause bis</label><input id="slurryPauseTo" type="datetime-local"></div></div><button id="addSlurryPause" class="btn soft" style="width:100%;margin-top:10px">Dosierpause hinzufügen</button><div id="slurryPauseList" class="note" style="margin-top:10px"></div></div>
+</section>
+
+<section id="extra" class="screen">
+<div class="card extraCard"><h2 class="sectiontitle">Extra</h2><p class="note">Zusätzliche Einbringung außerhalb des Morgen- und Abendplans. Der reguläre Fahrplan bleibt unverändert.</p></div>
+<div class="card">
+<label>Einsatzstoff</label><select id="extraSubstrate"></select>
+<label>Menge</label><input id="extraAmount" type="number" min="0" step="0.1" inputmode="decimal">
+<label>Einheit</label><select id="extraUnit"><option value="t">t</option><option value="m³">m³</option></select>
+<label>Fermenter</label><select id="extraFer"><option value="1">Fermenter 1</option><option value="2">Fermenter 2</option></select>
+<label>Zeitpunkt</label><input id="extraTime" type="datetime-local">
+<label>Kommentar oder Grund optional</label><input id="extraComment" placeholder="z. B. Ausgleich oder Sondercharge">
+<button id="saveExtra" class="btn primary" style="width:100%;margin-top:12px">Extra-Einbringung speichern</button>
+<div id="extraSaved" class="success">Extra-Einbringung gespeichert ✓</div>
+</div>
+<div class="card"><b>Letzte Extra-Einbringungen</b><div id="extraRecent"></div></div>
 </section>
 
 <section id="summary" class="screen">
@@ -499,6 +517,15 @@ Gasparameter speichern
 </div>
 
 <div class="card">
+<h3 class="sectiontitle">Zusatzstoffe</h3>
+<p class="note">Zusatzstoffe werden getrennt von den Feststofftonnen geführt und nicht in die Gasprognose eingerechnet.</p>
+<div id="additiveSetupRows"></div>
+<button id="addAdditiveRule" class="btn soft" style="width:100%;margin-top:10px">+ Zusatzstoff-Regel hinzufügen</button>
+<button id="saveAdditives" class="btn primary" style="width:100%;margin-top:10px">Zusatzstoff-Regeln speichern</button>
+<div id="additivesSaved" class="success">Zusatzstoff-Regeln gespeichert ✓</div>
+</div>
+
+<div class="card">
 <h3 class="sectiontitle">Datenübernahme und Sicherung</h3>
 <p class="note">Die Excelvorlage übernimmt Fahrpläne und Einstellungen. Vorhandene Fütterungseinträge bleiben erhalten. Der Import wird vor dem Speichern geprüft und muss bestätigt werden.</p>
 <label>Excel-Importvorlage auswählen</label>
@@ -519,6 +546,7 @@ Gasparameter speichern
 <button class="active" data-screen="dashboard"><b>⌂</b>Dashboard</button>
 <button data-screen="fill"><b>🚜</b>Füttern</button>
 <button data-screen="slurry"><b>💧</b>Gülle</button>
+<button data-screen="extra"><b>＋</b>Extra</button>
 <button data-screen="setup"><b>⚙</b>Setup</button>
 </div>
 </nav>
@@ -550,31 +578,23 @@ const defaultSubs=[
 
 const defaultGas={
 "Maissilage":{
-yield:200,
-delay:2,
-peak:10
+yield:185,peak:2,t50:36,decay:120,ch4:52,status:"Literatur-Startwert"
 },
 "Grassilage":{
-yield:180,
-delay:2.5,
-peak:14
+yield:208,peak:2,t50:52,decay:168,ch4:52,status:"Literatur-Startwert"
 },
 "GPS":{
-yield:190,
-delay:2.5,
-peak:12
+yield:195,peak:2,t50:40,decay:144,ch4:52,status:"Literatur-Startwert"
 },
 "Rindergülle":{
-yield:25,ts:8,ots:75,
-delay:1,
-peak:5
+yield:25,ts:8,ots:75,peak:12,t50:64,decay:216,ch4:55,status:"Literatur-Startwert",yieldBasis:"m3_biogas_per_m3"
 },
-"Getreidekorn":{yield:620,ts:86,ots:97,delay:2,peak:12},
-"Feuchtmaisschrot":{yield:420,ts:65,ots:97,delay:2,peak:11},
-"Rindermist":{yield:80,ts:25,ots:80,delay:3,peak:18},
-"Entmischte Melasse":{yield:300,ts:55,ots:90,delay:1,peak:8}
+"Getreidekorn":{yield:590,ts:86,ots:97,peak:2,t50:20,decay:72,ch4:52,status:"Literatur-Startwert"},
+"Feuchtmaisschrot":{yield:451,ts:65,ots:97,peak:2,t50:20,decay:72,ch4:52,status:"Literatur-Startwert"},
+"Rindermist":{yield:90,ts:25,ots:80,peak:12,t50:64,decay:216,ch4:55,status:"Literatur-Startwert"},
+"Entmischte Melasse":{yield:215,ts:55,ots:90,peak:5,t50:11,decay:48,ch4:55,status:"Literatur-Startwert"}
 ,
-"Sep. Gärrest":{yield:50,ts:25,ots:50,delay:4,peak:18,category:"manure"}
+"Sep. Gärrest":{yield:50,ts:25,ots:50,peak:48,t50:120,decay:480,ch4:55,status:"ungeprüft",category:"manure"}
 };
 defaultGas["Maissilage"].ts=33; defaultGas["Maissilage"].ots=96;
 defaultGas["Grassilage"].ts=35; defaultGas["Grassilage"].ots=90;
@@ -620,12 +640,21 @@ let week={...(BUILT_IN.week||{
 5:900,
 6:800
 }),...load("bs_week",{})};
-let gas={...defaultGas,...(BUILT_IN.gas||{}),...load("bs_gas",{})};
+const storedGas=load("bs_gas",null);
+let gas=storedGas?{...defaultGas,...(BUILT_IN.gas||{}),...storedGas}:{...(BUILT_IN.gas||{}),...defaultGas};
 let roundCompletions=load("bs_round_completions",{});
 let dosingSchedules=load("bs_dosing_schedules",{});
-let slurry=load("bs_slurry",{enabled:false,standardM3Day:8,target:"equal",gasYieldM3PerM3:25,densityTPerM3:1,effectiveFrom:new Date().toISOString(),changes:[],overrides:{},pauses:[]});
-slurry={enabled:false,standardM3Day:8,target:"equal",gasYieldM3PerM3:25,densityTPerM3:1,effectiveFrom:new Date().toISOString(),changes:[],overrides:{},pauses:[],...slurry};
+let slurry=load("bs_slurry",{enabled:true,standardM3Day:8,splitF1Pct:50,gasYieldM3PerM3:25,densityTPerM3:1,effectiveFrom:new Date().toISOString(),changes:[],overrides:{},pauses:[]});
+slurry={enabled:true,standardM3Day:8,splitF1Pct:50,gasYieldM3PerM3:25,densityTPerM3:1,effectiveFrom:new Date().toISOString(),changes:[],overrides:{},pauses:[],...slurry};
 slurry.changes=Array.isArray(slurry.changes)?slurry.changes:[];slurry.overrides=slurry.overrides||{};slurry.pauses=Array.isArray(slurry.pauses)?slurry.pauses:[];
+const defaultAdditiveRules=[
+{id:"spuren-f1",name:"Schaumann Spuren",unit:"Sack",weightPerBagKg:0,amount:1,fer:1,round:"Morgen",days:[1,2,3,4,5],active:true},
+{id:"eisen-f1",name:"Sampower Eisen",unit:"Sack",weightPerBagKg:0,amount:1,fer:1,round:"Morgen",days:[1,2,3,4,5],active:true},
+{id:"spuren-f2",name:"Schaumann Spuren",unit:"Sack",weightPerBagKg:0,amount:1,fer:2,round:"Morgen",days:[1,3,5],active:true},
+{id:"eisen-f2",name:"Sampower Eisen",unit:"Sack",weightPerBagKg:0,amount:1,fer:2,round:"Morgen",days:[1,3,5],active:true}
+];
+let additiveRules=load("bs_additive_rules",defaultAdditiveRules);
+let additiveLogs=load("bs_additive_logs",[]);
 save("bs_subs",subs);
 
 let state={
@@ -704,6 +733,7 @@ x.classList.toggle("active",x.dataset.screen===id);
 if(id==="dashboard") renderDashboard();
 if(id==="fill") renderFeed();
 if(id==="slurry") renderSlurry();
+if(id==="extra") renderExtra();
 if(id==="summary") renderSummary();
 if(id==="history") renderHistory();
 if(id==="plans") renderPlan();
@@ -753,7 +783,9 @@ subs.forEach(s=>{
 if(!gas[s]){
 gas[s]={...(defaultGas[s]||{yield:0,ts:0,ots:0,delay:0,peak:0,category:"unassigned"})};
 }
-gas[s]={yield:0,ts:0,ots:0,delay:0,peak:0,...gas[s]};
+gas[s]={yield:0,ts:0,ots:0,ch4:0,peak:0,t50:0,decay:0,status:"ungeprüft",...(defaultGas[s]||{}),...gas[s]};
+if(!gas[s].t50)gas[s].t50=Math.max(Number(gas[s].peak)||0,(Number(gas[s].delay)||0)+(Number(gas[s].peak)||0)*3);
+if(!gas[s].decay)gas[s].decay=Math.max(48,(Number(gas[s].t50)||0)*3);
 if(!gas[s].category)gas[s].category=["Rindergülle","Rindermist","Sep. Gärrest"].includes(s)?"manure":["Entmischte Melasse"].includes(s)?"other":"nawaro";
 });
 save("bs_gas",gas);
@@ -782,7 +814,7 @@ return limit>0&&duration>0?Math.min(energy,limit*duration):energy;
 
 function parameterSnapshot(sub){
 const g=gas[sub]||{};
-return {ts:Number(g.ts)||0,ots:Number(g.ots)||0,yieldValue:Number(g.yield)||0,yieldBasis:g.yieldBasis||"m3_biogas_per_t_fresh_mass",delayHours:Number(g.delay)||0,peakHours:Number(g.peak)||0,energyKwhPerM3:Number(settings.energyContent)||5.5,bhkwEfficiencies:(settings.bhkwEfficiencies||[]).map(x=>({...x})),electricEfficiency:averageEfficiency(),activeBhkwPowerKw:activeBhkwPower()};
+return {ts:Number(g.ts)||0,ots:Number(g.ots)||0,ch4Pct:Number(g.ch4)||0,yieldValue:Number(g.yield)||0,yieldBasis:g.yieldBasis||"m3_biogas_per_t_fresh_mass",delayHours:Number(g.delay)||0,peakHours:Number(g.peak)||0,t50Hours:Number(g.t50)||0,decayHours:Number(g.decay)||0,parameterStatus:g.status||"ungeprüft",energyKwhPerM3:Number(settings.energyContent)||5.5,bhkwEfficiencies:(settings.bhkwEfficiencies||[]).map(x=>({...x})),electricEfficiency:averageEfficiency(),activeBhkwPowerKw:activeBhkwPower()};
 }
 
 function snapshotFor(log){
@@ -792,6 +824,11 @@ return log.parameterSnapshot||parameterSnapshot(log.sub);
 function makeLog(data){
 return {id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,ts:new Date().toISOString(),date:feedingDate(data.round),...data,parameterSnapshot:parameterSnapshot(data.sub),schemaVersion:3};
 }
+
+function requiredAdditives(date,round,fer){const day=dateAt(date,"12:00").getDay();return additiveRules.filter(r=>r.active!==false&&(r.fer==="both"||Number(r.fer)===Number(fer))&&(r.round==="both"||r.round===round)&&(r.days||[]).map(Number).includes(day));}
+function additiveConfirmed(date,rule,fer,round){return additiveLogs.some(l=>l.date===date&&l.ruleId===rule.id&&Number(l.fer)===Number(fer)&&l.round===round&&l.status==="confirmed");}
+function renderFeedAdditives(date,fer,round){const rules=requiredAdditives(date,round,fer),el=$("#feedAdditives");if(!el)return;el.innerHTML=rules.length?`<h4 style="margin:14px 0 4px">Zusatzstoffe</h4>${rules.map(r=>{const done=additiveConfirmed(date,r,fer,round);return `<div class="additiveItem row"><div><b>${r.name}</b><div class="small muted">F${fer} · ${round} · ${formatNum(r.amount,1)} ${r.unit}${r.unit==="Sack"&&Number(r.weightPerBagKg)>0?` · ${formatNum(r.weightPerBagKg,1)} kg/Sack`:""}</div></div>${done?`<span class="tag">erfasst ✓</span>`:`<button class="btn soft" data-additive-confirm="${r.id}">Erfasst</button>`}</div>`;}).join("")}`:`<div class="note" style="margin-top:10px">Für diese Runde sind keine Pflicht-Zusatzstoffe geplant.</div>`;$$('[data-additive-confirm]').forEach(b=>b.onclick=()=>{const r=additiveRules.find(x=>x.id===b.dataset.additiveConfirm);if(!r)return;additiveLogs.push({id:`add-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,ts:new Date().toISOString(),date,name:r.name,amount:Number(r.amount)||0,unit:r.unit,fer:Number(fer),round,ruleId:r.id,status:"confirmed",source:"manuell"});save("bs_additive_logs",additiveLogs);renderFeed();});}
+function missingAdditives(date,round){return [1,2].flatMap(fer=>requiredAdditives(date,round,fer).map(rule=>({rule,fer}))).filter(x=>!additiveLogs.some(l=>l.date===date&&l.ruleId===x.rule.id&&Number(l.fer)===x.fer&&l.round===round&&(l.status==="confirmed"||l.status==="missing"))).map(x=>({...x.rule,fer:x.fer,round}));}
 
 function migrateLegacyLogs(){
 let changed=false;
@@ -810,6 +847,7 @@ const selectableSubs=subs.filter(s=>!(slurry.enabled&&s==="Rindergülle"));
 $("#substrate").innerHTML=selectableSubs
 .map(s=>`<option>${s}</option>`).join("");
 if(selected && selectableSubs.includes(selected)) $("#substrate").value=selected;
+if($("#extraSubstrate")){const extraSelected=$("#extraSubstrate").value;$("#extraSubstrate").innerHTML=subs.map(s=>`<option>${s}</option>`).join("");if(extraSelected&&subs.includes(extraSelected))$("#extraSubstrate").value=extraSelected;}
 
 $("#kwSelect").value=state.kw;
 $("#planKw").value=state.kw;
@@ -857,13 +895,14 @@ $("#remaining").className=totals.remaining<0?"negative":"";
 $("#count").textContent=`${totals.count} Schaufeln gesamt`;
 $("#substrateStatus").textContent=`Ausgewählt: ${sub} · Fermenter ${state.fer} · Ist ${formatTons(substrateActual)} / Soll ${formatTons(substrateTarget)} · Rest ${formatTons(substrateRemaining)}${slurry.enabled?` · Rindergülle automatisch ${formatNum(slurryDayAmount(today),1)} m³/Tag (50 % F1 / 50 % F2)`:""}`;
 $("#bar").style.width=`${pct}%`;
-renderPowerComparison("fill",plannedDayMetrics(state.kw,today),liveDayMetrics(state.kw,today));
+renderFeedPower(state.kw,today);
 const planItems=subs.map(name=>{const target=getTarget(state.kw,state.fer,state.round,name),actual=sumLogs(logs.filter(l=>entryDate(l)===today&&Number(l.kw)===state.kw&&Number(l.fer)===state.fer&&l.round===state.round&&l.sub===name));return{name,target,actual,remaining:target-actual};}).filter(x=>x.target>0||x.actual>0);
 const planTotal=planItems.reduce((sum,x)=>sum+x.target,0);
 $("#feedPlanContext").textContent=`Fermenter ${state.fer} · ${state.round==="Morgen"?"☀️":"🌙"} ${state.round} · ${state.kw} kW`;
 $("#feedPlanTotal").textContent=`${formatNum(planTotal,1)} t Soll`;
 const planActual=planItems.reduce((sum,x)=>sum+x.actual,0),planRest=planTotal-planActual;
 $("#feedPlanOverview").innerHTML=planItems.length?`<div class="feedPlanRow feedPlanHead"><span>Substrat</span><span>Soll</span><span>Ist</span><span>Rest</span></div>${planItems.map(x=>`<div class="feedPlanRow"><span><b>${x.name}</b></span><span>${formatNum(x.target,1)} t</span><span>${formatNum(x.actual,1)} t</span><span class="${x.remaining<0?"negative":x.remaining<=0.01?"remainingOk":"remainingOpen"}">${formatNum(x.remaining,1)} t</span></div>`).join("")}<div class="feedPlanRow totalLine"><span>Gesamt</span><span>${formatNum(planTotal,1)} t</span><span>${formatNum(planActual,1)} t</span><span class="${planRest<0?"negative":""}">${formatNum(planRest,1)} t</span></div>`:`<div class="muted" style="padding-top:10px">Für Fermenter ${state.fer} · ${state.round} · ${state.kw} kW sind noch keine Sollmengen hinterlegt.</div>`;
+renderFeedAdditives(today,state.fer,state.round);
 const completion=roundCompletions[`${today}|all|${state.round}`];
 $("#completeRoundFeed").textContent=completion?`Abgeschlossen ${new Date(completionValue(completion)).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})} (${completionMode(completion)==="auto"?"automatisch":"manuell"})`:"Fütterung abgeschlossen";
 renderDosingStatus(today,state.round);
@@ -954,6 +993,9 @@ renderDashboard();
 setTimeout(()=>{addInProgress=false;$("#addBtn").disabled=false;},450);
 };
 
+function renderExtra(){fillSelects();if(!$("#extraTime").value)$("#extraTime").value=toLocalDateTimeInput(new Date());const recent=logs.filter(l=>l.isExtra).slice().sort((a,b)=>new Date(b.ts)-new Date(a.ts)).slice(0,20);$("#extraRecent").innerHTML=recent.length?recent.map(l=>`<div class="entry row"><div><b>${formatNum(l.amount??logTons(l),1)} ${l.unit||"t"} ${l.sub}</b><div class="small muted">F${l.fer} · Extra · ${new Date(l.ts).toLocaleString("de-DE")}${l.comment?` · ${l.comment}`:""}</div></div><button class="btn danger small" data-extra-del="${l.id}">Löschen</button></div>`).join(""):`<div class="muted" style="padding-top:10px">Noch keine Extra-Einbringung erfasst.</div>`;$$('[data-extra-del]').forEach(b=>b.onclick=()=>{const removed=logs.find(l=>String(l.id)===String(b.dataset.extraDel));if(!removed||!confirm("Diese Extra-Einbringung löschen?"))return;logs=logs.filter(l=>String(l.id)!==String(b.dataset.extraDel));corrections.push({type:"deleted_extra",at:new Date().toISOString(),entry:{...removed}});save("bs_logs",logs);save("bs_corrections",corrections);renderExtra();renderDashboard();});}
+$("#saveExtra").onclick=()=>{const amount=Number(String($("#extraAmount").value).replace(",",".")),ts=new Date($("#extraTime").value),unit=$("#extraUnit").value,sub=$("#extraSubstrate").value;if(!(amount>0)||!Number.isFinite(ts.getTime())||!sub){alert("Bitte Einsatzstoff, positive Menge und gültigen Zeitpunkt eingeben.");return;}const log=makeLog({ts:ts.toISOString(),date:localDate(ts),kw:0,fer:Number($("#extraFer").value),round:"Extra",sub,amount,unit,tons:unit==="t"?amount:undefined,isExtra:true,comment:$("#extraComment").value.trim(),captureType:"Extra"});logs.push(log);save("bs_logs",logs);$("#extraAmount").value="";$("#extraComment").value="";$("#extraSaved").style.display="block";setTimeout(()=>$("#extraSaved").style.display="none",1400);renderExtra();renderDashboard();};
+
 function dateAt(day,time,addDay=0){
 const [y,m,d]=day.split("-").map(Number);
 const [h,min]=(time||"00:00").split(":").map(Number);
@@ -969,7 +1011,7 @@ function regularDosingEnd(date,round){if(round==="Morgen")return dateAt(date,set
 function scheduleComposition(date,fer,round){const entries=logs.filter(l=>entryDate(l)===date&&Number(l.fer)===Number(fer)&&l.round===round);return entries.map(l=>({logId:l.id,sub:l.sub,tons:logTons(l),snapshot:{...snapshotFor(l)}}));}
 function createDosingSchedules(date,round,completedAt,mode,startAt,endAt){
 const start=new Date(startAt),end=new Date(endAt),valid=Number.isFinite(start.getTime())&&Number.isFinite(end.getTime())&&end>start;
-[1,2].forEach(fer=>{const composition=scheduleComposition(date,fer,round),key=`${date}|${fer}|${round}`;dosingSchedules[key]={date,fer,round,completedAt:new Date(completedAt).toISOString(),startAt:valid?start.toISOString():null,endAt:valid?end.toISOString():null,mode,status:composition.length?(valid?"modelled":"needs_time_review"):"completed_without_material",modelVersion:"quarter-hour-gamma-v1",composition};});
+[1,2].forEach(fer=>{const composition=scheduleComposition(date,fer,round),key=`${date}|${fer}|${round}`;dosingSchedules[key]={date,fer,round,completedAt:new Date(completedAt).toISOString(),startAt:valid?start.toISOString():null,endAt:valid?end.toISOString():null,mode,status:composition.length?(valid?"modelled":"needs_time_review"):"completed_without_material",modelVersion:"quarter-hour-lognormal-v2",composition};});
 save("bs_dosing_schedules",dosingSchedules);return valid;
 }
 function roundTotals(kw,round,date=feedingDate(round)){
@@ -982,6 +1024,7 @@ return{target,actual,remaining:target-actual,count:matching.length};
 function completeCurrentRound(successSelector){
 const date=feedingDate(state.round),totals=roundTotals(state.kw,state.round,date);
 if(totals.remaining>0.05&&!confirm(`Für die gesamte Fütterung sind noch ${formatTons(totals.remaining)} offen. Trotzdem ${state.round} für beide Fermenter und alle Substrate abschließen?`))return;
+const missing=missingAdditives(date,state.round);if(missing.length){const text=missing.map(r=>`${r.name}, F${r.fer} ${r.round}, ${formatNum(r.amount,1)} ${r.unit}`).join("\n");if(!confirm(`Folgende Zusatzstoffe fehlen:\n${text}\n\nTrotzdem abschließen und als fehlend kennzeichnen?`))return;missing.forEach(r=>additiveLogs.push({id:`miss-${Date.now()}-${r.id}`,ts:new Date().toISOString(),date,name:r.name,amount:0,plannedAmount:Number(r.amount)||0,unit:r.unit,fer:Number(r.fer),round:r.round,ruleId:r.id,status:"missing",source:"Abschlusswarnung"}));save("bs_additive_logs",additiveLogs);}
 const completedAt=new Date(),start=new Date($("#dosingStart").value),end=new Date($("#dosingEnd").value);
 if(!Number.isFinite(start.getTime())||!Number.isFinite(end.getTime())||end<=start){alert("Dosierbeginn und Dosierende müssen vollständig sein; das Ende muss nach dem Beginn liegen.");return;}
 setRoundCompletion(date,state.round,completedAt,"manual");
@@ -992,11 +1035,11 @@ renderFeed();renderFill();renderDashboard();
 }
 function updateAutoCompletions(now=new Date()){
 const minutes=Math.max(1,Number(settings.autoCompleteMinutes)||30),groups={};
-logs.forEach(l=>{if(!l.date||!l.round)return;const key=`${l.date}|${l.round}`,t=new Date(l.ts).getTime();if(Number.isFinite(t))groups[key]=Math.max(groups[key]||0,t);});
+logs.forEach(l=>{if(!l.date||!l.round||l.isExtra||!["Morgen","Abend"].includes(l.round))return;const key=`${l.date}|${l.round}`,t=new Date(l.ts).getTime();if(Number.isFinite(t))groups[key]=Math.max(groups[key]||0,t);});
 let changed=false;
 Object.entries(groups).forEach(([key,last])=>{const split=key.lastIndexOf("|"),date=key.slice(0,split),round=key.slice(split+1),allKey=`${date}|all|${round}`,existing=roundCompletions[allKey],existingTime=new Date(completionValue(existing)||0).getTime();
 if(existing&&completionMode(existing)==="auto"&&last>=existingTime){[1,2].forEach(f=>delete roundCompletions[`${date}|${f}|${round}`]);delete roundCompletions[allKey];changed=true;}
-if(now.getTime()>=last+minutes*60000&&!roundCompletions[allKey]){const completedAt=new Date(last+minutes*60000),start=new Date(last),end=regularDosingEnd(date,round);setRoundCompletion(date,round,completedAt,"auto");createDosingSchedules(date,round,completedAt,"auto",start,end);changed=true;}
+if(now.getTime()>=last+minutes*60000&&!roundCompletions[allKey]){const completedAt=new Date(last+minutes*60000),start=new Date(last),end=regularDosingEnd(date,round);setRoundCompletion(date,round,completedAt,"auto");createDosingSchedules(date,round,completedAt,"auto",start,end);missingAdditives(date,round).forEach(r=>additiveLogs.push({id:`miss-${completedAt.getTime()}-${r.id}`,ts:completedAt.toISOString(),date,name:r.name,amount:0,plannedAmount:Number(r.amount)||0,unit:r.unit,fer:Number(r.fer),round:r.round,ruleId:r.id,status:"missing",source:"Autoabschluss"}));save("bs_additive_logs",additiveLogs);changed=true;}
 });
 if(changed){save("bs_round_completions",roundCompletions);save("bs_dosing_schedules",dosingSchedules);}
 return changed;
@@ -1014,22 +1057,10 @@ $("#dosingStatus").textContent=`Geladen: ${formatTons(loaded)} · Dosierung vorg
 }
 
 function feedingShape(ageHours,cfg){
-const delay=Number(cfg.delay)||0;
-const peak=Math.max(1,Number(cfg.peak)||8);
-
-if(ageHours<=delay) return 0;
-
-const t=ageHours-delay;
-const scale=peak/3;
-
-const x=Math.max(0.0001,t/scale);
-
-/*
-Gamma-ähnliche Kurve:
-langsamer Anstieg, Maximum, danach Abklingen.
-Die Fläche wird anschließend zur stündlichen Gasmenge skaliert.
-*/
-return Math.pow(x,2)*Math.exp(-x);
+const peak=Math.max(.25,Number(cfg.peak)||8),t50=Math.max(peak+.01,Number(cfg.t50)||peak*3),decay=Math.max(t50,Number(cfg.decay)||t50*3);
+if(ageHours<=0||ageHours>decay)return 0;
+const sigma2=Math.max(.02,Math.log(t50/peak)),sigma=Math.sqrt(sigma2),mu=Math.log(t50),t=Math.max(.0001,ageHours);
+return Math.exp(-Math.pow(Math.log(t)-mu,2)/(2*sigma2))/(t*sigma*Math.sqrt(2*Math.PI));
 }
 
 function portionsFromSchedule(schedule){
@@ -1037,25 +1068,32 @@ if(!schedule?.startAt||!schedule?.endAt)return[];const start=new Date(schedule.s
 for(let cursor=new Date(start);cursor<end;){const next=new Date(Math.min(end.getTime(),cursor.getTime()+15*60000)),fraction=(next-cursor)/duration;schedule.composition.forEach(x=>{const snap=x.snapshot||parameterSnapshot(x.sub);out.push({at:next.toISOString(),source:"Feststoff",fer:schedule.fer,sub:x.sub,amount:Number(x.tons||0)*fraction,unit:"t",potentialGas:Number(x.tons||0)*fraction*(Number(snap.yieldValue)||0),snapshot:snap,modelVersion:schedule.modelVersion});});cursor=next;}
 return out;
 }
-function plannedSchedule(date,fer,round){const kw=Number(week[dateAt(date,"12:00").getDay()]||0),start=dateAt(date,round==="Morgen"?(settings.morning||"07:00"):(settings.evening||"17:00")),end=regularDosingEnd(date,round),composition=subs.map(sub=>({sub,tons:getTarget(kw,fer,round,sub),snapshot:parameterSnapshot(sub)})).filter(x=>x.tons>0);return{date,fer,round,startAt:start.toISOString(),endAt:end.toISOString(),composition,modelVersion:"planned-quarter-hour-gamma-v1"};}
+function plannedSchedule(date,fer,round){const kw=Number(week[dateAt(date,"12:00").getDay()]||0),start=dateAt(date,round==="Morgen"?(settings.morning||"07:00"):(settings.evening||"17:00")),end=regularDosingEnd(date,round),composition=subs.map(sub=>({sub,tons:getTarget(kw,fer,round,sub,date),snapshot:parameterSnapshot(sub)})).filter(x=>x.tons>0);return{date,fer,round,startAt:start.toISOString(),endAt:end.toISOString(),composition,modelVersion:"planned-quarter-hour-lognormal-v2"};}
 function plannedInputs(until){const now=new Date(),out=[];for(let d=new Date(now.getFullYear(),now.getMonth(),now.getDate());d<=until;d.setDate(d.getDate()+1)){const date=localDate(d);["Morgen","Abend"].forEach(round=>[1,2].forEach(fer=>{const key=`${date}|${fer}|${round}`;if(dosingSchedules[key])return;const s=plannedSchedule(date,fer,round);if(new Date(s.startAt)>now&&s.composition.length)out.push(...portionsFromSchedule(s));}));}return out;}
-function slurryConfigAt(at){const base={enabled:slurry.enabled,standardM3Day:slurry.standardM3Day,target:"equal",gasYieldM3PerM3:slurry.gasYieldM3PerM3,densityTPerM3:slurry.densityTPerM3,effectiveFrom:slurry.effectiveFrom},changes=[base,...slurry.changes].filter(x=>x.effectiveFrom&&new Date(x.effectiveFrom)<=at).sort((a,b)=>new Date(a.effectiveFrom)-new Date(b.effectiveFrom));return changes.length?changes.at(-1):{...base,enabled:false};}
+function purePlanInputs(from,to){const out=[];for(let d=new Date(from.getFullYear(),from.getMonth(),from.getDate());d<=to;d.setDate(d.getDate()+1)){const date=localDate(d);["Morgen","Abend"].forEach(round=>[1,2].forEach(fer=>{const s=plannedSchedule(date,fer,round);if(s.composition.length)out.push(...portionsFromSchedule(s));}));}return out;}
+function extraInputs(from,to){return logs.filter(l=>l.isExtra&&new Date(l.ts)>=from&&new Date(l.ts)<=to).map(l=>{const p=snapshotFor(l),amount=Number(l.amount??logTons(l))||0;return{at:l.ts,source:"Extra",fer:l.fer,sub:l.sub,amount,unit:l.unit||"t",potentialGas:amount*(Number(p.yieldValue)||0),snapshot:p,modelVersion:"extra-direct-v1"};});}
+function slurryConfigAt(at){const defaults={enabled:false,standardM3Day:8,splitF1Pct:50,gasYieldM3PerM3:25,densityTPerM3:1,effectiveFrom:slurry.effectiveFrom},base={enabled:slurry.enabled,standardM3Day:slurry.standardM3Day,splitF1Pct:slurry.splitF1Pct??50,gasYieldM3PerM3:slurry.gasYieldM3PerM3,densityTPerM3:slurry.densityTPerM3,effectiveFrom:slurry.effectiveFrom},source=slurry.changes.length?slurry.changes:[base],changes=source.filter(x=>x.effectiveFrom&&new Date(x.effectiveFrom)<=at).sort((a,b)=>new Date(a.effectiveFrom)-new Date(b.effectiveFrom));return changes.reduce((cfg,x)=>({...cfg,...x}),defaults);}
 function slurryDayAmount(date){const cfg=slurryConfigAt(dateAt(date,"12:00")),override=slurry.overrides?.[date];return override!=null&&override!==""?Number(override)||0:Number(cfg.standardM3Day)||0;}
 function slurryPaused(at){return slurry.pauses.some(p=>new Date(p.from)<=at&&at<new Date(p.to));}
-function slurryInputs(from,to){const out=[];let cursor=new Date(Math.floor(from.getTime()/(15*60000))*15*60000);while(cursor<to){const next=new Date(cursor.getTime()+15*60000),mid=new Date((cursor.getTime()+next.getTime())/2),cfg=slurryConfigAt(mid);if(cfg.enabled&&!slurryPaused(mid)){const m3=slurryDayAmount(localDate(mid))/96;[1,2].forEach(fer=>out.push({at:next.toISOString(),source:"Rindergülle automatisch",fer,sub:"Rindergülle",amount:m3/2,unit:"m³",potentialGas:m3/2*(Number(cfg.gasYieldM3PerM3)||0),snapshot:{...parameterSnapshot("Rindergülle"),yieldValue:Number(cfg.gasYieldM3PerM3)||0},modelVersion:"continuous-slurry-quarter-hour-v1"}));}cursor=next;}return out;}
-function modelInputs(atDate){const from=new Date(atDate.getTime()-14*86400000),to=new Date(atDate.getTime()+15*60000),actual=Object.values(dosingSchedules).flatMap(portionsFromSchedule),future=atDate>new Date()?plannedInputs(atDate):[];return [...actual,...future,...slurryInputs(from,to)].filter(x=>{const t=new Date(x.at);return t>=from&&t<=to;});}
+function slurryInputs(from,to){const out=[];let cursor=new Date(Math.floor(from.getTime()/(15*60000))*15*60000);while(cursor<to){const next=new Date(cursor.getTime()+15*60000),mid=new Date((cursor.getTime()+next.getTime())/2),cfg=slurryConfigAt(mid);if(cfg.enabled&&!slurryPaused(mid)){const m3=slurryDayAmount(localDate(mid))/96,share1=Math.min(1,Math.max(0,(Number(cfg.splitF1Pct)||0)/100));[[1,share1],[2,1-share1]].forEach(([fer,share])=>out.push({at:next.toISOString(),source:"Rindergülle automatisch",fer,sub:"Rindergülle",amount:m3*share,unit:"m³",potentialGas:m3*share*(Number(cfg.gasYieldM3PerM3)||0),snapshot:{...parameterSnapshot("Rindergülle"),yieldValue:Number(cfg.gasYieldM3PerM3)||0,yieldBasis:"m3_biogas_per_m3"},modelVersion:"continuous-slurry-quarter-hour-v2"}));}cursor=next;}return out;}
+function modelInputs(atDate){const from=new Date(atDate.getTime()-21*86400000),to=new Date(atDate.getTime()+15*60000),actual=Object.values(dosingSchedules).flatMap(portionsFromSchedule),future=atDate>new Date()?plannedInputs(atDate):[];return [...actual,...future,...extraInputs(from,to),...slurryInputs(from,to)].filter(x=>{const t=new Date(x.at);return t>=from&&t<=to;});}
+function actualOnlyInputs(atDate){const from=new Date(atDate.getTime()-21*86400000),to=new Date(atDate.getTime()+15*60000);return [...Object.values(dosingSchedules).flatMap(portionsFromSchedule),...extraInputs(from,to),...slurryInputs(from,to)].filter(x=>{const t=new Date(x.at);return t>=from&&t<=to;});}
+function planModelInputs(atDate){const from=new Date(atDate.getTime()-21*86400000),to=new Date(atDate.getTime()+15*60000);return [...purePlanInputs(from,to),...slurryInputs(from,to)].filter(x=>{const t=new Date(x.at);return t>=from&&t<=to;});}
 const shapeNormCache={};
-function gasRateFromInput(input,atDate){const cfg={delay:input.snapshot?.delayHours,peak:input.snapshot?.peakHours},potential=Math.max(0,Number(input.potentialGas)||0),age=(atDate-new Date(input.at))/3600000;if(age<=0||potential<=0)return 0;const key=`${Number(cfg.delay)||0}|${Number(cfg.peak)||0}`;let norm=shapeNormCache[key];if(!norm){norm=0;const maxHours=Math.max(48,(Number(cfg.delay)||0)+(Number(cfg.peak)||10)*8);for(let h=0;h<maxHours;h+=.25)norm+=feedingShape(h,cfg)*.25;shapeNormCache[key]=norm;}return norm>0?potential*feedingShape(age,cfg)/norm:0;}
+function gasRateFromInput(input,atDate){const cfg={peak:input.snapshot?.peakHours,t50:input.snapshot?.t50Hours,decay:input.snapshot?.decayHours},potential=Math.max(0,Number(input.potentialGas)||0),age=(atDate-new Date(input.at))/3600000;if(age<=0||potential<=0)return 0;const key=`${Number(cfg.peak)||0}|${Number(cfg.t50)||0}|${Number(cfg.decay)||0}`;let norm=shapeNormCache[key];if(!norm){norm=0;const maxHours=Math.max(48,Number(cfg.decay)||168);for(let h=.125;h<=maxHours;h+=.25)norm+=feedingShape(h,cfg)*.25;shapeNormCache[key]=norm;}return norm>0?potential*feedingShape(age,cfg)/norm:0;}
 function gasRateAt(date){return Math.max(0,modelInputs(date).reduce((sum,input)=>sum+gasRateFromInput(input,date),0));
 }
+function actualGasRateAt(date){return Math.max(0,actualOnlyInputs(date).reduce((sum,input)=>sum+gasRateFromInput(input,date),0));}
+function planGasRateAt(date){return Math.max(0,planModelInputs(date).reduce((sum,input)=>sum+gasRateFromInput(input,date),0));}
 function powerAt(date){const raw=modelInputs(date).reduce((sum,input)=>sum+gasRateFromInput(input,date)*(Number(input.snapshot?.energyKwhPerM3)||5.5)*(Number(input.snapshot?.electricEfficiency)||averageEfficiency()),0);return limitElectricalPower(raw);}
+function planPowerAt(date){const raw=planModelInputs(date).reduce((sum,input)=>sum+gasRateFromInput(input,date)*(Number(input.snapshot?.energyKwhPerM3)||5.5)*(Number(input.snapshot?.electricEfficiency)||averageEfficiency()),0);return limitElectricalPower(raw);}
 
 function renderGasTrend(){
 const now=new Date();
-const future=new Date(now.getTime()+3*3600000);
+const future=new Date(now.getTime()+12*3600000);
 
-const current=gasRateAt(now);
-const later=gasRateAt(future);
+const current=actualGasRateAt(now);
+const later=actualGasRateAt(future);
 
 $("#dashGas").textContent=`${formatNum(current,0)} m³/h`;
 
@@ -1077,7 +1115,7 @@ label.textContent="gleichbleibend";
 if(Math.abs(pct)<3){
 arrow.classList.add("flat");
 $("#trendText").textContent=
-`Prognose in 3 Stunden etwa ${formatNum(later,0)} m³/h.`;
+`Nur aus bereits erfassten Mengen: jetzt ${formatNum(current,0)} m³/h, in 12 Stunden ${formatNum(later,0)} m³/h.`;
 return;
 }
 
@@ -1106,16 +1144,20 @@ label.textContent="leicht fallend";
 }
 
 $("#trendText").textContent=
-`Erwartete Veränderung in 3 Stunden: ${pct>0?"+":""}${formatNum(pct,1)} % · ca. ${formatNum(later,0)} m³/h.`;
+`Nur aus bereits erfassten Mengen: jetzt ${formatNum(current,0)} m³/h, in 12 Stunden ${formatNum(later,0)} m³/h · ${pct>0?"+":""}${formatNum(pct,1)} %.`;
 }
+
+function roundEnergyMetrics(kw,date,round,useActual){let tons=0,gasTotal=0,electricity=0;const actual=logs.filter(l=>entryDate(l)===date&&l.round===round&&!l.isExtra);if(useActual&&actual.length){actual.forEach(l=>{const t=logTons(l),p=snapshotFor(l),g=t*(Number(p.yieldValue)||0);tons+=t;gasTotal+=g;electricity+=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);});}else{[1,2].forEach(fer=>subs.forEach(sub=>{const t=getTarget(kw,fer,round,sub,date),g=t*(Number(gas[sub]?.yield)||0);tons+=t;gasTotal+=g;electricity+=g*(Number(settings.energyContent)||5.5)*averageEfficiency();}));}return{tons,gas:gasTotal,electricity,power:electricity/24};}
+function setRoundPower(prefix,planned,live){const diff=live.power-planned.power,limit=Math.max(5,planned.power*.02),arrow=diff>limit?"↑":diff<-limit?"↓":"→",cls=diff>limit?"statusUp":diff<-limit?"statusDown":"statusFlat";$("#"+prefix+"Power").textContent=`${formatNum(live.power,0)} kW`;const el=$("#"+prefix+"Diff");el.textContent=`${arrow} ${diff>0?"+":""}${formatNum(diff,0)} kW zum Ziel`;el.className=`small ${cls}`;}
+function renderFeedPower(kw,date){const pM=roundEnergyMetrics(kw,date,"Morgen",false),lM=roundEnergyMetrics(kw,date,"Morgen",true),pA=roundEnergyMetrics(kw,date,"Abend",false),lA=roundEnergyMetrics(kw,date,"Abend",true),planned=plannedDayMetrics(kw,date),live=liveDayMetrics(kw,date);setRoundPower("fillMorning",pM,lM);setRoundPower("fillEvening",pA,lA);setRoundPower("fillDay",planned,live);}
 
 function plannedDayMetrics(kw,date=localDate()){
 let tons=0,gasTotal=0;
-[1,2].forEach(fer=>["Morgen","Abend"].forEach(round=>subs.forEach(sub=>{const t=getTarget(kw,fer,round,sub);tons+=t;gasTotal+=t*(Number(gas[sub]?.yield)||0);})));const slurryCfg=slurryConfigAt(dateAt(date,"12:00")),slurryM3=slurryCfg.enabled?slurryDayAmount(date):0;gasTotal+=slurryM3*(Number(slurryCfg.gasYieldM3PerM3)||0);const rawElectricity=gasTotal*(Number(settings.energyContent)||5.5)*averageEfficiency(),electricity=limitElectricalEnergy(rawElectricity,24),power=electricity/24;return{tons,slurryM3,gas:gasTotal,electricity,power,rawElectricity};
+[1,2].forEach(fer=>["Morgen","Abend"].forEach(round=>subs.forEach(sub=>{const t=getTarget(kw,fer,round,sub,date);tons+=t;gasTotal+=t*(Number(gas[sub]?.yield)||0);})));const slurryCfg=slurryConfigAt(dateAt(date,"12:00")),slurryM3=slurryCfg.enabled?slurryDayAmount(date):0;gasTotal+=slurryM3*(Number(slurryCfg.gasYieldM3PerM3)||0);const rawElectricity=gasTotal*(Number(settings.energyContent)||5.5)*averageEfficiency(),electricity=limitElectricalEnergy(rawElectricity,24),power=electricity/24;return{tons,slurryM3,gas:gasTotal,electricity,power,rawElectricity};
 }
 function liveDayMetrics(kw,date=feedingDate(autoRound())){
 let tons=0,gasTotal=0,electricity=0;
-["Morgen","Abend"].forEach(round=>{const roundLogs=logs.filter(l=>l.date===date&&l.round===round);if(roundLogs.length){roundLogs.forEach(l=>{const t=logTons(l),p=snapshotFor(l),g=t*(Number(p.yieldValue)||0);tons+=t;gasTotal+=g;electricity+=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);});}else{[1,2].forEach(fer=>subs.forEach(sub=>{const t=getTarget(kw,fer,round,sub),g=t*(Number(gas[sub]?.yield)||0);tons+=t;gasTotal+=g;electricity+=g*(Number(settings.energyContent)||5.5)*averageEfficiency();}));}});const slurryCfg=slurryConfigAt(dateAt(date,"12:00")),slurryM3=slurryCfg.enabled?slurryDayAmount(date):0,slurryGas=slurryM3*(Number(slurryCfg.gasYieldM3PerM3)||0);gasTotal+=slurryGas;electricity+=slurryGas*(Number(settings.energyContent)||5.5)*averageEfficiency();const rawElectricity=electricity;electricity=limitElectricalEnergy(rawElectricity,24);const power=electricity/24;return{tons,slurryM3,gas:gasTotal,electricity,power,rawElectricity};
+["Morgen","Abend"].forEach(round=>{const roundLogs=logs.filter(l=>l.date===date&&l.round===round);if(roundLogs.length){roundLogs.forEach(l=>{const t=logTons(l),p=snapshotFor(l),g=t*(Number(p.yieldValue)||0);tons+=t;gasTotal+=g;electricity+=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);});}else{[1,2].forEach(fer=>subs.forEach(sub=>{const t=getTarget(kw,fer,round,sub),g=t*(Number(gas[sub]?.yield)||0);tons+=t;gasTotal+=g;electricity+=g*(Number(settings.energyContent)||5.5)*averageEfficiency();}));}});logs.filter(l=>l.isExtra&&entryDate(l)===date).forEach(l=>{const amount=Number(l.amount??logTons(l))||0,p=snapshotFor(l),g=amount*(Number(p.yieldValue)||0);if((l.unit||"t")==="t")tons+=amount;gasTotal+=g;electricity+=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);});const slurryCfg=slurryConfigAt(dateAt(date,"12:00")),slurryM3=slurryCfg.enabled?slurryDayAmount(date):0,slurryGas=slurryM3*(Number(slurryCfg.gasYieldM3PerM3)||0);gasTotal+=slurryGas;electricity+=slurryGas*(Number(settings.energyContent)||5.5)*averageEfficiency();const rawElectricity=electricity;electricity=limitElectricalEnergy(rawElectricity,24);const power=electricity/24;return{tons,slurryM3,gas:gasTotal,electricity,power,rawElectricity};
 }
 function weeklyPlanMetrics(){let electricity=0;for(let i=0;i<7;i++)electricity+=plannedDayMetrics(Number(week[i])||0).electricity;return{electricity,power:electricity/168};}
 function renderPowerComparison(prefix,planned,live){const diff=live.power-planned.power,limit=Math.max(10,planned.power*.02),arrow=diff>limit?"↑":diff<-limit?"↓":"→",cls=diff>limit?"statusUp":diff<-limit?"statusDown":"statusFlat";$("#"+prefix+"PlanPower").textContent=`${formatNum(planned.power,0)} kW`;$("#"+prefix+"LivePower").textContent=`${formatNum(live.power,0)} kW`;const el=$("#"+prefix+"PowerDiff");el.textContent=`${arrow} ${diff>0?"+":""}${formatNum(diff,0)} kW`;el.className=cls;}
@@ -1137,6 +1179,8 @@ renderPowerComparison("dash",planned,live);
 const capacityNote=live.rawElectricity/24>live.power+0.1?" · auf aktive BHKW-Leistung begrenzt":"";
 $("#dashEnough").textContent=`Reicht nach aktuellem Stand für ca. ${formatNum(live.power,0)} kW · modelliert, nicht gemessen${capacityNote}`;
 $("#dashWeekPower").textContent=`Wochenplan: ${formatNum(weekly.electricity,0)} kWh · Ø ${formatNum(weekly.power,0)} kW`;
+const sourceParts=[`${logs.filter(l=>!l.isExtra).length} gespeicherte Fütterungen`,`${logs.filter(l=>l.isExtra).length} Extra-Einträge`,slurryConfigAt(now).enabled?"Gülleautomatik aktiv":"Gülleautomatik aus","offene Zukunft nach Fahrplan"];
+$("#dashGasSources").textContent="Datenquellen: "+sourceParts.join(" · ")+". Keine Messwerte oder erfundene Grundlast.";
 
 const monthLogs=logs.filter(l=>{
 const d=new Date(entryDate(l)+"T12:00:00"),current=new Date(feedDate+"T12:00:00");
@@ -1166,12 +1210,13 @@ const c=$("#forecastChart"); if(!c) return;
 const box=c.parentElement.getBoundingClientRect();
 const dpr=window.devicePixelRatio||1;c.width=box.width*dpr;c.height=box.height*dpr;c.style.width=box.width+"px";c.style.height=box.height+"px";
 const x=c.getContext("2d");x.scale(dpr,dpr);const w=box.width,h=box.height,p={l:43,r:10,t:15,b:27};
-const now=new Date();const pts=[];for(let i=-48;i<=72;i++){const d=new Date(now.getTime()+i*3600000);pts.push({i,v:state.chartMode==="gas"?gasRateAt(d):powerAt(d)});}
-const max=Math.max(10,...pts.map(q=>Number.isFinite(q.v)&&q.v>0?q.v:0))*1.1;
+const now=new Date();const pts=[];for(let i=-48;i<=72;i++){const d=new Date(now.getTime()+i*3600000);pts.push({i,current:state.chartMode==="gas"?gasRateAt(d):powerAt(d),plan:state.chartMode==="gas"?planGasRateAt(d):planPowerAt(d)});}
+const max=Math.max(10,...pts.flatMap(q=>[q.current,q.plan]).map(v=>Number.isFinite(v)&&v>0?v:0))*1.1;
 x.clearRect(0,0,w,h);x.strokeStyle="#dce7e1";x.fillStyle="#6a8075";x.font="12px system-ui";
 for(let j=0;j<=4;j++){const y=p.t+(h-p.t-p.b)*j/4;x.beginPath();x.moveTo(p.l,y);x.lineTo(w-p.r,y);x.stroke();x.fillText(formatNum(max*(1-j/4),0),2,y+4);}
 const px=i=>p.l+(i+48)/120*(w-p.l-p.r),py=v=>p.t+(1-v/max)*(h-p.t-p.b);
-x.beginPath();pts.forEach((q,i)=>{const X=px(q.i),Y=py(Math.max(0,q.v));i?x.lineTo(X,Y):x.moveTo(X,Y)});x.strokeStyle="#1e7a4a";x.lineWidth=3;x.stroke();
+x.beginPath();pts.forEach((q,i)=>{const X=px(q.i),Y=py(Math.max(0,q.plan));i?x.lineTo(X,Y):x.moveTo(X,Y)});x.strokeStyle="#c83b3b";x.lineWidth=2;x.stroke();
+x.beginPath();pts.forEach((q,i)=>{const X=px(q.i),Y=py(Math.max(0,q.current));i?x.lineTo(X,Y):x.moveTo(X,Y)});x.strokeStyle="#1e7a4a";x.lineWidth=3;x.stroke();
 const nx=px(0);x.beginPath();x.moveTo(nx,p.t);x.lineTo(nx,h-p.b);x.strokeStyle="#e38b25";x.lineWidth=2;x.stroke();x.fillStyle="#17362a";x.fillText("−48 h",p.l,h-7);x.fillText("Jetzt",nx-15,h-7);x.fillText("+72 h",w-44,h-7);
 }
 
@@ -1338,8 +1383,11 @@ return d.getFullYear()===current.getFullYear();
 });
 }
 
+function rangeAdditives(mode){const now=new Date(),currentDate=feedingDate(autoRound(),now),current=new Date(currentDate+"T12:00:00");return additiveLogs.filter(l=>{if(l.status!=="confirmed")return false;const d=new Date(l.date+"T12:00:00");if(mode==="day")return l.date===currentDate;if(mode==="week"){const start=new Date(current);start.setDate(start.getDate()-((start.getDay()+6)%7));const end=new Date(start);end.setDate(end.getDate()+6);return d>=start&&d<=end;}if(mode==="month")return d.getFullYear()===current.getFullYear()&&d.getMonth()===current.getMonth();return d.getFullYear()===current.getFullYear();});}
+
 function renderSummary(){
 const arr=rangeLogs(state.summary);
+const additiveArr=rangeAdditives(state.summary);
 const now=new Date();
 const summaryDate=new Date(feedingDate(autoRound(),now)+"T12:00:00");
 
@@ -1392,7 +1440,8 @@ return `
 </div>
 `;
 }).join("");
-$("#summaryRounds").innerHTML=["Morgen","Abend"].map(round=>`<div class="entry row"><span>${round}</span><b>${formatTons(sumLogs(arr.filter(l=>l.round===round)))}</b></div>`).join("");
+if(additiveArr.length){$("#summarySubs").insertAdjacentHTML("beforeend","<h4>Zusatzstoffe tatsächlich erfasst</h4>"+[...new Set(additiveArr.map(x=>x.name))].map(name=>{const same=additiveArr.filter(x=>x.name===name),unit=same[0]?.unit||"";return "<div class=\"entry row\"><span>"+name+"</span><b>"+formatNum(same.reduce((n,x)=>n+Number(x.amount||0),0),1)+" "+unit+"</b></div>";}).join(""));}
+$("#summaryRounds").innerHTML=["Morgen","Abend","Extra"].map(round=>`<div class="entry row"><span>${round}</span><b>${formatTons(sumLogs(arr.filter(l=>l.round===round)))}</b></div>`).join("");
 const modeledGas=arr.reduce((s,l)=>s+logTons(l)*(Number(snapshotFor(l).yieldValue)||0),0);const yearDays=(new Date(summaryDate.getFullYear()+1,0,1)-new Date(summaryDate.getFullYear(),0,1))/86400000,hours=state.summary==="day"?24:state.summary==="week"?168:state.summary==="month"?24*new Date(summaryDate.getFullYear(),summaryDate.getMonth()+1,0).getDate():24*yearDays;const modeledPower=arr.reduce((s,l)=>{const p=snapshotFor(l);return s+logTons(l)*(Number(p.yieldValue)||0)*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);},0);let slurryFrom,slurryTo;if(state.summary==="day"){slurryFrom=dateAt(localDate(summaryDate),"00:00");slurryTo=new Date(slurryFrom.getTime()+24*3600000);}else if(state.summary==="week"){slurryFrom=new Date(summaryDate);slurryFrom.setDate(slurryFrom.getDate()-((slurryFrom.getDay()+6)%7));slurryFrom.setHours(0,0,0,0);slurryTo=new Date(slurryFrom.getTime()+7*24*3600000);}else if(state.summary==="month"){slurryFrom=new Date(summaryDate.getFullYear(),summaryDate.getMonth(),1);slurryTo=new Date(summaryDate.getFullYear(),summaryDate.getMonth()+1,1);}else{slurryFrom=new Date(summaryDate.getFullYear(),0,1);slurryTo=new Date(summaryDate.getFullYear()+1,0,1);}const slurryVolume=slurryInputs(slurryFrom,slurryTo).reduce((n,x)=>n+Number(x.amount||0),0),slurryGas=slurryInputs(slurryFrom,slurryTo).reduce((n,x)=>n+Number(x.potentialGas||0),0),totalGas=modeledGas+slurryGas,totalPower=limitElectricalEnergy(modeledPower+slurryGas*(Number(settings.energyContent)||5.5)*averageEfficiency(),hours);$("#summaryEnergy").innerHTML=`Feststoffe: ${formatNum(sumLogs(arr),1)} t · Rindergülle automatisch: ${formatNum(slurryVolume,1)} m³<br>${formatNum(totalGas,0)} m³ Biogaspotenzial · Ø ${formatNum(totalGas/hours,1)} m³/h<br>${formatNum(totalPower,0)} kWh elektrisch · Ø ${formatNum(totalPower/hours,1)} kW<br><span class="muted">Modellierte Werte – nicht gemessen; t und m³ werden getrennt ausgewiesen.</span>`;
 }
 
@@ -1422,7 +1471,7 @@ const rows=[
 "Fütterung",
 "Substrat",
 "Menge t",
-"Fahrplan kW","TS %","oTS % der TS","Ertrag m³ Biogas/t FM","Verzug h","Peak h","Energie kWh/m³","Wirkungsgrad %"
+"Fahrplan kW","TS %","oTS % der TS","CH4 %","Gasertrag","Peak h","t50 h","Nachwirkung h","Parameterstatus","Energie kWh/m³","Wirkungsgrad %"
 ]
 ];
 
@@ -1439,8 +1488,7 @@ minute:"2-digit"
 l.round,
 l.sub,
 formatNum(logTons(l),3),l.kw,
-formatNum(snapshotFor(l).ts,1),formatNum(snapshotFor(l).ots,1),formatNum(snapshotFor(l).yieldValue,1),
-formatNum(snapshotFor(l).delayHours,1),formatNum(snapshotFor(l).peakHours,1),formatNum(snapshotFor(l).energyKwhPerM3,2),formatNum(snapshotFor(l).electricEfficiency*100,1)
+formatNum(snapshotFor(l).ts,1),formatNum(snapshotFor(l).ots,1),formatNum(snapshotFor(l).ch4Pct,1),formatNum(snapshotFor(l).yieldValue,1),formatNum(snapshotFor(l).peakHours,1),formatNum(snapshotFor(l).t50Hours,1),formatNum(snapshotFor(l).decayHours,1),snapshotFor(l).parameterStatus||"ungeprüft",formatNum(snapshotFor(l).energyKwhPerM3,2),formatNum(snapshotFor(l).electricEfficiency*100,1)
 ]);
 });
 
@@ -1511,32 +1559,31 @@ function xmlEscape(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<
 function excelColumn(n){let s="";for(n++;n>0;n=Math.floor((n-1)/26))s=String.fromCharCode(65+(n-1)%26)+s;return s;}
 async function downloadXlsx(rows,name){if(!window.JSZip)throw new Error("Excel-Modul nicht verfügbar");const zip=new JSZip(),sheet=rows.map((row,r)=>`<row r="${r+1}">${row.map((v,c)=>`<c r="${excelColumn(c)}${r+1}" t="inlineStr"><is><t xml:space="preserve">${xmlEscape(v)}</t></is></c>`).join("")}</row>`).join("");zip.file("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`);zip.folder("_rels").file(".rels",`<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);zip.folder("xl").file("workbook.xml",`<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Auswertung" sheetId="1" r:id="rId1"/></sheets></workbook>`).file("styles.xml",`<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="1"><fill><patternFill patternType="none"/></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="1"><xf xfId="0"/></cellXfs></styleSheet>`);zip.folder("xl/_rels").file("workbook.xml.rels",`<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`);zip.folder("xl/worksheets").file("sheet1.xml",`<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${sheet}</sheetData></worksheet>`);const blob=await zip.generateAsync({type:"blob",compression:"DEFLATE"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function logsBetween(from,to){return logs.filter(l=>entryDate(l)>=from&&entryDate(l)<=to).sort((a,b)=>new Date(a.ts)-new Date(b.ts));}
-function modeledTotals(arr){return arr.reduce((o,l)=>{const p=snapshotFor(l),g=logTons(l)*(Number(p.yieldValue)||0),e=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);o.gas+=g;o.power+=e;return o;},{gas:0,power:0});}
+function modeledTotals(arr){return arr.reduce((o,l)=>{const p=snapshotFor(l),amount=l.isExtra?Number(l.amount)||0:logTons(l),g=amount*(Number(p.yieldValue)||0),e=g*(Number(p.energyKwhPerM3)||5.5)*(Number(p.electricEfficiency)||0);o.gas+=g;o.power+=e;return o;},{gas:0,power:0});}
 function pushTotals(rows,arr,label){
 rows.push([], [label]);
 rows.push(["Gesamtmenge t",formatNum(sumLogs(arr),1)]);
 subs.forEach(s=>rows.push(["Substrat",s,formatNum(sumLogs(arr.filter(l=>l.sub===s)),1),"t"]));
 [1,2].forEach(f=>rows.push(["Fermenter",`Fermenter ${f}`,formatNum(sumLogs(arr.filter(l=>Number(l.fer)===f)),1),"t"]));
-["Morgen","Abend"].forEach(x=>rows.push(["Fütterungsrunde",x,formatNum(sumLogs(arr.filter(l=>l.round===x)),1),"t"]));
+["Morgen","Abend","Extra"].forEach(x=>rows.push(["Fütterungsrunde",x,formatNum(sumLogs(arr.filter(l=>l.round===x)),1),"t"]));
 }
 function pushDiary(rows,arr,from,to,withEnergy){
 const start=new Date(from+"T00:00:00"),end=new Date(to+"T00:00:00");
-rows.push([], ["Einsatzstofftagebuch"],["Zeitraum",from,"bis",to],[],["Datum",...subs,"Gesamt t",...(withEnergy?["Gasproduktion m³","Stromertrag kWh"]:[])]);
-const totals=Object.fromEntries(subs.map(s=>[s,0]));let grand=0,totalGas=0,totalPower=0,days=0;
-for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){days++;const key=isoLocal(d),dayLogs=arr.filter(l=>entryDate(l)===key),vals=subs.map(s=>{const v=sumLogs(dayLogs.filter(l=>l.sub===s));totals[s]+=v;return formatNum(v,1);}),t=sumLogs(dayLogs),energy=modeledTotals(dayLogs),usableEnergy=limitElectricalEnergy(energy.power,24);grand+=t;totalGas+=energy.gas;totalPower+=usableEnergy;rows.push([key,...vals,formatNum(t,1),...(withEnergy?[formatNum(energy.gas,0),formatNum(usableEnergy,0)]:[])]);}
-rows.push([], ["Summe",...subs.map(s=>formatNum(totals[s],1)),formatNum(grand,1),...(withEnergy?[formatNum(totalGas,0),formatNum(totalPower,0)]:[])]);
-const manure=subs.filter(s=>gas[s]?.category==="manure").reduce((n,s)=>n+(totals[s]||0),0),nawaro=subs.filter(s=>gas[s]?.category==="nawaro").reduce((n,s)=>n+(totals[s]||0),0),maize=["Maissilage","Getreidekorn","Feuchtmaisschrot"].reduce((n,s)=>n+(totals[s]||0),0),pct=grand?maize/grand*100:0;
-rows.push(["Gülle + Mist",formatNum(manure,1)],["Summe Nawaro",formatNum(nawaro,1)],["Maisdeckel",formatNum(pct,1)+" %",pct>40?"WARNUNG: über 40 %":"max. 40 %"],["Ø t/Tag",formatNum(grand/days,1)]);
+end.setHours(23,59,59,999);
+rows.push([],["Einsatzstofftagebuch"],["Zeitraum",from,"bis",to],[],["Datum","Uhrzeit","Fermenter","Runde","Einsatzstoff","Menge","Einheit","Art","Erfassungsart","Status",...(withEnergy?["Gas-/Energiehinweis"]:[])]);
+arr.forEach(l=>rows.push([entryDate(l),new Date(l.ts).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}),"F"+l.fer,l.isExtra?"Extra":l.round,l.sub,formatNum(l.amount??logTons(l),3),l.unit||"t","Einsatzstoff",l.isExtra?"Extra":"manuell","eingesetzt",...(withEnergy?["Rohbuchung; Modellwerte separat"]:[])]));
+for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){const key=isoLocal(d),next=new Date(d);next.setDate(next.getDate()+1);const portions=slurryInputs(d,next);[1,2].forEach(fer=>{const amount=portions.filter(x=>Number(x.fer)===fer).reduce((n,x)=>n+Number(x.amount||0),0);if(amount>0)rows.push([key,"laufend","F"+fer,"automatisch","Rindergülle",formatNum(amount,3),"m³","Gülle","automatisch berechnet","rechnerisch eingebracht",...(withEnergy?["modelliert – nicht gemessen"]:[])]);});}
+additiveLogs.filter(l=>l.date>=from&&l.date<=to).forEach(l=>rows.push([l.date,new Date(l.ts).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}),"F"+l.fer,l.round,l.name,formatNum(l.amount,3),l.unit,"Zusatzstoff",l.source||"manuell",l.status==="confirmed"?"eingesetzt":"fehlend / nicht bestätigt",...(withEnergy?["kein Gasertrag angesetzt"]:[])]));
 }
 async function runSelectedExport(){
 const from=$("#exportFrom").value,to=$("#exportTo").value;if(!from||!to||from>to){alert("Bitte einen gültigen Zeitraum auswählen.");return;}
 const choices=["exEntries","exTotals","exParams","exDosing","exSlurry","exEnergy","exHourly","exDiary"].some(id=>$("#"+id).checked);if(!choices){alert("Bitte mindestens einen Datenbereich auswählen.");return;}
 const arr=logsBetween(from,to),rows=[["Biogasanlage Schneider – Datenexport"],["Zeitraum",from,"bis",to],["Erstellt",new Date().toLocaleString("de-DE")],["Hinweis","Gas- und Stromwerte sind modelliert, nicht gemessen."]];
-if($("#exEntries").checked||$("#exParams").checked){const params=$("#exParams").checked;rows.push([], [params?"Fütterungseinträge mit Parameter-Snapshots":"Fütterungseinträge"],["Fütterungstag","Uhrzeit","Fermenter","Fütterungsrunde","Substrat","Menge t","Fahrplan kW",...(params?["TS %","oTS % der TS","Ertrag m³ Biogas/t FM","Verzug h","Peak h","Energie kWh/m³","Wirkungsgrad %"]:[])]);arr.forEach(l=>{const d=new Date(l.ts),p=snapshotFor(l);rows.push([entryDate(l),d.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}),`Fermenter ${l.fer}`,l.round,l.sub,formatNum(logTons(l),1),l.kw,...(params?[formatNum(p.ts,1),formatNum(p.ots,1),formatNum(p.yieldValue,1),formatNum(p.delayHours,1),formatNum(p.peakHours,1),formatNum(p.energyKwhPerM3,2),formatNum((Number(p.electricEfficiency)||0)*100,1)]:[])]);});}
+if($("#exEntries").checked||$("#exParams").checked){const params=$("#exParams").checked;rows.push([], [params?"Fütterungseinträge mit Parameter-Snapshots":"Fütterungseinträge"],["Fütterungstag","Uhrzeit","Fermenter","Fütterungsrunde","Substrat","Menge","Einheit","Fahrplan kW",...(params?["TS %","oTS % der TS","CH4 %","Gasertrag","Peak h","t50 h","Nachwirkung h","Parameterstatus","Energie kWh/m³","Wirkungsgrad %"]:[])]);arr.forEach(l=>{const d=new Date(l.ts),p=snapshotFor(l);rows.push([entryDate(l),d.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}),`Fermenter ${l.fer}`,l.isExtra?"Extra":l.round,l.sub,formatNum(l.amount??logTons(l),1),l.unit||"t",l.kw,...(params?[formatNum(p.ts,1),formatNum(p.ots,1),formatNum(p.ch4Pct,1),formatNum(p.yieldValue,1),formatNum(p.peakHours,1),formatNum(p.t50Hours,1),formatNum(p.decayHours,1),p.parameterStatus||"ungeprüft",formatNum(p.energyKwhPerM3,2),formatNum((Number(p.electricEfficiency)||0)*100,1)]:[])]);});}
 if($("#exEntries").checked){const corr=corrections.filter(c=>String(c.at).slice(0,10)>=from&&String(c.at).slice(0,10)<=to);if(corr.length){rows.push([], ["Korrekturprotokoll"],["Korrekturzeit","Art","Ursprünglicher Fütterungstag","Substrat","Fermenter","Runde","Menge t"]);corr.forEach(c=>rows.push([new Date(c.at).toLocaleString("de-DE"),c.type,entryDate(c.entry),c.entry.sub,`F${c.entry.fer}`,c.entry.round,formatNum(logTons(c.entry),1)]));}}
 if($("#exTotals").checked)pushTotals(rows,arr,"Zusammenfassung");
 if($("#exDosing").checked){rows.push([], ["Beladungs- und Dosierzeiten"],["Fütterungstag","Fermenter","Runde","Abschluss","Dosierbeginn","Dosierende","Status","Modellversion"]);Object.values(dosingSchedules).filter(s=>s.date>=from&&s.date<=to).sort((a,b)=>String(a.date).localeCompare(String(b.date))).forEach(s=>rows.push([s.date,`F${s.fer}`,s.round,new Date(s.completedAt).toLocaleString("de-DE"),s.startAt?new Date(s.startAt).toLocaleString("de-DE"):"zu prüfen",s.endAt?new Date(s.endAt).toLocaleString("de-DE"):"zu prüfen",s.status,s.modelVersion]));}
-if($("#exSlurry").checked){rows.push([], ["Rindergülle – rechnerische Zufuhr"],["Datum","Soll m³/Tag","Rechnerisch eingebracht m³","F1 m³","F2 m³","Verteilung","Status"]);const a=new Date(from+"T00:00:00"),b=new Date(to+"T00:00:00");for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){const key=isoLocal(d),end=new Date(d);end.setDate(end.getDate()+1);const cfg=slurryConfigAt(d),m3=slurryInputs(d,end).reduce((n,x)=>n+Number(x.amount||0),0);rows.push([key,formatNum(slurryDayAmount(key),3),formatNum(m3,3),formatNum(m3/2,3),formatNum(m3/2,3),"50 % F1 / 50 % F2",cfg.enabled?"rechnerisch – Automatik ein":"Automatik aus"]);}if(slurry.pauses.length){rows.push([], ["Gülle-Dosierpausen"],["Von","Bis"]);slurry.pauses.filter(p=>String(p.to).slice(0,10)>=from&&String(p.from).slice(0,10)<=to).forEach(p=>rows.push([new Date(p.from).toLocaleString("de-DE"),new Date(p.to).toLocaleString("de-DE")]));}}
+if($("#exSlurry").checked){rows.push([], ["Rindergülle – rechnerische Zufuhr"],["Datum","Soll m³/Tag","Rechnerisch eingebracht m³","F1 m³","F2 m³","Verteilung","Status"]);const a=new Date(from+"T00:00:00"),b=new Date(to+"T00:00:00");for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){const key=isoLocal(d),end=new Date(d);end.setDate(end.getDate()+1);const cfg=slurryConfigAt(d),parts=slurryInputs(d,end),m3=parts.reduce((n,x)=>n+Number(x.amount||0),0),f1=parts.filter(x=>Number(x.fer)===1).reduce((n,x)=>n+Number(x.amount||0),0),f2=m3-f1;rows.push([key,formatNum(slurryDayAmount(key),3),formatNum(m3,3),formatNum(f1,3),formatNum(f2,3),`F1 ${formatNum(cfg.splitF1Pct??50,0)} % / F2 ${formatNum(100-(cfg.splitF1Pct??50),0)} %`,cfg.enabled?"rechnerisch – Automatik ein":"Automatik aus"]);}if(slurry.pauses.length){rows.push([], ["Gülle-Dosierpausen"],["Von","Bis"]);slurry.pauses.filter(p=>String(p.to).slice(0,10)>=from&&String(p.from).slice(0,10)<=to).forEach(p=>rows.push([new Date(p.from).toLocaleString("de-DE"),new Date(p.to).toLocaleString("de-DE")]));}}
 const dayCount=Math.floor((new Date(to+"T00:00:00")-new Date(from+"T00:00:00"))/86400000)+1;
 if($("#exEnergy").checked){
 const m=modeledTotals(arr),hours=dayCount*24,usableEnergy=limitElectricalEnergy(m.power,hours);
@@ -1559,14 +1606,15 @@ $("#runExport").onclick=runSelectedExport;
 
 function renderSlurry(now=new Date()){
 const today=localDate(now),cfg=slurryConfigAt(now),day=slurryDayAmount(today),hour=day/24,dayStart=dateAt(today,"00:00"),inserted=slurryInputs(dayStart,now).reduce((n,x)=>n+Number(x.amount||0),0);
-$("#slurryEnabled").value=String(Boolean(cfg.enabled));$("#slurryM3Day").value=Number(cfg.standardM3Day)||0;$("#slurryTarget").value="equal";$("#slurryYield").value=Number(cfg.gasYieldM3PerM3)||0;$("#slurryDensity").value=Number(cfg.densityTPerM3)||0;
+const split=Math.min(100,Math.max(0,Number(cfg.splitF1Pct??50)));$("#slurryEnabled").value=String(Boolean(cfg.enabled));$("#slurryM3Day").value=Number(cfg.standardM3Day)||0;$("#slurrySplitF1").value=split;$("#slurrySplitText").textContent=`F1 ${formatNum(split,0)} % · F2 ${formatNum(100-split,0)} %`;$("#slurryYield").value=Number(cfg.gasYieldM3PerM3)||0;$("#slurryDensity").value=Number(cfg.densityTPerM3)||0;
 if(!$("#slurryEffectiveFrom").value)$("#slurryEffectiveFrom").value=toLocalDateTimeInput(now);if(!$("#slurryOverrideDate").value)$("#slurryOverrideDate").value=today;
 $("#slurryDayKpi").textContent=`${formatNum(day,1)} m³`;$("#slurryHourKpi").textContent=`${formatNum(hour,2)} m³/h`;
-$("#slurryTodayStatus").textContent=`Heute rechnerisch eingebracht: ${formatNum(inserted,2)} m³ · verbleibend: ${formatNum(Math.max(0,day-inserted),2)} m³ · je 50 % auf F1 und F2 · Status: ${cfg.enabled?"Automatik ein":"Automatik aus"}`;
+$("#slurryTodayStatus").textContent=`Heute rechnerisch eingebracht: ${formatNum(inserted,2)} m³ · verbleibend: ${formatNum(Math.max(0,day-inserted),2)} m³ · F1 ${formatNum(split,0)} % / F2 ${formatNum(100-split,0)} % · Status: ${cfg.enabled?"Automatik ein":"Automatik aus"}`;
 $("#slurryPauseList").innerHTML=slurry.pauses.length?slurry.pauses.slice().sort((a,b)=>new Date(b.from)-new Date(a.from)).map((p,i)=>`<div class="entry row"><span>${new Date(p.from).toLocaleString("de-DE")} bis ${new Date(p.to).toLocaleString("de-DE")}</span><button class="btn danger small" data-pause-del="${i}">Löschen</button></div>`).join(""):"Keine Dosierpause gespeichert.";
 $$('[data-pause-del]').forEach(b=>b.onclick=()=>{slurry.pauses.splice(Number(b.dataset.pauseDel),1);save("bs_slurry",slurry);renderSlurry();renderDashboard();});
 }
-$("#saveSlurry").onclick=()=>{const effective=new Date($("#slurryEffectiveFrom").value),standard=Number(String($("#slurryM3Day").value).replace(",",".")),yieldValue=Number(String($("#slurryYield").value).replace(",",".")),density=Number(String($("#slurryDensity").value).replace(",","."));if(!Number.isFinite(effective.getTime())||standard<0||yieldValue<0||density<0){alert("Bitte gültige Güllewerte und einen Wirksamkeitszeitpunkt eingeben.");return;}const change={enabled:$("#slurryEnabled").value==="true",standardM3Day:standard,target:"equal",gasYieldM3PerM3:yieldValue,densityTPerM3:density,effectiveFrom:effective.toISOString()};slurry={...slurry,...change,changes:[...slurry.changes,change].sort((a,b)=>new Date(a.effectiveFrom)-new Date(b.effectiveFrom))};save("bs_slurry",slurry);$("#slurrySaved").style.display="block";setTimeout(()=>$("#slurrySaved").style.display="none",1400);fillSelects();renderSlurry();renderFeed();renderDashboard();};
+$("#slurrySplitF1").oninput=()=>{const split=Math.min(100,Math.max(0,Number($("#slurrySplitF1").value)||0));$("#slurrySplitText").textContent=`F1 ${formatNum(split,0)} % · F2 ${formatNum(100-split,0)} %`;};
+$("#saveSlurry").onclick=()=>{const effective=new Date($("#slurryEffectiveFrom").value),standard=Number(String($("#slurryM3Day").value).replace(",",".")),splitF1Pct=Number($("#slurrySplitF1").value),yieldValue=Number(String($("#slurryYield").value).replace(",",".")),density=Number(String($("#slurryDensity").value).replace(",","."));if(!Number.isFinite(effective.getTime())||standard<0||splitF1Pct<0||splitF1Pct>100||yieldValue<0||density<0){alert("Bitte gültige Güllewerte, eine Aufteilung von 0 bis 100 Prozent und einen Wirksamkeitszeitpunkt eingeben.");return;}const change={enabled:$("#slurryEnabled").value==="true",standardM3Day:standard,splitF1Pct,gasYieldM3PerM3:yieldValue,densityTPerM3:density,effectiveFrom:effective.toISOString()};slurry={...slurry,...change,changes:[...slurry.changes,change].sort((a,b)=>new Date(a.effectiveFrom)-new Date(b.effectiveFrom))};save("bs_slurry",slurry);$("#slurrySaved").style.display="block";setTimeout(()=>$("#slurrySaved").style.display="none",1400);fillSelects();renderSlurry();renderFeed();renderDashboard();};
 $("#saveSlurryOverride").onclick=()=>{const date=$("#slurryOverrideDate").value,value=$("#slurryOverrideM3").value;if(!date){alert("Bitte einen Tag auswählen.");return;}if(value==="")delete slurry.overrides[date];else{const n=Number(String(value).replace(",","."));if(!Number.isFinite(n)||n<0){alert("Bitte eine gültige Tagesmenge eingeben.");return;}slurry.overrides[date]=n;}save("bs_slurry",slurry);renderSlurry();renderDashboard();};
 $("#addSlurryPause").onclick=()=>{const from=new Date($("#slurryPauseFrom").value),to=new Date($("#slurryPauseTo").value);if(!Number.isFinite(from.getTime())||!Number.isFinite(to.getTime())||to<=from){alert("Die Pause benötigt einen gültigen Beginn und ein späteres Ende.");return;}slurry.pauses.push({from:from.toISOString(),to:to.toISOString()});save("bs_slurry",slurry);$("#slurryPauseFrom").value="";$("#slurryPauseTo").value="";renderSlurry();renderDashboard();};
 
@@ -1709,28 +1757,24 @@ $$('[data-bhkw],[data-bhkw-power],[data-bhkw-active]').forEach(inp=>inp.oninput=
 
 $("#gasRows").innerHTML=`
 <div
-class="setupGrid header"
+class="setupGrid header" style="grid-template-columns:1.25fr repeat(9,.75fr)"
 >
 <b>Substrat</b>
 <b>TS %</b><b>oTS % TS</b>
-<b>m³ Biogas/t FM</b>
-<b>Verzug h</b>
-<b>Peak h</b>
-<b>Kategorie</b>
+<b>Gasertrag</b><b>CH4 %</b><b>Peak h</b><b>t50 h</b><b>Nachwirkung h</b><b>Status</b><b>Kategorie</b>
 </div>
 
 ${subs.map((sub,i)=>{
 const g=gas[sub] || {
-yield:0,ts:0,ots:0,
-delay:0,
-peak:0
+yield:0,ts:0,ots:0,ch4:0,peak:0,t50:0,decay:0,status:"ungeprüft"
 };
 
 return `
 <div
-class="setupGrid ${[g.ts,g.ots,g.yield,g.delay,g.peak].every(v=>Number(v)>0)&&g.category&&g.category!=="unassigned"?"":"incomplete"}"
+class="setupGrid ${[g.ts,g.ots,g.yield,g.peak,g.t50,g.decay].every(v=>Number(v)>0)&&g.category&&g.category!=="unassigned"&&g.status!=="ungeprüft"?"":"incomplete"}"
+style="grid-template-columns:1.25fr repeat(9,.75fr)"
 >
-<b>${sub}${[g.ts,g.ots,g.yield,g.delay,g.peak].every(v=>Number(v)>0)&&g.category&&g.category!=="unassigned"?"":`<div class="small" style="color:#a4382e">Parameter noch nicht vollständig eingerichtet</div>`}</b>
+<b>${sub}${[g.ts,g.ots,g.yield,g.peak,g.t50,g.decay].every(v=>Number(v)>0)&&g.category&&g.category!=="unassigned"&&g.status!=="ungeprüft"?"":`<div class="small" style="color:#a4382e">Parameter ungeprüft oder unvollständig</div>`}</b>
 
 <input type="number" step="0.1" min="0" max="100" data-gas-ts="${i}" value="${Number(g.ts)||0}">
 <input type="number" step="0.1" min="0" max="100" data-gas-ots="${i}" value="${Number(g.ots)||0}">
@@ -1741,13 +1785,7 @@ step="1"
 data-gas-yield="${i}"
 value="${Number(g.yield)||0}"
 >
-
-<input
-type="number"
-step="0.5"
-data-gas-delay="${i}"
-value="${Number(g.delay)||0}"
->
+<input type="number" step="0.1" min="0" max="100" data-gas-ch4="${i}" value="${Number(g.ch4)||0}">
 
 <input
 type="number"
@@ -1755,6 +1793,9 @@ step="0.5"
 data-gas-peak="${i}"
 value="${Number(g.peak)||0}"
 >
+<input type="number" step="0.5" min="0" data-gas-t50="${i}" value="${Number(g.t50)||0}">
+<input type="number" step="1" min="0" data-gas-decay="${i}" value="${Number(g.decay)||0}">
+<select data-gas-status="${i}"><option ${g.status==="Literatur-Startwert"?"selected":""}>Literatur-Startwert</option><option ${g.status==="anlagenkalibriert"?"selected":""}>anlagenkalibriert</option><option ${g.status==="ungeprüft"?"selected":""}>ungeprüft</option></select>
 <select data-gas-category="${i}"><option value="nawaro" ${g.category==="nawaro"?"selected":""}>Nawaro</option><option value="manure" ${g.category==="manure"?"selected":""}>Gülle & Mist</option><option value="other" ${g.category==="other"?"selected":""}>Sonstige</option><option value="unassigned" ${!g.category||g.category==="unassigned"?"selected":""}>Nicht zugeordnet</option></select>
 </div>
 `;
@@ -1767,7 +1808,12 @@ $("#substrateList").innerHTML=subs.map(sub=>`
 <span class="tag">aktiv</span>
 </div>
 `).join("");
+renderAdditiveSetup();
 }
+
+function renderAdditiveSetup(){const el=$("#additiveSetupRows");if(!el)return;el.innerHTML=additiveRules.map((r,i)=>`<div class="additiveItem" data-additive-row="${i}"><div class="grid2"><div><label>Bezeichnung</label><input data-ar-name value="${r.name||""}"></div><div><label>Einheit</label><select data-ar-unit><option ${r.unit==="Sack"?"selected":""}>Sack</option><option ${r.unit==="kg"?"selected":""}>kg</option><option ${r.unit==="Liter"?"selected":""}>Liter</option></select></div><div><label>Standardmenge</label><input data-ar-amount type="number" min="0" step="0.1" value="${Number(r.amount)||0}"></div><div><label>kg je Sack optional</label><input data-ar-weight type="number" min="0" step="0.1" value="${Number(r.weightPerBagKg)||0}"></div><div><label>Fermenter</label><select data-ar-fer><option value="1" ${Number(r.fer)===1?"selected":""}>F1</option><option value="2" ${Number(r.fer)===2?"selected":""}>F2</option><option value="both" ${r.fer==="both"?"selected":""}>beide</option></select></div><div><label>Runde</label><select data-ar-round><option ${r.round==="Morgen"?"selected":""}>Morgen</option><option ${r.round==="Abend"?"selected":""}>Abend</option><option value="both" ${r.round==="both"?"selected":""}>beide</option></select></div><div><label>Wochentage (1=Mo bis 7=So)</label><input data-ar-days value="${(r.days||[]).map(d=>d===0?7:d).join(",")}"></div><div><label>Status</label><select data-ar-active><option value="true" ${r.active!==false?"selected":""}>aktiv</option><option value="false" ${r.active===false?"selected":""}>inaktiv</option></select></div></div><button class="btn danger small" data-ar-del="${i}" style="margin-top:8px">Regel löschen</button></div>`).join("");$$('[data-ar-del]').forEach(b=>b.onclick=()=>{additiveRules.splice(Number(b.dataset.arDel),1);renderAdditiveSetup();});}
+$("#addAdditiveRule").onclick=()=>{additiveRules.push({id:`rule-${Date.now()}`,name:"",unit:"Sack",weightPerBagKg:0,amount:1,fer:1,round:"Morgen",days:[1],active:true});renderAdditiveSetup();};
+$("#saveAdditives").onclick=()=>{additiveRules=$$('[data-additive-row]').map((row,i)=>{const old=additiveRules[i]||{};const days=row.querySelector('[data-ar-days]').value.split(/[,; ]+/).map(Number).filter(n=>n>=1&&n<=7).map(n=>n===7?0:n),ferValue=row.querySelector('[data-ar-fer]').value;return{id:old.id||`rule-${Date.now()}-${i}`,name:row.querySelector('[data-ar-name]').value.trim(),unit:row.querySelector('[data-ar-unit]').value,amount:Number(String(row.querySelector('[data-ar-amount]').value).replace(",","."))||0,weightPerBagKg:Number(String(row.querySelector('[data-ar-weight]').value).replace(",","."))||0,fer:ferValue==="both"?"both":Number(ferValue),round:row.querySelector('[data-ar-round]').value,days:[...new Set(days)],active:row.querySelector('[data-ar-active]').value==="true"};}).filter(r=>r.name);save("bs_additive_rules",additiveRules);$("#additivesSaved").style.display="block";setTimeout(()=>$("#additivesSaved").style.display="none",1400);renderFeed();};
 
 $("#saveTimes").onclick=()=>{
 settings.morning=$("#morningTime").value||"07:00";
@@ -1793,49 +1839,26 @@ $$("[data-gas-yield]").forEach(inp=>{
 const i=Number(inp.dataset.gasYield);
 const sub=subs[i];
 
-if(!gas[sub]){
-gas[sub]={
-yield:0,
-delay:0,
-peak:0
-};
-}
+if(!gas[sub])gas[sub]={yield:0,ts:0,ots:0,ch4:0,peak:0,t50:0,decay:0,status:"ungeprüft",category:"unassigned"};
 
 gas[sub].yield=
 Number(String(inp.value).replace(",","."))||0;
 });
 
-$$("[data-gas-delay]").forEach(inp=>{
-const i=Number(inp.dataset.gasDelay);
-const sub=subs[i];
-
-if(!gas[sub]){
-gas[sub]={
-yield:0,
-delay:0,
-peak:0
-};
-}
-
-gas[sub].delay=
-Number(String(inp.value).replace(",","."))||0;
-});
+$$("[data-gas-ch4]").forEach(inp=>{gas[subs[Number(inp.dataset.gasCh4)]].ch4=Number(String(inp.value).replace(",","."))||0;});
 
 $$("[data-gas-peak]").forEach(inp=>{
 const i=Number(inp.dataset.gasPeak);
 const sub=subs[i];
 
-if(!gas[sub]){
-gas[sub]={
-yield:0,
-delay:0,
-peak:0
-};
-}
+if(!gas[sub])gas[sub]={yield:0,ts:0,ots:0,ch4:0,peak:0,t50:0,decay:0,status:"ungeprüft",category:"unassigned"};
 
 gas[sub].peak=
 Number(String(inp.value).replace(",","."))||0;
 });
+$$("[data-gas-t50]").forEach(inp=>{gas[subs[Number(inp.dataset.gasT50)]].t50=Number(String(inp.value).replace(",","."))||0;});
+$$("[data-gas-decay]").forEach(inp=>{gas[subs[Number(inp.dataset.gasDecay)]].decay=Number(String(inp.value).replace(",","."))||0;});
+$$("[data-gas-status]").forEach(sel=>{gas[subs[Number(sel.dataset.gasStatus)]].status=sel.value;});
 $$('[data-gas-category]').forEach(sel=>{gas[subs[Number(sel.dataset.gasCategory)]].category=sel.value;});
 
 save("bs_gas",gas);
@@ -1867,7 +1890,7 @@ return;
 
 subs.push(name);
 
-gas[name]={yield:0,ts:0,ots:0,delay:0,peak:0,category:"unassigned"};
+gas[name]={yield:0,ts:0,ots:0,ch4:0,peak:0,t50:0,decay:0,status:"ungeprüft",category:"unassigned"};
 
 save("bs_subs",subs);
 save("bs_gas",gas);
@@ -1893,19 +1916,19 @@ return result;
 }
 function configFromExcel(book){
 const sr=book.Substrate||book.Substrateparameter||book.Substrate;const fr=book["Fahrpläne"],br=book.BHKW,ar=book.Anlage;if(!sr||!fr||!br||!ar)throw new Error("Benötigte Blätter fehlen: Fahrpläne, Substrate, BHKW oder Anlage.");
-const subHeader=sr.findIndex(r=>String(r?.[0]||"").trim()==="Substrat"),newSubs=[],newGas={};for(let i=subHeader+1;i<sr.length;i++){const r=sr[i]||[],name=String(r[0]||"").trim();if(!name)continue;newSubs.push(name);newGas[name]={ts:Number(r[1])||0,ots:Number(r[2])||0,yield:Number(r[3])||0,delay:Number(r[4])||0,peak:Number(r[5])||0,category:normalizeCategory(r[6]),yieldBasis:String(r[7]||"m3_biogas_per_t_fresh_mass")};}
+const subHeader=sr.findIndex(r=>String(r?.[0]||"").trim()==="Substrat"),newSubs=[],newGas={};for(let i=subHeader+1;i<sr.length;i++){const r=sr[i]||[],name=String(r[0]||"").trim();if(!name)continue;const base=defaultGas[name]||{};newSubs.push(name);newGas[name]={...base,ts:Number(r[1])||0,ots:Number(r[2])||0,yield:Number(r[3])||0,peak:Number(r[5])||Number(base.peak)||0,t50:Number(base.t50)||0,decay:Number(base.decay)||0,ch4:Number(base.ch4)||0,status:base.status||"ungeprüft",category:normalizeCategory(r[6]),yieldBasis:String(r[7]||base.yieldBasis||"m3_biogas_per_t_fresh_mass")};}
 const planHeader=fr.findIndex(r=>String(r?.[0]||"").includes("Leistungsstufe")),newPlans={};let kw=0;for(let i=planHeader+1;i<fr.length;i++){const r=fr[i]||[];if(Number(r[0]))kw=Number(r[0]);const sub=String(r[1]||"").trim();if(!kw||!newSubs.includes(sub))continue;newPlans[planKey(kw,1,"Morgen",sub)]=Number(r[2])||0;newPlans[planKey(kw,1,"Abend",sub)]=Number(r[3])||0;newPlans[planKey(kw,2,"Morgen",sub)]=Number(r[4])||0;newPlans[planKey(kw,2,"Abend",sub)]=Number(r[5])||0;}
 const bhkwHeader=br.findIndex(r=>String(r?.[0]||"").trim()==="BHKW"),bhkw=[];for(let i=bhkwHeader+1;i<br.length;i++){const r=br[i]||[],number=Number(r[0]);if(!number)continue;let eff=Number(r[2])||0;if(eff>0&&eff<=1)eff*=100;bhkw.push({number,powerKw:Number(r[1])||0,efficiency:eff,active:String(r[3]||"Ja").toLowerCase()!=="nein",thermalPowerKw:Number(r[4])||0,note:String(r[5]||"")});if(bhkw.length===7)break;}
 const find=(label,col=0)=>{const row=ar.find(r=>String(r?.[col]||"").trim()===label);return row?.[col+1];},newWeek={};const dayIndex={Sonntag:0,Montag:1,Dienstag:2,Mittwoch:3,Donnerstag:4,Freitag:5,Samstag:6};ar.forEach(r=>{const day=String(r?.[6]||"").trim();if(dayIndex[day]!==undefined)newWeek[dayIndex[day]]=Number(r[7])||0;});
 const config={subs:newSubs,gas:newGas,plans:newPlans,settings:{...settings,morning:excelTime(find("Morgen Beginn"))||"07:00",morningEnd:excelTime(find("Morgen Ende"))||"15:00",evening:excelTime(find("Abend Beginn"))||"15:00",eveningEnd:excelTime(find("Abend Ende Folgetag"))||"04:00",energyContent:Number(find("Energiegehalt Biogas kWh/m³"))||5.5,autoCompleteMinutes:Number(settings.autoCompleteMinutes)||30,bhkwEfficiencies:bhkw},week:newWeek};
 const levels=[...new Set(Object.keys(newPlans).map(k=>Number(k.split("|")[0])))].sort((a,b)=>a-b);if(newSubs.length<1||bhkw.length!==7||levels.length!==12||levels[0]!==100||levels.at(-1)!==1200)throw new Error(`Plausibilitätsprüfung fehlgeschlagen: ${newSubs.length} Substrate, ${bhkw.length} BHKW, ${levels.length} Leistungsstufen.`);return{...config,levels};
 }
-function saveConfiguration(config){subs=[...config.subs];gas={...config.gas};plans={...config.plans};settings={...config.settings};week={...config.week};if(config.slurry)slurry={...slurry,...config.slurry};save("bs_subs",subs);save("bs_gas",gas);save("bs_plans",plans);save("bs_settings",settings);save("bs_week",week);save("bs_slurry",slurry);state.kw=currentPlanKw();state.round=autoRound();fillSelects();renderSetup();renderPlan();renderFeed();renderFill();renderDashboard();renderSummary();}
+function saveConfiguration(config){subs=[...config.subs];gas={...config.gas};plans={...config.plans};settings={...config.settings};week={...config.week};if(config.slurry)slurry={...slurry,...config.slurry};if(Array.isArray(config.additiveRules))additiveRules=config.additiveRules;save("bs_subs",subs);save("bs_gas",gas);save("bs_plans",plans);save("bs_settings",settings);save("bs_week",week);save("bs_slurry",slurry);save("bs_additive_rules",additiveRules);state.kw=currentPlanKw();state.round=autoRound();fillSelects();renderSetup();renderPlan();renderFeed();renderFill();renderDashboard();renderSummary();}
 $("#importExcel").onclick=async()=>{const file=$("#excelImport").files?.[0],status=$("#importStatus");status.style.display="block";if(!file){status.textContent="Bitte zuerst eine Excel-Datei auswählen.";return;}status.textContent="Datei wird geprüft …";try{const config=configFromExcel(await parseExcelWorkbook(file)),planCount=Object.values(config.plans).filter(v=>Number(v)>0).length,msg=`Geprüft: ${config.subs.length} Substrate, ${config.levels.length} Leistungsstufen, 2 Fermenter, ${config.settings.bhkwEfficiencies.length} BHKW und ${planCount} belegte Fahrplanwerte. Fahrpläne und Einstellungen jetzt übernehmen?`;if(!confirm(msg)){status.textContent="Import abgebrochen. Es wurden keine Daten verändert.";return;}saveConfiguration(config);status.textContent="Excel-Daten erfolgreich übernommen. Vorhandene Fütterungseinträge wurden nicht verändert.";}catch(e){status.textContent=`Import nicht durchgeführt: ${e.message}`;}};
 function downloadJson(value,name){const blob=new Blob([JSON.stringify(value,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-$("#backupSettings").onclick=()=>downloadJson({schemaVersion:5,createdAt:new Date().toISOString(),subs,gas,plans,settings,week,slurry},`Biogasanlage-Einstellungen-${localDate()}.json`);
-$("#backupAll").onclick=()=>downloadJson({schemaVersion:5,backupType:"full",createdAt:new Date().toISOString(),subs,gas,plans,settings,week,slurry,logs,corrections,roundCompletions,dosingSchedules},`Biogasanlage-Vollbackup-${localDate()}.json`);
-$("#restoreSettings").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!Array.isArray(data.subs)||!data.gas||!data.plans||!data.settings||!data.week)throw new Error("Ungültige Sicherungsdatei");const full=data.backupType==="full"&&Array.isArray(data.logs),question=full?"Vollständige Sicherung einschließlich Fütterungen wiederherstellen?":"Einstellungen und Fahrpläne wiederherstellen? Vorhandene Fütterungen bleiben erhalten.";if(confirm(`${question}\nSicherung vom ${data.createdAt?new Date(data.createdAt).toLocaleString("de-DE"):"unbekannten Zeitpunkt"}`)){saveConfiguration(data);if(full){logs=data.logs;corrections=data.corrections||[];roundCompletions=data.roundCompletions||{};dosingSchedules=data.dosingSchedules||{};save("bs_logs",logs);save("bs_corrections",corrections);save("bs_round_completions",roundCompletions);save("bs_dosing_schedules",dosingSchedules);}renderFeed();renderDashboard();alert("Sicherung wurde wiederhergestellt.");}}catch(err){alert(`Sicherung konnte nicht eingelesen werden: ${err.message}`);}finally{e.target.value="";}};
+$("#backupSettings").onclick=()=>downloadJson({schemaVersion:6,createdAt:new Date().toISOString(),subs,gas,plans,settings,week,slurry,additiveRules},`Biogasanlage-Einstellungen-${localDate()}.json`);
+$("#backupAll").onclick=()=>downloadJson({schemaVersion:6,backupType:"full",createdAt:new Date().toISOString(),subs,gas,plans,settings,week,slurry,additiveRules,additiveLogs,logs,corrections,roundCompletions,dosingSchedules},`Biogasanlage-Vollbackup-${localDate()}.json`);
+$("#restoreSettings").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!Array.isArray(data.subs)||!data.gas||!data.plans||!data.settings||!data.week)throw new Error("Ungültige Sicherungsdatei");const full=data.backupType==="full"&&Array.isArray(data.logs),question=full?"Vollständige Sicherung einschließlich Fütterungen wiederherstellen?":"Einstellungen und Fahrpläne wiederherstellen? Vorhandene Fütterungen bleiben erhalten.";if(confirm(`${question}\nSicherung vom ${data.createdAt?new Date(data.createdAt).toLocaleString("de-DE"):"unbekannten Zeitpunkt"}`)){saveConfiguration(data);if(Array.isArray(data.additiveRules)){additiveRules=data.additiveRules;save("bs_additive_rules",additiveRules);}if(full){logs=data.logs;additiveLogs=data.additiveLogs||[];corrections=data.corrections||[];roundCompletions=data.roundCompletions||{};dosingSchedules=data.dosingSchedules||{};save("bs_logs",logs);save("bs_additive_logs",additiveLogs);save("bs_corrections",corrections);save("bs_round_completions",roundCompletions);save("bs_dosing_schedules",dosingSchedules);}renderFeed();renderDashboard();renderSetup();alert("Sicherung wurde wiederhergestellt.");}}catch(err){alert(`Sicherung konnte nicht eingelesen werden: ${err.message}`);}finally{e.target.value="";}};
 
 function renderHistory(){
 const arr=[...logs]
@@ -1917,7 +1940,7 @@ $("#historyList").innerHTML=arr.length
 <div class="entry">
 <div class="row">
 <b>${l.sub}</b>
-<div><b>${formatTons(logTons(l))}</b> <button class="btn danger small" data-history-del="${l.id}">Löschen</button></div>
+<div><b>${l.isExtra?`${formatNum(l.amount,1)} ${l.unit}`:formatTons(logTons(l))}</b> <button class="btn danger small" data-history-del="${l.id}">Löschen</button></div>
 </div>
 
 <div class="small muted">
@@ -1929,8 +1952,8 @@ hour:"2-digit",
 minute:"2-digit"
 })}
 · Fermenter ${l.fer}
-· ${l.round}
-· ${l.kw} kW
+· ${l.isExtra?"Extra":l.round}
+${l.isExtra?"":`· ${l.kw} kW`}
 </div>
 </div>
 `).join("")
@@ -1966,6 +1989,7 @@ renderPlan();
 renderSetup();
 renderHistory();
 renderSlurry();
+renderExtra();
 
 setInterval(()=>{if(updateAutoCompletions()){renderFeed();renderDashboard();}},60000);
 setInterval(updateHeaderClock,1000);
