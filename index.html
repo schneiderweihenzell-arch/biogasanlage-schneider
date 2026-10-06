@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f7a4c">
 <meta name="description" content="Radlader-Testversion der Fütterungsapp für die Biogasanlage Schneider">
-<meta name="application-version" content="6.0-test">
+<meta name="application-version" content="6.4-test">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>Biogasanlage Schneider</title>
@@ -125,7 +125,7 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 <div class="brand">🌿 Biogasanlage Schneider</div>
 <div id="headerDateTime" class="headerTime" aria-live="off"></div>
 </div>
-<div class="sub">Fütterung · Gülle · Extra · Prognose · Testversion 6.0</div>
+<div class="sub">Fütterung · Gülle · Extra · Prognose · Testversion 6.4</div>
 </header>
 
 <section id="dashboard" class="screen active">
@@ -149,13 +149,6 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 <div class="chartWrap"><canvas id="forecastChart" aria-label="Modellierte 120-Stunden-Prognose"></canvas></div>
 </div>
 
-<div class="card kpi">
-<div class="muted small">Fütterungsbasierte Gasprognose</div>
-<div id="dashGas" class="n">0 m³/h</div>
-<div class="note">inkl. 15-Minuten-Eintrag und substratspezifischer Umsetzung</div>
-<div id="dashGasSources" class="note"></div>
-</div>
-
 <div class="card powerKpi">
 <b>Modellierte Leistung F1 + F2</b>
 <div class="powerCompare">
@@ -165,6 +158,16 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 </div>
 <div id="dashEnough" class="note" style="margin-top:9px">Modellierte Fütterungsleistung – nicht gemessen</div>
 <div id="dashWeekPower" class="note" style="margin-top:5px">Wochenplan: 0 kWh · Ø 0 kW</div>
+</div>
+
+<div class="card">
+<b>Ø Tagesleistung aus der aktuellen Prognose</b>
+<div class="grid3" style="margin-top:12px">
+<div class="kpi"><div class="muted small">Heute</div><div id="dashPowerToday" class="n">0 kW</div></div>
+<div class="kpi"><div class="muted small">Morgen</div><div id="dashPowerTomorrow" class="n">0 kW</div></div>
+<div class="kpi"><div class="muted small">Übermorgen</div><div id="dashPowerDayAfter" class="n">0 kW</div></div>
+</div>
+<div class="note" style="margin-top:9px">Durchschnitt der grünen Prognosekurve über den jeweiligen Kalendertag · modelliert, nicht gemessen</div>
 </div>
 
 <div class="card">
@@ -193,15 +196,6 @@ input,select,textarea{font-size:16px!important;min-height:48px;padding:11px 12px
 </div>
 </div>
 
-<div class="card">
-<div class="row">
-<div>
-<b>Nächste / aktuelle Fütterung</b>
-<div id="dashRound" class="muted"></div>
-</div>
-<button class="btn primary" onclick="show('fill')">Füttern</button>
-</div>
-</div>
 </section>
 
 <section id="fillLegacy" class="screen">
@@ -555,6 +549,7 @@ Gasparameter speichern
 
 <script src="jszip.min.js"></script>
 <script src="default-config.js"></script>
+<script src="prefeeding-data.js"></script>
 <script>
 (()=>{
 const $=s=>document.querySelector(s);
@@ -791,6 +786,22 @@ if(!gas[s].category)gas[s].category=["Rindergülle","Rindermist","Sep. Gärrest"
 save("bs_gas",gas);
 }
 
+const GAS_DEFAULTS_MIGRATION_KEY="bs_gas_defaults_2026_10_06_v1";
+function migrateMissingGasDefaults(){
+if(localStorage.getItem(GAS_DEFAULTS_MIGRATION_KEY)==="done")return;
+Object.entries(defaultGas).forEach(([sub,defaults])=>{
+gas[sub]=gas[sub]||{};
+["ts","ots","yield","ch4","peak","t50","decay"].forEach(key=>{
+if(!(Number(gas[sub][key])>0)&&Number(defaults[key])>0)gas[sub][key]=Number(defaults[key]);
+});
+if(!gas[sub].status||(gas[sub].status==="ungeprüft"&&defaults.status==="Literatur-Startwert"))gas[sub].status=defaults.status||"ungeprüft";
+if(!gas[sub].category||gas[sub].category==="unassigned")gas[sub].category=defaults.category||(["Rindergülle","Rindermist","Sep. Gärrest"].includes(sub)?"manure":sub==="Entmischte Melasse"?"other":"nawaro");
+if(!gas[sub].yieldBasis&&defaults.yieldBasis)gas[sub].yieldBasis=defaults.yieldBasis;
+});
+save("bs_gas",gas);
+localStorage.setItem(GAS_DEFAULTS_MIGRATION_KEY,"done");
+}
+
 function averageEfficiency(){
 const active=(settings.bhkwEfficiencies||[]).filter(x=>x.active!==false&&(Number(x.efficiency)||0)>0);
 if(!active.length)return Number(settings.electricEfficiency)||0;
@@ -834,6 +845,27 @@ function migrateLegacyLogs(){
 let changed=false;
 logs=logs.map(l=>{if(l.parameterSnapshot)return l;changed=true;return {...l,parameterSnapshot:parameterSnapshot(l.sub),schemaVersion:2,legacySnapshotAssigned:true};});
 if(changed)save("bs_logs",logs);
+}
+
+const PREFEEDING_MIGRATION_KEY="bs_prefeeding_import_2026_10_06_v2";
+function migratePrefeedingHistory(){
+if(localStorage.getItem(PREFEEDING_MIGRATION_KEY)==="done")return;
+const rows=window.BIOGAS_PREFEEDING_ROWS;
+if(!Array.isArray(rows)||!rows.length)return;
+const imported=rows.map((r,i)=>{
+const [date,clock,fer,round,sub,tons]=r,snapshot=parameterSnapshot(sub),day=dateAt(date,"12:00"),kw=Number(week[day.getDay()])||0;
+return{id:`prefeed-${date.replace(/-/g,"")}-${clock.replace(":","")}-${i}`,ts:`${date}T${clock}:00`,date,kw,fer:Number(fer)||1,round,sub,tons:Number(tons)||0,unit:"t",captureType:"historical_import",parameterSnapshot:{...snapshot,parameterStatus:"Neues Prognosemodell; Menge und Art aus Auswertung 06.10.2026"},schemaVersion:3,importSource:"Auswertung 06102026.xlsx"};
+});
+const previousImport=logs.filter(l=>l.importSource==="Auswertung 06102026.xlsx"),otherLogs=logs.filter(l=>l.importSource!=="Auswertung 06102026.xlsx"),regularOther=otherLogs.filter(l=>!l.isExtra),extras=otherLogs.filter(l=>l.isExtra);
+if(previousImport.length){logs=[...imported,...otherLogs];}
+else if(regularOther.length<=3){logs=[...imported,...extras];}
+else{
+const signature=l=>{const d=new Date(l.ts);return `${entryDate(l)}|${pad(d.getHours())}:${pad(d.getMinutes())}|${Number(l.fer)}|${l.round}|${l.sub}|${logTons(l).toFixed(3)}`;};
+const existing=new Set(logs.map(signature));logs=[...logs,...imported.filter(l=>!existing.has(signature(l)))];
+}
+const latest={};imported.forEach(l=>{const key=`${l.date}|${l.round}`,time=new Date(l.ts).getTime();latest[key]=Math.max(latest[key]||0,time);});
+Object.entries(latest).forEach(([key,last])=>{const split=key.lastIndexOf("|"),date=key.slice(0,split),round=key.slice(split+1);[1,2].forEach(fer=>{delete roundCompletions[`${date}|${fer}|${round}`];delete dosingSchedules[`${date}|${fer}|${round}`];});delete roundCompletions[`${date}|all|${round}`];const start=new Date(last),completedAt=new Date(last+(Number(settings.autoCompleteMinutes)||30)*60000),end=regularDosingEnd(date,round);setRoundCompletion(date,round,completedAt,"imported-new-model");createDosingSchedules(date,round,completedAt,"imported-new-model",start,end);});
+save("bs_logs",logs);save("bs_round_completions",roundCompletions);save("bs_dosing_schedules",dosingSchedules);localStorage.setItem(PREFEEDING_MIGRATION_KEY,"done");
 }
 
 function fillSelects(){
@@ -1095,8 +1127,6 @@ const future=new Date(now.getTime()+12*3600000);
 const current=actualGasRateAt(now);
 const later=actualGasRateAt(future);
 
-$("#dashGas").textContent=`${formatNum(current,0)} m³/h`;
-
 let pct=0;
 
 if(current>5){
@@ -1162,6 +1192,19 @@ let tons=0,gasTotal=0,electricity=0;
 function weeklyPlanMetrics(){let electricity=0;for(let i=0;i<7;i++)electricity+=plannedDayMetrics(Number(week[i])||0).electricity;return{electricity,power:electricity/168};}
 function renderPowerComparison(prefix,planned,live){const diff=live.power-planned.power,limit=Math.max(10,planned.power*.02),arrow=diff>limit?"↑":diff<-limit?"↓":"→",cls=diff>limit?"statusUp":diff<-limit?"statusDown":"statusFlat";$("#"+prefix+"PlanPower").textContent=`${formatNum(planned.power,0)} kW`;$("#"+prefix+"LivePower").textContent=`${formatNum(live.power,0)} kW`;const el=$("#"+prefix+"PowerDiff");el.textContent=`${arrow} ${diff>0?"+":""}${formatNum(diff,0)} kW`;el.className=cls;}
 
+function forecastDayAveragePower(date){
+const start=dateAt(date,"00:00");
+let energy=0;
+for(let hour=0;hour<24;hour++)energy+=powerAt(new Date(start.getTime()+(hour+.5)*3600000));
+return energy/24;
+}
+
+function renderForecastDayPowers(now=new Date()){
+const dates=[0,1,2].map(offset=>{const d=new Date(now);d.setHours(12,0,0,0);d.setDate(d.getDate()+offset);return localDate(d);});
+const ids=["dashPowerToday","dashPowerTomorrow","dashPowerDayAfter"];
+dates.forEach((date,i)=>{$("#"+ids[i]).textContent=`${formatNum(forecastDayAveragePower(date),0)} kW`;});
+}
+
 function renderDashboard(){
 updateAutoCompletions();
 const now=new Date();
@@ -1179,8 +1222,7 @@ renderPowerComparison("dash",planned,live);
 const capacityNote=live.rawElectricity/24>live.power+0.1?" · auf aktive BHKW-Leistung begrenzt":"";
 $("#dashEnough").textContent=`Reicht nach aktuellem Stand für ca. ${formatNum(live.power,0)} kW · modelliert, nicht gemessen${capacityNote}`;
 $("#dashWeekPower").textContent=`Wochenplan: ${formatNum(weekly.electricity,0)} kWh · Ø ${formatNum(weekly.power,0)} kW`;
-const sourceParts=[`${logs.filter(l=>!l.isExtra).length} gespeicherte Fütterungen`,`${logs.filter(l=>l.isExtra).length} Extra-Einträge`,slurryConfigAt(now).enabled?"Gülleautomatik aktiv":"Gülleautomatik aus","offene Zukunft nach Fahrplan"];
-$("#dashGasSources").textContent="Datenquellen: "+sourceParts.join(" · ")+". Keine Messwerte oder erfundene Grundlast.";
+renderForecastDayPowers(now);
 
 const monthLogs=logs.filter(l=>{
 const d=new Date(entryDate(l)+"T12:00:00"),current=new Date(feedDate+"T12:00:00");
@@ -1196,10 +1238,6 @@ return d.getFullYear()===current.getFullYear();
 $("#kpiDay").textContent=formatTons(sumLogs(today));
 $("#kpiMonth").textContent=formatTons(sumLogs(monthLogs));
 $("#kpiYear").textContent=formatTons(sumLogs(yearLogs));
-
-const r=autoRound();
-$("#dashRound").textContent=
-`${r} · ${dayKw} kW · ${settings[r==="Morgen"?"morning":"evening"]}`;
 
 renderGasTrend();
 renderForecastChart();
@@ -1966,6 +2004,8 @@ $$("[data-history-del]").forEach(b=>b.onclick=()=>{if(confirm("Diesen Fütterung
 /* Start der App */
 
 ensureGas();
+migrateMissingGasDefaults();
+migratePrefeedingHistory();
 migrateLegacyLogs();
 migrateDosingSchedules();
 updateAutoCompletions();
